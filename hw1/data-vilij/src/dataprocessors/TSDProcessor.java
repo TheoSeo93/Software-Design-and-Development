@@ -1,10 +1,14 @@
 package dataprocessors;
 
 import javafx.geometry.Point2D;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
@@ -28,7 +32,7 @@ public final class TSDProcessor {
         }
     }
 
-    private Map<String, String>  dataLabels;
+    private Map<String, String> dataLabels;
     private Map<String, Point2D> dataPoints;
 
     public TSDProcessor() {
@@ -43,26 +47,63 @@ public final class TSDProcessor {
      * @throws Exception if the input string does not follow the <code>.tsd</code> data format
      */
     public void processString(String tsdString) throws Exception {
-        AtomicBoolean hadAnError   = new AtomicBoolean(false);
+
+        String entireFormat = "^@[^\\s]+[a-zA-Z0-9]*[\\s]+[a-zA-Z0-9]+[\\s]+?([0-9]*[.])?[0-9]+,+?([0-9]*[.])?[0-9]+\\s*$";
+        String nameRegex = "(?<=@)[a-zA-Z0-9]*(?!:(\\s*[a-zA-Z0-9]*[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+))";
+        String labelRegex = "(?<=[a-zA-Z0-9]{1,20})\\s+[a-zA-Z0-9]*(?=(\\s+(?<=\\s{1,4})[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+))";
+        String xposRegex = "(?<=[a-zA-Z0-9])\\s+?([0-9]*[.])?[0-9]+(?<!,\\d)";
+        String yposRegex = "(?<=[a-zA-Z0-9]\\s{1,20}?([0-9]{1,4}[.])?[0-9]{1,4},)([0-9]*[.])?[0-9]+";
+
+        Pattern formatPattern = Pattern.compile(entireFormat);
+        Pattern namePattern = Pattern.compile(nameRegex);
+        Pattern labelPattern = Pattern.compile(labelRegex);
+        Pattern xPattern = Pattern.compile(xposRegex);
+        Pattern yPattern = Pattern.compile(yposRegex);
+
+        final AtomicBoolean notError = new AtomicBoolean(true);
         StringBuilder errorMessage = new StringBuilder();
         Stream.of(tsdString.split("\n"))
-              .map(line -> Arrays.asList(line.split("\t")))
-              .forEach(list -> {
-                  try {
-                      String   name  = checkedname(list.get(0));
-                      String   label = list.get(1);
-                      String[] pair  = list.get(2).split(",");
-                      Point2D  point = new Point2D(Double.parseDouble(pair[0]), Double.parseDouble(pair[1]));
-                      dataLabels.put(name, label);
-                      dataPoints.put(name, point);
-                  } catch (Exception e) {
-                      errorMessage.setLength(0);
-                      errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
-                      hadAnError.set(true);
-                  }
-              });
+                .forEach(line -> {
+
+
+                    try {
+                        Matcher formatMatch = formatPattern.matcher(line);
+                        Matcher firstMatch = namePattern.matcher(line);
+                        Matcher secondMatch = labelPattern.matcher(line);
+                        Matcher thirdMatch = xPattern.matcher(line);
+                        Matcher fourthMatch = yPattern.matcher(line);
+
+                        notError.set(formatMatch.matches() && firstMatch.find() && secondMatch.find() && thirdMatch.find() && fourthMatch.find());
+
+                        if (notError.get()) {
+                            String name = firstMatch.group(0);
+                            String label = secondMatch.group(0);
+                            Point2D point = new Point2D(Double.valueOf(thirdMatch.group(0)), Double.parseDouble(fourthMatch.group(0)));
+                            dataLabels.put(name, label);
+                            dataPoints.put(name, point);
+                        } else {
+                            if (!firstMatch.find()) {
+                                List list = Arrays.asList(line.split("\\s+"));
+                                throw new InvalidDataNameException(checkedname((String) list.get(0)));
+                            } else
+                                throw new Exception("It's not in the following format: [@name][space][label][space][xPos,yPos]");
+
+                        }
+                    } catch (Exception e) {
+
+                        errorMessage.setLength(0);
+                        errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
+                        notError.set(false);
+
+                    }
+                });
         if (errorMessage.length() > 0)
             throw new Exception(errorMessage.toString());
+    }
+
+
+    public void update() {
+        clear();
     }
 
     /**
@@ -70,7 +111,7 @@ public final class TSDProcessor {
      *
      * @param chart the specified chart
      */
-    void toChartData(XYChart<Number, Number> chart) {
+    public void toChartData(XYChart<Number, Number> chart) {
         Set<String> labels = new HashSet<>(dataLabels.values());
         for (String label : labels) {
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
@@ -79,6 +120,7 @@ public final class TSDProcessor {
                 Point2D point = dataPoints.get(entry.getKey());
                 series.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
             });
+
             chart.getData().add(series);
         }
     }

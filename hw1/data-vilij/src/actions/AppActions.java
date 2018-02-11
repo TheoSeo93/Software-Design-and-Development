@@ -1,8 +1,17 @@
 package actions;
 
+import dataprocessors.TSDProcessor;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import ui.DataVisualizer;
 import vilij.components.ActionComponent;
+import vilij.components.ConfirmationDialog;
+import vilij.components.Dialog;
 import vilij.templates.ApplicationTemplate;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -13,24 +22,37 @@ import java.nio.file.Path;
  */
 public final class AppActions implements ActionComponent {
 
-    /** The application to which this class of actions belongs. */
+    /**
+     * The application to which this class of actions belongs.
+     */
     private ApplicationTemplate applicationTemplate;
-
-    /** Path to the data file currently active. */
+    /**
+     * Path to the data file currently active.
+     */
     Path dataFilePath;
-
     public AppActions(ApplicationTemplate applicationTemplate) {
         this.applicationTemplate = applicationTemplate;
     }
 
     @Override
     public void handleNewRequest() {
-        // TODO for homework 1
+        try {
+            if (promptToSave() == true)
+                handleSaveRequest();
+        } catch (Exception ex) {
+            if(ex instanceof  IOException)
+            applicationTemplate.getDialog(Dialog.DialogType.ERROR).show("File not saved", "Cannot save the file");
+        }
+        applicationTemplate.getDataComponent().clear();
+
     }
 
     @Override
     public void handleSaveRequest() {
-        // TODO: NOT A PART OF HW 1
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("tsd files (*.tsd)", "*.tsd"));
+        fileChooser.showOpenDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
     }
 
     @Override
@@ -40,7 +62,8 @@ public final class AppActions implements ActionComponent {
 
     @Override
     public void handleExitRequest() {
-        // TODO for homework 1
+        Platform.exit();
+
     }
 
     @Override
@@ -65,8 +88,16 @@ public final class AppActions implements ActionComponent {
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
      */
     private boolean promptToSave() throws IOException {
-        // TODO for homework 1
-        // TODO remove the placeholder line below after you have implemented this method
-        return false;
+        ConfirmationDialog confirmationDialog = (ConfirmationDialog) applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION);
+        confirmationDialog.show("Save Current Work", "Would you like to save current work?");
+        if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.CANCEL)
+            return false;
+
+        else if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.YES) {
+            return true;
+        } else {
+            applicationTemplate.getDataComponent().clear();
+            return false;
+        }
     }
 }
