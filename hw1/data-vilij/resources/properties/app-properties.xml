@@ -16,10 +16,17 @@ functionality within the main workspace. -->
         <!-- WARNING MESSAGES -->
         <property name="EXIT_WHILE_RUNNING_WARNING"
                   value="An algorithm is running. If you exit now, all unsaved changes will be lost. Are you sure?"/>
+        <property name="WRONG_DATA_FORMAT_ERROR"
+                  value="WRONG DATA FORMAT ERROR"/>
+        <property name="WRONG_DATA_FORMAT_ERROR_CONTENT"
+                  value="It's not in the following format: [@name][space][label][space][xPos,yPos]"/>
+
 
         <!-- ERROR MESSAGES -->
         <property name="RESOURCE_SUBDIR_NOT_FOUND" value="Directory not found under resources."/>
-
+        <property name="'SAVE_IOEXCEPTION" value ="Failed to save the file"/>
+        <property name="'WRONG_EXTENSION_CONTENT" value ="Must save tsd file only"/>
+        <property name="'WRONG_EXTENSION" value ="Wrong extension format"/>
         <!-- APPLICATION-SPECIFIC MESSAGE TITLES -->
         <property name="SAVE_UNSAVED_WORK_TITLE" value="Save Current Work"/>
 
@@ -31,6 +38,13 @@ functionality within the main workspace. -->
         <property name="DATA_FILE_EXT_DESC" value="Tab-Separated Data File"/>
         <property name="TEXT_AREA" value="text area"/>
         <property name="SPECIFIED_FILE" value=" specified file"/>
+        <!-- COMPONENT NAMES -->
+        <property name="DISPLAY" value="DISPLAY"/>
+        <property name="TEXT_AREA_TITLE" value="Data File"/>
+
+        <property name="SEPARATOR" value="/"/>
+        <property name= "SAVE_TITLE" value ="Save File"/>
+        <property name="SCREEN_TOOLTIP" value="Take a screen shot"/>
 
     </property_list>
     <property_options_list/>

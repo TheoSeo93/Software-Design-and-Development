@@ -20,6 +20,9 @@ public enum AppPropertyTypes {
 
     /* error messages */
     RESOURCE_SUBDIR_NOT_FOUND,
+    SAVE_IOEXCEPTION,
+    WRONG_DATA_FORMAT_ERROR,
+    WRONG_DATA_FORMAT_ERROR_CONTENT,
 
     /* application-specific message titles */
     SAVE_UNSAVED_WORK_TITLE,
@@ -31,5 +34,15 @@ public enum AppPropertyTypes {
     DATA_FILE_EXT,
     DATA_FILE_EXT_DESC,
     TEXT_AREA,
-    SPECIFIED_FILE
+    SPECIFIED_FILE,
+    /* component names */
+    TEXT_AREA_TITLE,
+    DISPLAY,
+    SAVE_TITLE,
+    SEPARATOR,
+    WRONG_EXTENSION,
+    WRONG_EXTENSION_CONTENT
+
+
+
 }

@@ -1,15 +1,15 @@
 package dataprocessors;
 
 import javafx.geometry.Point2D;
-import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
+import ui.AppUI;
 
-import java.nio.file.AtomicMoveNotSupportedException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
 
 /**
  * The data files used by this data visualization applications follow a tab-separated format, where each data point is
@@ -38,6 +38,7 @@ public final class TSDProcessor {
     public TSDProcessor() {
         dataLabels = new HashMap<>();
         dataPoints = new HashMap<>();
+
     }
 
     /**
@@ -48,11 +49,22 @@ public final class TSDProcessor {
      */
     public void processString(String tsdString) throws Exception {
 
-        String entireFormat = "^@[^\\s]+[a-zA-Z0-9]*[\\s]+[a-zA-Z0-9]+[\\s]+?([0-9]*[.])?[0-9]+,+?([0-9]*[.])?[0-9]+\\s*$";
-        String nameRegex = "(?<=@)[a-zA-Z0-9]*(?!:(\\s*[a-zA-Z0-9]*[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+))";
-        String labelRegex = "(?<=[a-zA-Z0-9]{1,20})\\s+[a-zA-Z0-9]*(?=(\\s+(?<=\\s{1,4})[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+))";
-        String xposRegex = "(?<=[a-zA-Z0-9])\\s+?([0-9]*[.])?[0-9]+(?<!,\\d)";
-        String yposRegex = "(?<=[a-zA-Z0-9]\\s{1,20}?([0-9]{1,4}[.])?[0-9]{1,4},)([0-9]*[.])?[0-9]+";
+        String[] regex = new String[5];
+        Stream.of(AppUI.regexString)
+                .map(line -> Arrays.asList(line.split("[\t]")))
+                .forEach(list -> {
+                    regex[0] = list.get(0);
+                    regex[1] = list.get(1);
+                    regex[2] = list.get(2);
+                    regex[3] = list.get(3);
+                    regex[4] = list.get(4);
+                });
+
+        String entireFormat = regex[0];
+        String nameRegex = regex[1];
+        String labelRegex = regex[2];
+        String xposRegex = regex[3];
+        String yposRegex = regex[4];
 
         Pattern formatPattern = Pattern.compile(entireFormat);
         Pattern namePattern = Pattern.compile(nameRegex);
@@ -64,8 +76,6 @@ public final class TSDProcessor {
         StringBuilder errorMessage = new StringBuilder();
         Stream.of(tsdString.split("\n"))
                 .forEach(line -> {
-
-
                     try {
                         Matcher formatMatch = formatPattern.matcher(line);
                         Matcher firstMatch = namePattern.matcher(line);
@@ -78,6 +88,8 @@ public final class TSDProcessor {
                         if (notError.get()) {
                             String name = firstMatch.group(0);
                             String label = secondMatch.group(0);
+                             name=name.trim();
+                            label=label.trim();
                             Point2D point = new Point2D(Double.valueOf(thirdMatch.group(0)), Double.parseDouble(fourthMatch.group(0)));
                             dataLabels.put(name, label);
                             dataPoints.put(name, point);
@@ -86,7 +98,7 @@ public final class TSDProcessor {
                                 List list = Arrays.asList(line.split("\\s+"));
                                 throw new InvalidDataNameException(checkedname((String) list.get(0)));
                             } else
-                                throw new Exception("It's not in the following format: [@name][space][label][space][xPos,yPos]");
+                                throw new Exception();
 
                         }
                     } catch (Exception e) {
