@@ -1,20 +1,14 @@
 package actions;
 
-import dataprocessors.AppData;
-import dataprocessors.TSDProcessor;
+
+
 import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.FileChooser;
 import ui.AppUI;
-import ui.DataVisualizer;
 import vilij.components.ActionComponent;
 import vilij.components.ConfirmationDialog;
-import vilij.components.DataComponent;
 import vilij.components.Dialog;
 import vilij.templates.ApplicationTemplate;
-import vilij.templates.UITemplate;
-
-import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -54,8 +48,6 @@ public final class AppActions implements ActionComponent {
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()),
                         applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()));
         }
-
-
     }
 
     @Override

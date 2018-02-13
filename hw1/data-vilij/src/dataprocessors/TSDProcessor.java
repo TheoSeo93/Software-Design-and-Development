@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static settings.AppPropertyTypes.WRONG_DATA_FORMAT_ERROR_CONTENT;
+
 
 /**
  * The data files used by this data visualization applications follow a tab-separated format, where each data point is
@@ -71,9 +73,9 @@ public final class TSDProcessor {
         Pattern labelPattern = Pattern.compile(labelRegex);
         Pattern xPattern = Pattern.compile(xposRegex);
         Pattern yPattern = Pattern.compile(yposRegex);
-
         final AtomicBoolean notError = new AtomicBoolean(true);
         StringBuilder errorMessage = new StringBuilder();
+        StringBuilder invalidNameFlag = new StringBuilder();
         Stream.of(tsdString.split("\n"))
                 .forEach(line -> {
                     try {
@@ -84,7 +86,6 @@ public final class TSDProcessor {
                         Matcher fourthMatch = yPattern.matcher(line);
 
                         notError.set(formatMatch.matches() && firstMatch.find() && secondMatch.find() && thirdMatch.find() && fourthMatch.find());
-
                         if (notError.get()) {
                             String name = firstMatch.group(0);
                             String label = secondMatch.group(0);
@@ -93,14 +94,15 @@ public final class TSDProcessor {
                             Point2D point = new Point2D(Double.valueOf(thirdMatch.group(0)), Double.parseDouble(fourthMatch.group(0)));
                             dataLabels.put(name, label);
                             dataPoints.put(name, point);
-                        } else {
-                            if (!firstMatch.find()) {
-                                List list = Arrays.asList(line.split("\\s+"));
-                                throw new InvalidDataNameException(checkedname((String) list.get(0)));
-                            } else
-                                throw new Exception();
-
                         }
+                        else{
+                            if(!firstMatch.find()) {
+                                List list = Arrays.asList(line.split("\\s+"));
+                                invalidNameFlag.append(list.get(0));
+                                throw new Exception();
+                            }
+                        }
+
                     } catch (Exception e) {
 
                         errorMessage.setLength(0);
@@ -108,8 +110,11 @@ public final class TSDProcessor {
                         notError.set(false);
 
                     }
+
                 });
-        if (errorMessage.length() > 0)
+        if (invalidNameFlag.toString().length()>0)
+            throw new InvalidDataNameException(invalidNameFlag.toString());
+        else
             throw new Exception(errorMessage.toString());
     }
 

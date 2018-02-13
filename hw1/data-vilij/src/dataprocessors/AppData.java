@@ -42,9 +42,6 @@ public class AppData implements DataComponent {
         processor.clear();
     }
 
-    public TSDProcessor getProcessor() {
-        return processor;
-    }
 
     public void displayData() {
         processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());

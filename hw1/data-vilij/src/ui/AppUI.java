@@ -53,6 +53,9 @@ public final class AppUI extends UITemplate {
     private Pane hBox;
     private Text textAreaTitle;
     private String scrnShotIconPath;
+
+
+    private String currentText;
     public static String regexString = "^@[^\\s]+[a-zA-Z0-9]*[\\s]+[a-zA-Z0-9]+[\\s]+?([0-9]*[.])?[0-9]+,+?([0-9]*[.])?[0-9]+\\s*$\t(?<=@)[a-zA-Z0-9]*(?!:(\\s*[a-zA-Z0-9]*[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+))\t(?<=[a-zA-Z0-9]{1,20})\\s+[a-zA-Z0-9]*(?=(\\s+(?<=\\s{1,4})[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+))\t(?<=[a-zA-Z0-9])\\s+?([0-9]*[.])?[0-9]+(?<!,\\d)\t(?<=[a-zA-Z0-9]\\s{1,20}?([0-9]{1,4}[.])?[0-9]{1,4},)([0-9]*[.])?[0-9]+\t";
 
     public ScatterChart<Number, Number> getChart() {
@@ -120,8 +123,8 @@ public final class AppUI extends UITemplate {
     }
 
     private void layout() {
-        final NumberAxis xAxis = new NumberAxis(0, 100, 10);
-        final NumberAxis yAxis = new NumberAxis(0, 110, 10);
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
         chart = new ScatterChart<>(xAxis, yAxis);
         chart.setTitle("Data Visualization");
         workspace = new VBox();
@@ -141,22 +144,35 @@ public final class AppUI extends UITemplate {
             @Override
             public void handle(ActionEvent event) {
                 String chartData = textArea.getText().toString();
-                try {
-                    new AppData(applicationTemplate).loadData(chartData);
-                    AppUI.super.saveButton.setDisable(false);
-                } catch (Exception ex) {
-                    Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
-                    error.show(applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR_CONTENT.toString()), ex.getMessage());
-                }
+                if (hasNewText) {
+                    try {
+                        new AppData(applicationTemplate).loadData(chartData);
+                        AppUI.super.saveButton.setDisable(false);
+                        hasNewText = false;
+                    } catch (Exception ex) {
+                        Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+                        if (ex instanceof TSDProcessor.InvalidDataNameException)
+                            error.show(applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR.toString()), ex.getMessage());
+                        else
+                            error.show(applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR.toString()), applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR_CONTENT.toString()));
+                    }
 
+                }
             }
         });
-
         textArea.textProperty().
+
                 addListener(new ChangeListener<String>() {
                     @Override
                     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                        hasNewText = true;
+
+
+                        currentText = newValue;
+                        if (!oldValue.equals(newValue))
+                            hasNewText = true;
+                        else
+                            hasNewText = false;
+
                         StringBuilder entireFormat = new StringBuilder();
                         Stream.of(regexString)
                                 .map(line -> Arrays.asList(line.split("[\t]")))
@@ -166,23 +182,23 @@ public final class AppUI extends UITemplate {
                         Pattern formatPattern = Pattern.compile(entireFormat.toString());
                         final AtomicInteger atomicInteger = new AtomicInteger(0);
 
-                        if (hasNewText == true) {
-                            Stream.of(newValue.split("\n"))
-                                    .forEach(line -> {
-                                        Matcher formatMatch = formatPattern.matcher(line);
-                                        atomicInteger.incrementAndGet();
-                                        if (formatMatch.matches() && atomicInteger.get() == 1) {
-                                            AppUI.super.newButton.setDisable(false);
-                                            AppUI.super.saveButton.setDisable(false);
-                                        } else if (!formatMatch.matches() && atomicInteger.get() == 1) {
-                                            AppUI.super.newButton.setDisable(true);
-                                            AppUI.super.saveButton.setDisable(true);
-                                        }
-                                        chart.getData().clear();
-                                        tsdProcessor.update();
-                                    });
 
-                        }
+                        Stream.of(newValue.split("\n"))
+                                .forEach(line -> {
+                                    Matcher formatMatch = formatPattern.matcher(line);
+                                    atomicInteger.incrementAndGet();
+                                    if (formatMatch.matches() && atomicInteger.get() == 1) {
+                                        AppUI.super.newButton.setDisable(false);
+                                        AppUI.super.saveButton.setDisable(false);
+                                    } else if (!formatMatch.matches() && atomicInteger.get() == 1) {
+                                        AppUI.super.newButton.setDisable(true);
+                                        AppUI.super.saveButton.setDisable(true);
+                                    }
+                                    chart.getData().clear();
+                                    tsdProcessor.update();
+                                });
+
+
                     }
 
 
