@@ -10,8 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static settings.AppPropertyTypes.WRONG_DATA_FORMAT_ERROR_CONTENT;
-
 
 /**
  * The data files used by this data visualization applications follow a tab-separated format, where each data point is
@@ -89,18 +87,19 @@ public final class TSDProcessor {
                         if (notError.get()) {
                             String name = firstMatch.group(0);
                             String label = secondMatch.group(0);
-                             name=name.trim();
-                            label=label.trim();
+                            name = name.trim();
+                            label = label.trim();
                             Point2D point = new Point2D(Double.valueOf(thirdMatch.group(0)), Double.parseDouble(fourthMatch.group(0)));
                             dataLabels.put(name, label);
                             dataPoints.put(name, point);
-                        }
-                        else{
-                            if(!firstMatch.find()) {
-                                List list = Arrays.asList(line.split("\\s+"));
+                        } else {
+                            List list = Arrays.asList(line.split("\\s+"));
+                            if (!firstMatch.find()) {
                                 invalidNameFlag.append(list.get(0));
-                                throw new Exception();
+                                invalidNameFlag.append(checkedname(list.get(0).toString()));
                             }
+
+                            throw new Exception();
                         }
 
                     } catch (Exception e) {
@@ -108,13 +107,14 @@ public final class TSDProcessor {
                         errorMessage.setLength(0);
                         errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
                         notError.set(false);
-
+                        System.out.print(invalidNameFlag.toString());
                     }
 
                 });
-        if (invalidNameFlag.toString().length()>0)
+        if (invalidNameFlag.toString().length() > 0){
             throw new InvalidDataNameException(invalidNameFlag.toString());
-        else
+        }
+        else if (errorMessage.length() > 0)
             throw new Exception(errorMessage.toString());
     }
 

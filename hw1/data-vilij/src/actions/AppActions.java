@@ -1,7 +1,6 @@
 package actions;
 
 
-
 import javafx.application.Platform;
 import javafx.stage.FileChooser;
 import ui.AppUI;
@@ -9,6 +8,7 @@ import vilij.components.ActionComponent;
 import vilij.components.ConfirmationDialog;
 import vilij.components.Dialog;
 import vilij.templates.ApplicationTemplate;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -59,6 +59,10 @@ public final class AppActions implements ActionComponent {
                 new FileChooser.ExtensionFilter(applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT_DESC.toString()),
                         applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT.toString())));
 
+        File initFile = new File(applicationTemplate.manager.getPropertyValue(DATA_RESOURCE_PATH.toString()));
+        dataFilePath = initFile.toPath();
+        fileChooser.setInitialDirectory(initFile);
+        fileChooser.setInitialFileName(applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT.toString()));
         File file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
 
         if (file != null) {
@@ -68,7 +72,9 @@ public final class AppActions implements ActionComponent {
                 fileWriter.write(chartData);
                 fileWriter.close();
             } catch (IOException ex) {
-                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()), applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()));
+                applicationTemplate.getDialog(Dialog.DialogType.ERROR).
+                        show(applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()),
+                        applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()));
             }
         }
 
@@ -107,16 +113,20 @@ public final class AppActions implements ActionComponent {
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
      */
     private boolean promptToSave() throws IOException {
-        ConfirmationDialog confirmationDialog = (ConfirmationDialog) applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION);
-        confirmationDialog.show(applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.toString()), applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK.toString()));
-        if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.CANCEL) {
-            return false;
-        } else if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.YES) {
-            return true;
-        } else {
-            applicationTemplate.getDataComponent().clear();
-            applicationTemplate.getUIComponent().clear();
-            return false;
+        try {
+            ConfirmationDialog confirmationDialog = (ConfirmationDialog) applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION);
+            confirmationDialog.show(applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.toString()), applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK.toString()));
+            if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.CANCEL) {
+                return false;
+            } else if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.YES) {
+                return true;
+            } else {
+                applicationTemplate.getDataComponent().clear();
+                applicationTemplate.getUIComponent().clear();
+                return false;
+            }
+        }catch(Exception ex){
+            throw new IOException();
         }
     }
 }
