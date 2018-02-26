@@ -1,14 +1,21 @@
 package dataprocessors;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import ui.AppUI;
+import vilij.propertymanager.PropertyManager;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import static settings.AppPropertyTypes.*;
 
 
 /**
@@ -25,20 +32,18 @@ public final class TSDProcessor {
 
     public static class InvalidDataNameException extends Exception {
 
-        private static final String NAME_ERROR_MSG = "All data instance names must start with the @ character.";
-
-        public InvalidDataNameException(String name) {
-            super(String.format("Invalid name '%s'." + NAME_ERROR_MSG, name));
+        public InvalidDataNameException(String name, String wrongPos) {
+            super(String.format("Invalid name '%s' " + manager.getPropertyValue(NAME_ERROR_MSG.toString()) + wrongPos, name));
         }
     }
 
     private Map<String, String> dataLabels;
     private Map<String, Point2D> dataPoints;
+    private static PropertyManager manager;
 
     public TSDProcessor() {
         dataLabels = new HashMap<>();
         dataPoints = new HashMap<>();
-
     }
 
     /**
@@ -72,8 +77,9 @@ public final class TSDProcessor {
         Pattern xPattern = Pattern.compile(xposRegex);
         Pattern yPattern = Pattern.compile(yposRegex);
         final AtomicBoolean notError = new AtomicBoolean(true);
+        AtomicInteger lineNumber = new AtomicInteger(1);
         StringBuilder errorMessage = new StringBuilder();
-        StringBuilder invalidNameFlag = new StringBuilder();
+
         Stream.of(tsdString.split("\n"))
                 .forEach(line -> {
                     try {
@@ -82,39 +88,44 @@ public final class TSDProcessor {
                         Matcher secondMatch = labelPattern.matcher(line);
                         Matcher thirdMatch = xPattern.matcher(line);
                         Matcher fourthMatch = yPattern.matcher(line);
-
                         notError.set(formatMatch.matches() && firstMatch.find() && secondMatch.find() && thirdMatch.find() && fourthMatch.find());
+
                         if (notError.get()) {
                             String name = firstMatch.group(0);
                             String label = secondMatch.group(0);
                             name = name.trim();
                             label = label.trim();
                             Point2D point = new Point2D(Double.valueOf(thirdMatch.group(0)), Double.parseDouble(fourthMatch.group(0)));
-                            dataLabels.put(name, label);
-                            dataPoints.put(name, point);
+                            if (!dataLabels.containsKey(name)) {
+                                dataLabels.put(name, label);
+                                dataPoints.put(name, point);
+                            } else {
+                                errorMessage.append(manager.getPropertyValue(DUPLICATE_NAME.toString()) + manager.getPropertyValue(AT.toString()));
+                                errorMessage.append(name);
+                                errorMessage.append(manager.getPropertyValue(ERROR_POSITION.toString()));
+                                errorMessage.append(lineNumber.get() + System.lineSeparator());
+                            }
+                            lineNumber.getAndIncrement();
                         } else {
                             List list = Arrays.asList(line.split("\\s+"));
                             if (!firstMatch.find()) {
-                                invalidNameFlag.append(list.get(0));
-                                invalidNameFlag.append(checkedname(list.get(0).toString()));
+                                errorMessage.append(checkedname(list.get(0).toString(), manager.getPropertyValue(ERROR_POSITION.toString()) + lineNumber));
+                            } else if (manager != null) {
+                                errorMessage.append(manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR_CONTENT.toString()));
+                                errorMessage.append(manager.getPropertyValue(ERROR_POSITION.toString()));
+                                errorMessage.append(lineNumber.get() +  System.lineSeparator());
                             }
-
-                            throw new Exception();
+                            lineNumber.getAndIncrement();
                         }
 
                     } catch (Exception e) {
-
-                        errorMessage.setLength(0);
-                        errorMessage.append(e.getClass().getSimpleName()).append(": ").append(e.getMessage());
+                        lineNumber.getAndIncrement();
+                        errorMessage.append(e.getMessage() +  System.lineSeparator());
                         notError.set(false);
-                        System.out.print(invalidNameFlag.toString());
                     }
-
                 });
-        if (invalidNameFlag.toString().length() > 0){
-            throw new InvalidDataNameException(invalidNameFlag.toString());
-        }
-        else if (errorMessage.length() > 0)
+
+        if (errorMessage.length() > 0)
             throw new Exception(errorMessage.toString());
     }
 
@@ -129,16 +140,32 @@ public final class TSDProcessor {
      * @param chart the specified chart
      */
     public void toChartData(XYChart<Number, Number> chart) {
+
         Set<String> labels = new HashSet<>(dataLabels.values());
+
+        int counter = 1;
         for (String label : labels) {
+            if (counter > 10)
+                break;
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             series.setName(label);
+
             dataLabels.entrySet().stream().filter(entry -> entry.getValue().equals(label)).forEach(entry -> {
                 Point2D point = dataPoints.get(entry.getKey());
-                series.getData().add(new XYChart.Data<>(point.getX(), point.getY()));
+                XYChart.Data data = new XYChart.Data<>(point.getX(), point.getY());
+                series.getData().add(data);
+                data.setExtraValue(entry.getKey());
             });
-
             chart.getData().add(series);
+            counter++;
+        }
+        Tooltip toolTip = new Tooltip();
+        for (XYChart.Series<Number, Number> series: chart.getData()) {
+            for (XYChart.Data<Number, Number> data : series.getData()) {
+                toolTip.install(data.getNode(), new Tooltip(data.getExtraValue().toString()+manager.getPropertyValue(XPOS.toString())+data.getXValue()+manager.getPropertyValue(YPOS.toString())+data.getYValue()));
+                data.getNode().setOnMouseEntered(event -> data.getNode().getStyleClass().add("onHover"));
+                data.getNode().setOnMouseExited(event -> data.getNode().getStyleClass().remove("onHover"));
+            }
         }
     }
 
@@ -147,9 +174,22 @@ public final class TSDProcessor {
         dataLabels.clear();
     }
 
-    private String checkedname(String name) throws InvalidDataNameException {
+    private String checkedname(String name, String wrongPos) throws InvalidDataNameException {
         if (!name.startsWith("@"))
-            throw new InvalidDataNameException(name);
+            throw new InvalidDataNameException(name, wrongPos);
         return name;
+    }
+
+
+    public void setManager(PropertyManager manager) {
+        this.manager = manager;
+    }
+
+    public int getDataSize() {
+        return dataPoints.size();
+    }
+
+    public Map<String, Point2D> getDataPoints() {
+        return dataPoints;
     }
 }

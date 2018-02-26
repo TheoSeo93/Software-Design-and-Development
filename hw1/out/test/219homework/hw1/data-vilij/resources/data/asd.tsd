@@ -1,1 +1,6 @@
-StringProperty [bean: TextArea@138b80df[styleClass=text-input text-area], name: text, value: @label a 3,3]
+StringProperty [bean: TextArea@138b80df[styleClass=text-input text-area], name: text, value: @a b 3,3
+
+@b b 3,3
+@c b 3,3
+ @d b 3,3
+ ]

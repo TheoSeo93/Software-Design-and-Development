@@ -23,29 +23,46 @@ functionality within the main workspace. -->
 
 
         <!-- ERROR MESSAGES -->
+
+        <property name="DATA_EXCEEDED" value="Showing only the first 10 in the text area. Loaded data number of :"/>
+        <property name="DUPLICATE_NAME" value="The name should be unique and distinct: "/>
         <property name="RESOURCE_SUBDIR_NOT_FOUND" value="Directory not found under resources."/>
         <property name="'SAVE_IOEXCEPTION" value ="Failed to save the file"/>
+        <property name="'SAVE_WRONG_DATA" value ="Failed to save the file due to incorrect data formats"/>
+        <property name="'LOAD_WRONG_DATA" value ="Failed to save the file due to incorrect data formats"/>
         <property name="'WRONG_EXTENSION_CONTENT" value ="Must save tsd file only"/>
         <property name="'WRONG_EXTENSION" value ="Wrong extension format"/>
+        <property name="ERROR_POSITION" value=" Error at line # "/>
+        <property name="NAME_ERROR_MSG" value=" All data instance names must start with the @ character. "/>
         <!-- APPLICATION-SPECIFIC MESSAGE TITLES -->
         <property name="SAVE_UNSAVED_WORK_TITLE" value="Save Current Work"/>
 
         <!-- APPLICATION-SPECIFIC MESSAGES -->
         <property name="SAVE_UNSAVED_WORK" value="Would you like to save current work?"/>
+        <property name="LOAD" value="LOAD FILE"/>
+
 
         <!-- APPLICATION-SPECIFIC PARAMETERS -->
-        <property name="DATA_FILE_EXT" value=".tsd"/>
+        <property name="DATA_FILE_EXT" value="*.tsd"/>
         <property name="DATA_FILE_EXT_DESC" value="Tab-Separated Data File"/>
         <property name="TEXT_AREA" value="text area"/>
         <property name="SPECIFIED_FILE" value=" specified file"/>
         <!-- COMPONENT NAMES -->
+        <property name="DATA_VISUALIZATION" value="Data Visualization"/>
         <property name="DISPLAY" value="DISPLAY"/>
         <property name="TEXT_AREA_TITLE" value="Data File"/>
-
         <property name="SEPARATOR" value="/"/>
         <property name= "SAVE_TITLE" value ="Save File"/>
         <property name="SCREEN_TOOLTIP" value="Take a screen shot"/>
-
+        <property name="AT" value="@"/>
+        <property name="EMPTY"  value = ""/>
+        <property name="READ_ONLY"  value = "Read Only"/>
+        <property name="PNG_EXT"  value = "*.png"/>
+        <property name="PNG"  value = "png"/>
+        <property name="PNG_EXT_DESC" value="Portable Network Graphics File"/>
+        <property name="AVG" value="Average"/>
+        <property name="XPOS" value="  X pos: "/>
+        <property name="YPOS" value="  Y pos: "/>
     </property_list>
     <property_options_list/>
 </properties>
