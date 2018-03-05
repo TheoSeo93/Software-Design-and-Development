@@ -189,8 +189,10 @@ public final class TSDProcessor {
         Tooltip toolTip = new Tooltip();
         int count=0;
         for (XYChart.Series<Number, Number> series: chart.getData()) {
-            if(count==0)
+            if(count==0) {
+                count++;
                 continue;
+            }
             for (XYChart.Data<Number, Number> data : series.getData()) {
 
                 toolTip.install(data.getNode(), new Tooltip(data.getExtraValue().toString()+manager.getPropertyValue(XPOS.toString())+data.getXValue()+manager.getPropertyValue(YPOS.toString())+data.getYValue()));
@@ -198,7 +200,7 @@ public final class TSDProcessor {
                 data.getNode().setOnMouseExited(event -> data.getNode().getStyleClass().remove("onHover"));
 
             }
-            count++;
+
         }
 
 
