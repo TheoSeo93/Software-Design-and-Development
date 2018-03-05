@@ -141,6 +141,30 @@ public final class TSDProcessor {
      */
     public void toChartData(XYChart<Number, Number> chart) {
 
+        ArrayList<Point2D> points = new ArrayList<>();
+        points.addAll(dataPoints.values());
+        double startX=points.get(0).getX();
+        double endX =0;
+        double avg=0;
+
+        for(int i=0;i<points.size();i++) {
+            avg += points.get(i).getY();
+            if(endX<points.get(i).getX())
+                endX=points.get(i).getX();
+            if(startX>points.get(i).getX())
+                startX=points.get(i).getX();
+        }
+
+        avg/=points.size();
+        XYChart.Series avgSeries = new XYChart.Series<>();
+
+        avgSeries.getData().add(new XYChart.Data<>(startX,avg));
+        avgSeries.getData().add(new XYChart.Data<>(endX,avg));
+
+        avgSeries.setName(manager.getPropertyValue(AVG.toString()));
+
+        chart.getData().add(0,avgSeries);
+
         Set<String> labels = new HashSet<>(dataLabels.values());
 
         int counter = 1;
@@ -159,14 +183,24 @@ public final class TSDProcessor {
             chart.getData().add(series);
             counter++;
         }
+
+
         Tooltip toolTip = new Tooltip();
+        int count=0;
         for (XYChart.Series<Number, Number> series: chart.getData()) {
+            if(count==0)
+                continue;
             for (XYChart.Data<Number, Number> data : series.getData()) {
+
                 toolTip.install(data.getNode(), new Tooltip(data.getExtraValue().toString()+manager.getPropertyValue(XPOS.toString())+data.getXValue()+manager.getPropertyValue(YPOS.toString())+data.getYValue()));
                 data.getNode().setOnMouseEntered(event -> data.getNode().getStyleClass().add("onHover"));
                 data.getNode().setOnMouseExited(event -> data.getNode().getStyleClass().remove("onHover"));
+
             }
+            count++;
         }
+
+
     }
 
     void clear() {

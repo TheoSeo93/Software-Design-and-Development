@@ -57,7 +57,8 @@ public enum AppPropertyTypes {
     DATA_VISUALIZATION,
     AVG,
     XPOS,
-    YPOS
+    YPOS,
+    onHover
 
 
 

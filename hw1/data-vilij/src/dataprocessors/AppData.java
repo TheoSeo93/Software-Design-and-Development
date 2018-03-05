@@ -105,25 +105,7 @@ public class AppData implements DataComponent {
         ArrayList<Point2D> points = new ArrayList<>();
         points.addAll(dataPoints.values());
 
-        double startX=points.get(0).getX();
-        double endX =0;
-        double avg=0;
 
-        for(int i=0;i<points.size();i++) {
-            avg += points.get(i).getY();
-            if(endX<points.get(i).getX())
-                endX=points.get(i).getX();
-            if(startX>points.get(i).getX())
-                startX=points.get(i).getX();
-        }
-
-        avg/=points.size();
-        XYChart.Series avgSeries = new XYChart.Series<>();
-
-        avgSeries.getData().add(new XYChart.Data<>(startX,avg));
-        avgSeries.getData().add(new XYChart.Data<>(endX,avg));
-        avgSeries.setName(applicationTemplate.manager.getPropertyValue(AVG.toString()));
-        ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().add(0,avgSeries);
         ((AppUI) applicationTemplate.getUIComponent()).enableScrnshot();
         processor.clear();
 

@@ -116,7 +116,7 @@ public final class AppActions implements ActionComponent {
         fileChooser.setInitialDirectory(initFile);
         file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
         ImageIO.write(SwingFXUtils.fromFXImage(screenShot, null), applicationTemplate.manager.getPropertyValue(PNG.toString()), file);
-        }
+    }
 
     /**
      * This helper method verifies that the user really wants to save their unsaved work, which they might not want to
