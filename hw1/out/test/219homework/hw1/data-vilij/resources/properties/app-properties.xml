@@ -63,8 +63,7 @@ functionality within the main workspace. -->
         <property name="AVG" value="Average"/>
         <property name="XPOS" value="  X pos: "/>
         <property name="YPOS" value="  Y pos: "/>
-        <property name="onHover" value="onHover"/>
-
+        <property name="CSS_ADDRESS" value="/css/.css"/>
     </property_list>
     <property_options_list/>
 </properties>

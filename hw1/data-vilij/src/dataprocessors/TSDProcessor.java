@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static settings.AppPropertyTypes.*;
+import static ui.DataVisualizer.*;
 
 
 /**
@@ -27,11 +28,13 @@ import static settings.AppPropertyTypes.*;
  * @see XYChart
  */
 public final class TSDProcessor {
+        private static String error ="Invalid name '%s'";
 
+        private static String onHover="onHover";
     public static class InvalidDataNameException extends Exception {
 
         public InvalidDataNameException(String name, String wrongPos) {
-            super(String.format("Invalid name '%s' " + manager.getPropertyValue(NAME_ERROR_MSG.toString()) + wrongPos, name));
+            super(String.format(error + manager.getPropertyValue(NAME_ERROR_MSG.toString()) + wrongPos, name));
         }
     }
 
@@ -53,8 +56,8 @@ public final class TSDProcessor {
     public void processString(String tsdString) throws Exception {
 
         String[] regex = new String[5];
-        Stream.of(AppUI.regexString)
-                .map(line -> Arrays.asList(line.split("[\t]")))
+        Stream.of(regexString)
+                .map(line -> Arrays.asList(line.split(tabRegex)))
                 .forEach(list -> {
                     regex[0] = list.get(0);
                     regex[1] = list.get(1);
@@ -78,7 +81,7 @@ public final class TSDProcessor {
         AtomicInteger lineNumber = new AtomicInteger(1);
         StringBuilder errorMessage = new StringBuilder();
 
-        Stream.of(tsdString.split("\n"))
+        Stream.of(tsdString.split(newLineRegex))
                 .forEach(line -> {
                     try {
                         Matcher formatMatch = formatPattern.matcher(line);
@@ -104,7 +107,7 @@ public final class TSDProcessor {
                             }
                             lineNumber.getAndIncrement();
                         } else {
-                            List list = Arrays.asList(line.split("\\s+"));
+                            List list = Arrays.asList(line.split(spaceRegex));
                             if (!firstMatch.find()) {
                                 errorMessage.append(checkedname(list.get(0).toString(), manager.getPropertyValue(ERROR_POSITION.toString()) + lineNumber));
                             } else if (manager != null) {
@@ -155,8 +158,8 @@ public final class TSDProcessor {
         avg/=points.size();
         XYChart.Series<Number,Number> avgSeries = new XYChart.Series<>();
 
-        avgSeries.getData().add(new XYChart.Data<>(startX,avg));
-        avgSeries.getData().add(new XYChart.Data<>(endX,avg));
+        avgSeries.getData().add(new XYChart.Data<>(startX-10,avg));
+        avgSeries.getData().add(new XYChart.Data<>(endX+10,avg));
 
         avgSeries.setName(manager.getPropertyValue(AVG.toString()));
 
@@ -194,8 +197,8 @@ public final class TSDProcessor {
             for (XYChart.Data<Number, Number> data : series.getData()) {
 
                 toolTip.install(data.getNode(), new Tooltip(data.getExtraValue().toString()+manager.getPropertyValue(XPOS.toString())+data.getXValue()+manager.getPropertyValue(YPOS.toString())+data.getYValue()));
-                data.getNode().setOnMouseEntered(event -> data.getNode().getStyleClass().add("onHover"));
-                data.getNode().setOnMouseExited(event -> data.getNode().getStyleClass().remove("onHover"));
+                data.getNode().setOnMouseEntered(event -> data.getNode().getStyleClass().add(onHover));
+                data.getNode().setOnMouseExited(event -> data.getNode().getStyleClass().remove(onHover));
 
             }
 
@@ -210,7 +213,7 @@ public final class TSDProcessor {
     }
 
     private String checkedname(String name, String wrongPos) throws InvalidDataNameException {
-        if (!name.startsWith("@"))
+        if (!name.startsWith(at))
             throw new InvalidDataNameException(name, wrongPos);
         return name;
     }

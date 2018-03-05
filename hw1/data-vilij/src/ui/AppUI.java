@@ -31,6 +31,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static settings.AppPropertyTypes.*;
+import static ui.DataVisualizer.newLineRegex;
+import static ui.DataVisualizer.regexString;
+import static ui.DataVisualizer.tabRegex;
 import static vilij.settings.PropertyTypes.*;
 
 /**
@@ -60,7 +63,6 @@ public final class AppUI extends UITemplate {
     private boolean moreThanTen;
     private StringBuilder pendingText;
 
-    public static String regexString = "^@[^\\s]+[a-zA-Z0-9]*[\\s]+[a-zA-Z0-9]+[\\s]+?([0-9]*[.])?[0-9]+,+?([0-9]*[.])?[0-9]+\\s*$\t(?<=@)[a-zA-Z0-9]*(?!:(\\s*[a-zA-Z0-9]*[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+))\t(?<=[a-zA-Z0-9]{1,20})\\s+[a-zA-Z0-9]*(?=(\\s+(?<=\\s{1,4})[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+))\t(?<=[a-zA-Z0-9])\\s+?([0-9]*[.])?[0-9]+(?<!,\\d)\t(?<=[a-zA-Z0-9]\\s{1,20}?([0-9]{1,4}[.])?[0-9]{1,4},)([0-9]*[.])?[0-9]+\t";
 
     public LineChart<Number, Number> getChart() {
         return chart;
@@ -132,7 +134,7 @@ public final class AppUI extends UITemplate {
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
         chart = new LineChart<>(xAxis, yAxis);
-        chart.getStylesheets().add(this.getClass().getResource("/css/.css").toExternalForm());
+        chart.getStylesheets().add(this.getClass().getResource(applicationTemplate.manager.getPropertyValue(CSS_ADDRESS.toString())).toExternalForm());
         chart.setTitle(applicationTemplate.manager.getPropertyValue(DATA_VISUALIZATION.toString()));
         workspace = new VBox();
         checkBox = new CheckBox(applicationTemplate.manager.getPropertyValue(READ_ONLY.toString()));
@@ -161,7 +163,7 @@ public final class AppUI extends UITemplate {
                         hasNewText = false;
                     } catch (Exception ex) {
                         Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
-                        error.show(applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR.toString()), ex.getMessage() + "\n");
+                        error.show(applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR.toString()), ex.getMessage() + System.lineSeparator());
                         ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
                     }
 
@@ -182,11 +184,11 @@ public final class AppUI extends UITemplate {
                             StringBuilder newStrbfr = new StringBuilder(newValue);
 
 
-                            String[] oldLines = oldStrbfr.toString().split("\n");
-                            String[] newLines = newStrbfr.toString().split("\n");
+                            String[] oldLines = oldStrbfr.toString().split(newLineRegex);
+                            String[] newLines = newStrbfr.toString().split(newLineRegex);
 
                             int deletedLineCount = oldLines.length - newLines.length;
-                            String[] pending = pendingText.toString().split("\n");
+                            String[] pending = pendingText.toString().split(newLineRegex);
                             StringBuilder newText = new StringBuilder();
 
                             if (pending.length >= deletedLineCount && deletedLineCount > 0) {
@@ -214,13 +216,13 @@ public final class AppUI extends UITemplate {
 
                         StringBuilder entireFormat = new StringBuilder();
                         Stream.of(regexString)
-                                .map(line -> Arrays.asList(line.split("[\t]")))
+                                .map(line -> Arrays.asList(line.split(tabRegex)))
                                 .forEach(list -> {
                                     entireFormat.append(list.get(0));
                                 });
                         Pattern formatPattern = Pattern.compile(entireFormat.toString());
                         final AtomicInteger atomicInteger = new AtomicInteger(0);
-                        Stream.of(newValue.split("\n"))
+                        Stream.of(newValue.split(newLineRegex))
                                 .forEach(line -> {
                                     Matcher formatMatch = formatPattern.matcher(line);
                                     atomicInteger.incrementAndGet();

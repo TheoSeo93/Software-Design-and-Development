@@ -58,7 +58,7 @@ public enum AppPropertyTypes {
     AVG,
     XPOS,
     YPOS,
-    onHover
+    CSS_ADDRESS
 
 
 

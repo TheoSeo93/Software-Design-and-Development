@@ -15,7 +15,12 @@ import static vilij.settings.InitializationParams.*;
  * @author Ritwik Banerjee
  */
 public final class DataVisualizer extends ApplicationTemplate {
+    public static String regexString = "^@[^\\s]+[a-zA-Z0-9]*[\\s]+[a-zA-Z0-9]+[\\s]+?([0-9]*[.])?[0-9]+,+?([0-9]*[.])?[0-9]+\\s*$\t(?<=@)[a-zA-Z0-9]*(?!:(\\s*[a-zA-Z0-9]*[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+))\t(?<=[a-zA-Z0-9]{1,20})\\s+[a-zA-Z0-9]*(?=(\\s+(?<=\\s{1,4})[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+))\t(?<=[a-zA-Z0-9])\\s+?([0-9]*[.])?[0-9]+(?<!,\\d)\t(?<=[a-zA-Z0-9]\\s{1,20}?([0-9]{1,4}[.])?[0-9]{1,4},)([0-9]*[.])?[0-9]+\t";
 
+    public static String at = "@";
+    public static String newLineRegex ="\n";
+    public static String tabRegex="[\t]";
+    public static String spaceRegex="\\s+";
     @Override
     public void start(Stage primaryStage) {
         dialogsAudit(primaryStage);
