@@ -124,7 +124,5 @@ public class AppData implements DataComponent {
 
     }
 
-    public StringBuilder getPendingText() {
-        return pendingText;
-    }
+
 }

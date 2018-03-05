@@ -1,10 +1,8 @@
 package dataprocessors;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
 import ui.AppUI;
 import vilij.propertymanager.PropertyManager;
 
@@ -155,7 +153,7 @@ public final class TSDProcessor {
         }
 
         avg/=points.size();
-        XYChart.Series avgSeries = new XYChart.Series<>();
+        XYChart.Series<Number,Number> avgSeries = new XYChart.Series<>();
 
         avgSeries.getData().add(new XYChart.Data<>(startX,avg));
         avgSeries.getData().add(new XYChart.Data<>(endX,avg));
@@ -177,7 +175,7 @@ public final class TSDProcessor {
 
             dataLabels.entrySet().stream().filter(entry -> entry.getValue().equals(label)).forEach(entry -> {
                 Point2D point = dataPoints.get(entry.getKey());
-                XYChart.Data data = new XYChart.Data<>(point.getX(), point.getY());
+                XYChart.Data<Number,Number> data = new XYChart.Data<>(point.getX(), point.getY());
                 series.getData().add(data);
                 data.setExtraValue(entry.getKey());
             });
