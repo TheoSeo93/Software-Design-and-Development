@@ -25,7 +25,7 @@ public class AppData implements DataComponent {
 
     private TSDProcessor processor;
     private ApplicationTemplate applicationTemplate;
-
+    private StringBuilder pendingText = new StringBuilder();
     public AppData(ApplicationTemplate applicationTemplate) {
         this.processor = new TSDProcessor();
         this.applicationTemplate = applicationTemplate;
@@ -33,6 +33,10 @@ public class AppData implements DataComponent {
 
     @Override
     public void loadData(Path dataFilePath) {
+
+        pendingText.setLength(0);
+        pendingText.trimToSize();
+
         processor.setManager(applicationTemplate.manager);
         ((AppUI) applicationTemplate.getUIComponent()).getTextArea().clear();
         try {
@@ -41,10 +45,19 @@ public class AppData implements DataComponent {
             try (Reader reader = new BufferedReader(new InputStreamReader(inputStream))) {
                 String line;
                 int counter = 1;
+
+
                 while ((line = ((BufferedReader) reader).readLine()) != null) {
-                    if (counter > 10)
-                        break;
-                    textBuilder.append(line + System.lineSeparator());
+
+                    if (counter > 10){
+                        ((AppUI) applicationTemplate.getUIComponent()).setMoreThanTen(true);
+                        pendingText.append(line + System.lineSeparator());
+                    } else{
+                        ((AppUI) applicationTemplate.getUIComponent()).setMoreThanTen(false);
+                        textBuilder.append(line + System.lineSeparator());
+                    }
+
+
                     counter++;
                 }
             }
@@ -58,7 +71,7 @@ public class AppData implements DataComponent {
             applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(LOAD.toString(), ex.getMessage());
         }
 
-
+        ((AppUI) applicationTemplate.getUIComponent()).setPendingText(pendingText);
     }
 
     public void loadData(String dataString) throws Exception {
@@ -111,5 +124,7 @@ public class AppData implements DataComponent {
 
     }
 
-
+    public StringBuilder getPendingText() {
+        return pendingText;
+    }
 }

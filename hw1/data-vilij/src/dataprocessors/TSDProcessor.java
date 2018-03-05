@@ -89,7 +89,6 @@ public final class TSDProcessor {
                         Matcher thirdMatch = xPattern.matcher(line);
                         Matcher fourthMatch = yPattern.matcher(line);
                         notError.set(formatMatch.matches() && firstMatch.find() && secondMatch.find() && thirdMatch.find() && fourthMatch.find());
-
                         if (notError.get()) {
                             String name = firstMatch.group(0);
                             String label = secondMatch.group(0);
@@ -169,8 +168,10 @@ public final class TSDProcessor {
 
         int counter = 1;
         for (String label : labels) {
-            if (counter > 10)
+            if (counter > 10) {
+
                 break;
+            }
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             series.setName(label);
 

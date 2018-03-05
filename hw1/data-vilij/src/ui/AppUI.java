@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 import vilij.components.Dialog;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
 import static settings.AppPropertyTypes.*;
 import static vilij.settings.PropertyTypes.*;
 
@@ -65,6 +67,8 @@ public final class AppUI extends UITemplate {
     private String scrnShotIconPath;
     private String currentText;
     private CheckBox checkBox;
+    private boolean moreThanTen;
+    private StringBuilder pendingText;
 
     public static String regexString = "^@[^\\s]+[a-zA-Z0-9]*[\\s]+[a-zA-Z0-9]+[\\s]+?([0-9]*[.])?[0-9]+,+?([0-9]*[.])?[0-9]+\\s*$\t(?<=@)[a-zA-Z0-9]*(?!:(\\s*[a-zA-Z0-9]*[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+))\t(?<=[a-zA-Z0-9]{1,20})\\s+[a-zA-Z0-9]*(?=(\\s+(?<=\\s{1,4})[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+))\t(?<=[a-zA-Z0-9])\\s+?([0-9]*[.])?[0-9]+(?<!,\\d)\t(?<=[a-zA-Z0-9]\\s{1,20}?([0-9]{1,4}[.])?[0-9]{1,4},)([0-9]*[.])?[0-9]+\t";
 
@@ -180,6 +184,38 @@ public final class AppUI extends UITemplate {
                 addListener(new ChangeListener<String>() {
                     @Override
                     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+
+
+                        if (pendingText != null && pendingText.toString().length() != 0 && isMoreThanTen()) {
+
+                            StringBuilder oldStrbfr = new StringBuilder(oldValue);
+                            StringBuilder newStrbfr = new StringBuilder(newValue);
+
+
+                            String[] oldLines = oldStrbfr.toString().split("\n");
+                            String[] newLines = newStrbfr.toString().split("\n");
+
+                            int deletedLineCount = oldLines.length - newLines.length;
+                            String[] pending = pendingText.toString().split("\n");
+                            StringBuilder newText = new StringBuilder();
+
+                            if (pending.length >= deletedLineCount && deletedLineCount > 0) {
+
+                                for (int count = 0; count < deletedLineCount; count++) {
+                                    newText.append(pending[count] + System.lineSeparator());
+                                }
+
+                                textArea.setText(newValue + newText.toString());
+                                pendingText.setLength(0);
+                                pendingText.trimToSize();
+                                for (int i = deletedLineCount; i < pending.length; i++) {
+                                    pendingText.append(pending[i] + System.lineSeparator());
+                                }
+
+                            }
+
+
+                        }
                         currentText = newValue;
                         if (!oldValue.equals(newValue))
                             hasNewText = true;
@@ -223,17 +259,20 @@ public final class AppUI extends UITemplate {
             }
         });
 
-            scrnshotButton.setOnAction(e -> {
-                try {
-                    ((AppActions) applicationTemplate.getActionComponent()).handleScreenshotRequest();
+        scrnshotButton.setOnAction(e -> {
+            try {
+                ((AppActions) applicationTemplate.getActionComponent()).handleScreenshotRequest();
 
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            });
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
 
 
+    }
 
+    public void setPendingText(StringBuilder pendingText) {
+        this.pendingText = pendingText;
     }
 
     public void setSaveDisabled() {
@@ -248,5 +287,12 @@ public final class AppUI extends UITemplate {
         scrnshotButton.setDisable(true);
     }
 
+    public boolean isMoreThanTen() {
+        return moreThanTen;
+    }
+
+    public void setMoreThanTen(boolean bool) {
+        moreThanTen = bool;
+    }
 
 }
