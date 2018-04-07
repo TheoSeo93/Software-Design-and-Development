@@ -92,6 +92,7 @@ public final class AppActions implements ActionComponent {
         if (file != null) {
             dataFilePath = file.toPath();
             applicationTemplate.getDataComponent().loadData(dataFilePath);
+            ((AppUI)applicationTemplate.getUIComponent()).setReadOnly();
         }
     }
 

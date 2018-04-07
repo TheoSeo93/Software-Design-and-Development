@@ -1,7 +1,6 @@
 package dataprocessors;
 
 import javafx.geometry.Point2D;
-import javafx.scene.chart.XYChart;
 import ui.AppUI;
 import vilij.components.DataComponent;
 import vilij.components.Dialog;
@@ -22,13 +21,25 @@ import static settings.AppPropertyTypes.*;
  * @see DataComponent
  */
 public class AppData implements DataComponent {
-
+    private String wrongDataFormat;
     private TSDProcessor processor;
+    private String wrongDataFormatContent;
     private ApplicationTemplate applicationTemplate;
+    private String empty;
+    private String specified;
+    private String wrongExtention;
+    private String wrongExtentionContent;
     private StringBuilder pendingText = new StringBuilder();
+
     public AppData(ApplicationTemplate applicationTemplate) {
         this.processor = new TSDProcessor();
         this.applicationTemplate = applicationTemplate;
+        wrongDataFormat = applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR.toString());
+        wrongDataFormatContent = applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR_CONTENT.toString());
+        empty = applicationTemplate.manager.getPropertyValue(EMPTY.toString());
+        specified = applicationTemplate.manager.getPropertyValue(SPECIFIED_FILE.toString());
+        wrongExtention = applicationTemplate.manager.getPropertyValue(WRONG_EXTENSION.toString());
+        wrongDataFormatContent = applicationTemplate.manager.getPropertyValue(WRONG_EXTENSION_CONTENT.toString());
     }
 
     @Override
@@ -49,10 +60,10 @@ public class AppData implements DataComponent {
 
                 while ((line = ((BufferedReader) reader).readLine()) != null) {
 
-                    if (counter > 10){
+                    if (counter > 10) {
                         ((AppUI) applicationTemplate.getUIComponent()).setMoreThanTen(true);
                         pendingText.append(line + System.lineSeparator());
-                    } else{
+                    } else {
                         ((AppUI) applicationTemplate.getUIComponent()).setMoreThanTen(false);
                         textBuilder.append(line + System.lineSeparator());
                     }
@@ -69,6 +80,7 @@ public class AppData implements DataComponent {
             ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(textBuilder.toString());
         } catch (Exception ex) {
             applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(LOAD.toString(), ex.getMessage());
+            processor.clear();
         }
 
         ((AppUI) applicationTemplate.getUIComponent()).setPendingText(pendingText);
@@ -117,8 +129,6 @@ public class AppData implements DataComponent {
         Map<String, Point2D> dataPoints = processor.getDataPoints();
         ArrayList<Point2D> points = new ArrayList<>();
         points.addAll(dataPoints.values());
-
-
         ((AppUI) applicationTemplate.getUIComponent()).enableScrnshot();
         processor.clear();
 

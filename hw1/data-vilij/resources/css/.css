@@ -5,12 +5,14 @@
 
 }
 .default-color0.chart-series-line { -fx-stroke: blue; }
+
 .chart-series-line {
   -fx-stroke: transparent;
 }
 .line-symbol {
     -fx-background-color: transparent, transparent;
 }
+
 .default-color0.chart-line-symbol { -fx-background-color: transparent; }
 
 
@@ -41,6 +43,9 @@
 .chart-horizontal-grid-lines {
     -fx-stroke: transparent;
 }
+
+
+
 
 .onHover{
     -fx-background-color: ORANGE;

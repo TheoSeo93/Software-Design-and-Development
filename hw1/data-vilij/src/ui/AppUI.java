@@ -62,22 +62,20 @@ public final class AppUI extends UITemplate {
     private CheckBox checkBox;
     private boolean moreThanTen;
     private StringBuilder pendingText;
-
+    private String textAreaLbl;
 
     public LineChart<Number, Number> getChart() {
         return chart;
     }
 
     public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate) {
-
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
         hBox = new HBox();
         textAreaTitle = new Text(applicationTemplate.manager.getPropertyValue(TEXT_AREA_TITLE.toString()));
+        textAreaLbl=applicationTemplate.manager.getPropertyValue(TEXT_AREA.toString());
         textArea = new TextArea();
         displayButton = new Button(applicationTemplate.manager.getPropertyValue(DISPLAY.toString()));
-
-
     }
 
     @Override
@@ -163,7 +161,7 @@ public final class AppUI extends UITemplate {
                         hasNewText = false;
                     } catch (Exception ex) {
                         Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
-                        error.show(applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR.toString()), ex.getMessage() + System.lineSeparator());
+                        error.show(applicationTemplate.manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.toString()), ex.getMessage() + System.lineSeparator());
                         ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
                     }
 
@@ -241,6 +239,7 @@ public final class AppUI extends UITemplate {
                     }
                 });
 
+
         checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -261,6 +260,13 @@ public final class AppUI extends UITemplate {
         });
 
 
+    }
+
+    public void setReadOnly(){
+        checkBox.setSelected(true);
+    }
+    public void setEditable(){
+        checkBox.setSelected(false);
     }
 
     public void setPendingText(StringBuilder pendingText) {

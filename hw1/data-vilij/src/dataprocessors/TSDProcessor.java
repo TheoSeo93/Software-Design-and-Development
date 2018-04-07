@@ -3,7 +3,6 @@ package dataprocessors;
 import javafx.geometry.Point2D;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
-import ui.AppUI;
 import vilij.propertymanager.PropertyManager;
 
 import java.util.*;
