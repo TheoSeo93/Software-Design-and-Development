@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import vilij.components.Dialog;
 import vilij.templates.ApplicationTemplate;
@@ -63,6 +64,7 @@ public final class AppUI extends UITemplate {
     private boolean moreThanTen;
     private StringBuilder pendingText;
     private String textAreaLbl;
+    private TextFlow dataDescription;
 
     public LineChart<Number, Number> getChart() {
         return chart;
@@ -73,9 +75,11 @@ public final class AppUI extends UITemplate {
         this.applicationTemplate = applicationTemplate;
         hBox = new HBox();
         textAreaTitle = new Text(applicationTemplate.manager.getPropertyValue(TEXT_AREA_TITLE.toString()));
-        textAreaLbl=applicationTemplate.manager.getPropertyValue(TEXT_AREA.toString());
+        textAreaLbl = applicationTemplate.manager.getPropertyValue(TEXT_AREA.toString());
         textArea = new TextArea();
         displayButton = new Button(applicationTemplate.manager.getPropertyValue(DISPLAY.toString()));
+        dataDescription = new TextFlow();
+
     }
 
     @Override
@@ -139,7 +143,9 @@ public final class AppUI extends UITemplate {
         workspace.getChildren().add(textAreaTitle);
         workspace.getChildren().add(textArea);
         workspace.getChildren().add(displayButton);
+        workspace.getChildren().add(dataDescription);
         workspace.getChildren().add(checkBox);
+
         VBox.setMargin(textAreaTitle, new Insets(0, 0, 0, 200));
         hBox.getChildren().add(workspace);
         hBox.getChildren().add(chart);
@@ -262,10 +268,11 @@ public final class AppUI extends UITemplate {
 
     }
 
-    public void setReadOnly(){
+    public void setReadOnly() {
         checkBox.setSelected(true);
     }
-    public void setEditable(){
+
+    public void setEditable() {
         checkBox.setSelected(false);
     }
 
@@ -288,6 +295,8 @@ public final class AppUI extends UITemplate {
     public boolean isMoreThanTen() {
         return moreThanTen;
     }
+
+    public TextFlow getTextFlow(){ return dataDescription; }
 
     public void setMoreThanTen(boolean bool) {
         moreThanTen = bool;

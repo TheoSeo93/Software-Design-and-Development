@@ -1,6 +1,8 @@
 package dataprocessors;
 
 import javafx.geometry.Point2D;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import ui.AppUI;
 import vilij.components.DataComponent;
 import vilij.components.Dialog;
@@ -10,6 +12,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 import static settings.AppPropertyTypes.*;
@@ -72,7 +75,21 @@ public class AppData implements DataComponent {
                     counter++;
                 }
             }
+
             processor.processString(textBuilder.toString());
+            TextFlow textFlow = ((AppUI)applicationTemplate.getUIComponent()).getTextFlow();
+            Text firstLine = new Text(processor.getDataSize()+" instances are loaded from "+System.lineSeparator());
+            Text labelDescription = new Text(processor.getDataLabelCount()+" labels are named as "+System.lineSeparator());
+            Text pathDescription = new Text(dataFilePath.toAbsolutePath().toString()+System.lineSeparator());
+            textFlow.getChildren().add(firstLine);
+            textFlow.getChildren().add(pathDescription);
+            textFlow.getChildren().add(labelDescription);
+            Iterator labelIterator = processor.getLabels().iterator();
+            for(int i = 0; i < processor.getDataLabelCount();i++){
+                textFlow.getChildren().add(new Text("-"+labelIterator.next()+System.lineSeparator()));
+                labelIterator.remove();
+            }
+
             if (processor.getDataSize() > 10)
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(DATA_EXCEEDED.toString(), applicationTemplate.manager.getPropertyValue(DATA_EXCEEDED.toString()) + processor.getDataSize());
 
@@ -84,6 +101,9 @@ public class AppData implements DataComponent {
         }
 
         ((AppUI) applicationTemplate.getUIComponent()).setPendingText(pendingText);
+
+
+
     }
 
     public void loadData(String dataString) throws Exception {
