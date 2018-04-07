@@ -10,10 +10,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -52,6 +49,7 @@ public final class AppUI extends UITemplate {
     TSDProcessor tsdProcessor = new TSDProcessor();
 
     @SuppressWarnings("FieldCanBeLocal")
+    private ToggleButton toggleButton;
     private Button scrnshotButton; // toolbar button to take a screenshot of the data
     private LineChart<Number, Number> chart;          // the chart where data will be displayed
     private Button displayButton;  // workspace button to display data on the chart
@@ -66,6 +64,7 @@ public final class AppUI extends UITemplate {
     private StringBuilder pendingText;
     private String textAreaLbl;
     private TextFlow dataDescription;
+    private boolean validityCheck;
 
     public LineChart<Number, Number> getChart() {
         return chart;
@@ -80,7 +79,7 @@ public final class AppUI extends UITemplate {
         textArea = new TextArea();
         displayButton = new Button(applicationTemplate.manager.getPropertyValue(DISPLAY.toString()));
         dataDescription = new TextFlow();
-
+        toggleButton = new ToggleButton();
     }
 
     @Override
@@ -146,6 +145,7 @@ public final class AppUI extends UITemplate {
         workspace.getChildren().add(displayButton);
         workspace.getChildren().add(dataDescription);
         workspace.getChildren().add(checkBox);
+        workspace.getChildren().add(toggleButton);
 
         VBox.setMargin(textAreaTitle, new Insets(0, 0, 0, 200));
         hBox.getChildren().add(workspace);
@@ -157,106 +157,107 @@ public final class AppUI extends UITemplate {
 
     private void setWorkspaceActions() {
         tsdProcessor.setManager(this.applicationTemplate.manager);
-        displayButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                String chartData = textArea.getText().toString();
-                if (hasNewText) {
-                    try {
-                        new AppData(applicationTemplate).loadData(chartData);
-                        AppUI.super.saveButton.setDisable(false);
-                        hasNewText = false;
-                    } catch (Exception ex) {
-                        Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
-                        error.show(applicationTemplate.manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.toString()), ex.getMessage() + System.lineSeparator());
-                        ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
-                    }
 
+        displayButton.setOnAction(e -> {
+            String chartData = textArea.getText().toString();
+            if (hasNewText) {
+                try {
+                    new AppData(applicationTemplate).loadData(chartData);
+                    AppUI.super.saveButton.setDisable(false);
+                    hasNewText = false;
+                } catch (Exception ex) {
+                    Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+                    error.show(applicationTemplate.manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.toString()), ex.getMessage() + System.lineSeparator());
+                    ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
                 }
 
             }
+
+
         });
         textArea.textProperty().
 
-                addListener(new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                addListener((observable, oldValue, newValue) -> {
 
 
-                        if (pendingText != null && pendingText.toString().length() != 0 && isMoreThanTen()) {
+                    if (pendingText != null && pendingText.toString().length() != 0 && isMoreThanTen()) {
 
-                            StringBuilder oldStrbfr = new StringBuilder(oldValue);
-                            StringBuilder newStrbfr = new StringBuilder(newValue);
+                        StringBuilder oldStrbfr = new StringBuilder(oldValue);
+                        StringBuilder newStrbfr = new StringBuilder(newValue);
 
 
-                            String[] oldLines = oldStrbfr.toString().split(newLineRegex);
-                            String[] newLines = newStrbfr.toString().split(newLineRegex);
+                        String[] oldLines = oldStrbfr.toString().split(newLineRegex);
+                        String[] newLines = newStrbfr.toString().split(newLineRegex);
 
-                            int deletedLineCount = oldLines.length - newLines.length;
-                            String[] pending = pendingText.toString().split(newLineRegex);
-                            StringBuilder newText = new StringBuilder();
+                        int deletedLineCount = oldLines.length - newLines.length;
+                        String[] pending = pendingText.toString().split(newLineRegex);
+                        StringBuilder newText = new StringBuilder();
 
-                            if (pending.length >= deletedLineCount && deletedLineCount > 0) {
+                        if (pending.length >= deletedLineCount && deletedLineCount > 0) {
 
-                                for (int count = 0; count < deletedLineCount; count++) {
-                                    newText.append(pending[count] + System.lineSeparator());
-                                }
-
-                                textArea.setText(newValue + newText.toString());
-                                pendingText.setLength(0);
-                                pendingText.trimToSize();
-                                for (int i = deletedLineCount; i < pending.length; i++) {
-                                    pendingText.append(pending[i] + System.lineSeparator());
-                                }
-
+                            for (int count = 0; count < deletedLineCount; count++) {
+                                newText.append(pending[count] + System.lineSeparator());
                             }
 
+                            textArea.setText(newValue + newText.toString());
+                            pendingText.setLength(0);
+                            pendingText.trimToSize();
+                            for (int i = deletedLineCount; i < pending.length; i++) {
+                                pendingText.append(pending[i] + System.lineSeparator());
+                            }
 
                         }
 
-                        //Validity Check
-                        currentText = newValue;
-                        if (!oldValue.equals(newValue))
-                            hasNewText = true;
-                        else
-                            hasNewText = false;
 
-                        StringBuilder entireFormat = new StringBuilder();
-                        Stream.of(regexString)
-                                .map(line -> Arrays.asList(line.split(tabRegex)))
-                                .forEach(list -> {
-                                    entireFormat.append(list.get(0));
-                                });
-                        Pattern formatPattern = Pattern.compile(entireFormat.toString());
-                        final AtomicInteger atomicInteger = new AtomicInteger(0);
-                        Stream.of(newValue.split(newLineRegex))
-                                .forEach(line -> {
-                                    Matcher formatMatch = formatPattern.matcher(line);
-                                    atomicInteger.incrementAndGet();
-                                    if (formatMatch.matches() && atomicInteger.get() == 1) {
+                    }
+
+                    //Validity Check
+                    currentText = newValue;
+                    if (!oldValue.equals(newValue))
+                        hasNewText = true;
+                    else
+                        hasNewText = false;
+
+                    StringBuilder entireFormat = new StringBuilder();
+                    Stream.of(regexString)
+                            .map(line -> Arrays.asList(line.split(tabRegex)))
+                            .forEach(list -> {
+                                entireFormat.append(list.get(0));
+                            });
+                    Pattern formatPattern = Pattern.compile(entireFormat.toString());
+                    final AtomicInteger atomicInteger = new AtomicInteger(0);
+                    Stream.of(newValue.split(newLineRegex))
+                            .forEach(line -> {
+                                Matcher formatMatch = formatPattern.matcher(line);
+                                atomicInteger.incrementAndGet();
+                                if (formatMatch.matches()) {
+                                    validityCheck = true;
+                                    if (atomicInteger.get() == 1) {
                                         AppUI.super.newButton.setDisable(false);
                                         AppUI.super.saveButton.setDisable(false);
-                                    } else if (!formatMatch.matches() && atomicInteger.get() == 1) {
-                                        AppUI.super.newButton.setDisable(true);
-                                        AppUI.super.saveButton.setDisable(true);
-                                        disableScrnshot();
+
                                     }
-                                    chart.getData().clear();
+                                } else if (!formatMatch.matches() && atomicInteger.get() == 1) {
+                                    AppUI.super.newButton.setDisable(true);
+                                    AppUI.super.saveButton.setDisable(true);
                                     disableScrnshot();
-                                    tsdProcessor.update();
-                                });
-                    }
+                                } else {
+                                    validityCheck = false;
+                                }
+                                chart.getData().clear();
+                                disableScrnshot();
+                                tsdProcessor.update();
+                            });
+
                 });
 
 
-        checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue)
-                    textArea.setDisable(true);
-                else
-                    textArea.setDisable(false);
-            }
+        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue)
+                textArea.setDisable(true);
+            else
+                textArea.setDisable(false);
+
         });
 
         scrnshotButton.setOnAction(e -> {
@@ -299,7 +300,9 @@ public final class AppUI extends UITemplate {
         return moreThanTen;
     }
 
-    public TextFlow getTextFlow(){ return dataDescription; }
+    public TextFlow getTextFlow() {
+        return dataDescription;
+    }
 
     public void setMoreThanTen(boolean bool) {
         moreThanTen = bool;

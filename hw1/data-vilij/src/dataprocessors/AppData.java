@@ -86,6 +86,7 @@ public class AppData implements DataComponent {
             textFlow.getChildren().add(pathDescription);
             textFlow.getChildren().add(labelDescription);
             Iterator labelIterator = processor.getLabels().iterator();
+
             for(int i = 0; i < processor.getDataLabelCount();i++){
                 textFlow.getChildren().add(new Text("-"+labelIterator.next()+System.lineSeparator()));
                 labelIterator.remove();
