@@ -79,7 +79,13 @@ public class AppData implements DataComponent {
 
             processor.processString(textBuilder.toString());
             TextFlow textFlow = ((AppUI)applicationTemplate.getUIComponent()).getTextFlow();
+            if(textFlow.getChildren().size()!=0){
+                ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
+                ((AppUI) applicationTemplate.getUIComponent()).setEditable();
+            }
+            textFlow.setLineSpacing(5);
             Text firstLine = new Text(processor.getDataSize()+" instances are loaded from "+System.lineSeparator());
+
             Text labelDescription = new Text(processor.getDataLabelCount()+" labels are named as "+System.lineSeparator());
             Text pathDescription = new Text(dataFilePath.toAbsolutePath().toString()+System.lineSeparator());
             textFlow.getChildren().add(firstLine);
@@ -91,12 +97,11 @@ public class AppData implements DataComponent {
                 textFlow.getChildren().add(new Text("-"+labelIterator.next()+System.lineSeparator()));
                 labelIterator.remove();
             }
-
             if (processor.getDataSize() > 10)
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(DATA_EXCEEDED.toString(), applicationTemplate.manager.getPropertyValue(DATA_EXCEEDED.toString()) + processor.getDataSize());
-
             processor.clear();
             ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(textBuilder.toString());
+            ((AppUI)applicationTemplate.getUIComponent()).setReadOnly();
         } catch (Exception ex) {
             applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(LOAD.toString(), ex.getMessage());
             processor.clear();

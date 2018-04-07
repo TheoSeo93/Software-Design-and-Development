@@ -3,10 +3,6 @@ package ui;
 import actions.AppActions;
 import dataprocessors.AppData;
 import dataprocessors.TSDProcessor;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -15,10 +11,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import vilij.components.Dialog;
+import vilij.components.ErrorDialog;
+import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
 
@@ -49,6 +46,7 @@ public final class AppUI extends UITemplate {
     TSDProcessor tsdProcessor = new TSDProcessor();
 
     @SuppressWarnings("FieldCanBeLocal")
+    private ComboBox comboBox;
     private ToggleButton toggleButton;
     private Button scrnshotButton; // toolbar button to take a screenshot of the data
     private LineChart<Number, Number> chart;          // the chart where data will be displayed
@@ -59,12 +57,11 @@ public final class AppUI extends UITemplate {
     private Text textAreaTitle;
     private String scrnShotIconPath;
     private String currentText;
-    private CheckBox checkBox;
+
     private boolean moreThanTen;
     private StringBuilder pendingText;
     private String textAreaLbl;
     private TextFlow dataDescription;
-    private boolean validityCheck;
 
     public LineChart<Number, Number> getChart() {
         return chart;
@@ -75,11 +72,16 @@ public final class AppUI extends UITemplate {
         this.applicationTemplate = applicationTemplate;
         hBox = new HBox();
         textAreaTitle = new Text(applicationTemplate.manager.getPropertyValue(TEXT_AREA_TITLE.toString()));
+        //Text FontSize to be corrected
         textAreaLbl = applicationTemplate.manager.getPropertyValue(TEXT_AREA.toString());
         textArea = new TextArea();
         displayButton = new Button(applicationTemplate.manager.getPropertyValue(DISPLAY.toString()));
         dataDescription = new TextFlow();
-        toggleButton = new ToggleButton();
+        dataDescription.setPrefWidth(textArea.getWidth());
+        toggleButton = new ToggleButton(PropertyManager.getManager().getPropertyValue(READ_ONLY.toString()));
+        comboBox = new ComboBox();
+
+
     }
 
     @Override
@@ -139,15 +141,13 @@ public final class AppUI extends UITemplate {
         chart.getStylesheets().add(this.getClass().getResource(applicationTemplate.manager.getPropertyValue(CSS_ADDRESS.toString())).toExternalForm());
         chart.setTitle(applicationTemplate.manager.getPropertyValue(DATA_VISUALIZATION.toString()));
         workspace = new VBox();
-        checkBox = new CheckBox(applicationTemplate.manager.getPropertyValue(READ_ONLY.toString()));
         workspace.getChildren().add(textAreaTitle);
         workspace.getChildren().add(textArea);
         workspace.getChildren().add(displayButton);
         workspace.getChildren().add(dataDescription);
-        workspace.getChildren().add(checkBox);
         workspace.getChildren().add(toggleButton);
 
-        VBox.setMargin(textAreaTitle, new Insets(0, 0, 0, 200));
+        VBox.setMargin(textAreaTitle, new Insets(30, 0, 0, 200));
         hBox.getChildren().add(workspace);
         hBox.getChildren().add(chart);
         super.appPane.getChildren().add(hBox);
@@ -165,6 +165,7 @@ public final class AppUI extends UITemplate {
                     new AppData(applicationTemplate).loadData(chartData);
                     AppUI.super.saveButton.setDisable(false);
                     hasNewText = false;
+
                 } catch (Exception ex) {
                     Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
                     error.show(applicationTemplate.manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.toString()), ex.getMessage() + System.lineSeparator());
@@ -231,7 +232,7 @@ public final class AppUI extends UITemplate {
                                 Matcher formatMatch = formatPattern.matcher(line);
                                 atomicInteger.incrementAndGet();
                                 if (formatMatch.matches()) {
-                                    validityCheck = true;
+
                                     if (atomicInteger.get() == 1) {
                                         AppUI.super.newButton.setDisable(false);
                                         AppUI.super.saveButton.setDisable(false);
@@ -241,8 +242,7 @@ public final class AppUI extends UITemplate {
                                     AppUI.super.newButton.setDisable(true);
                                     AppUI.super.saveButton.setDisable(true);
                                     disableScrnshot();
-                                } else {
-                                    validityCheck = false;
+
                                 }
                                 chart.getData().clear();
                                 disableScrnshot();
@@ -252,18 +252,30 @@ public final class AppUI extends UITemplate {
                 });
 
 
-        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue)
-                textArea.setDisable(true);
-            else
+        toggleButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                String chartData = textArea.getText().toString();
+                try {
+                    tsdProcessor.processString(chartData);
+                    AppUI.super.saveButton.setDisable(false);
+                    textArea.setDisable(true);
+                    workspace.getChildren().add(comboBox);
+                } catch (Exception ex) {
+                    textArea.setDisable(false);
+                    Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+                    error.show(applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR.toString()), ex.getMessage() + System.lineSeparator());
+                    toggleButton.setSelected(false);
+                } finally {
+                    tsdProcessor.update();
+                }
+            } else
                 textArea.setDisable(false);
-
         });
+
 
         scrnshotButton.setOnAction(e -> {
             try {
                 ((AppActions) applicationTemplate.getActionComponent()).handleScreenshotRequest();
-
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -273,11 +285,11 @@ public final class AppUI extends UITemplate {
     }
 
     public void setReadOnly() {
-        checkBox.setSelected(true);
+        textArea.setDisable(true);
     }
 
     public void setEditable() {
-        checkBox.setSelected(false);
+        toggleButton.setSelected(false);
     }
 
     public void setPendingText(StringBuilder pendingText) {

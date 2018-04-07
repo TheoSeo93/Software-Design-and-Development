@@ -49,11 +49,14 @@ public final class AppActions implements ActionComponent {
             if (promptToSave())
                 handleSaveRequest();
 
+
         } catch (Exception ex) {
             if (ex instanceof IOException)
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()),
                         applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()));
         }
+
+
     }
 
 
@@ -71,6 +74,8 @@ public final class AppActions implements ActionComponent {
             file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
             if (file != null)
                 dataFilePath = file.toPath();
+
+
         }
         if (file != null) {
             applicationTemplate.getDataComponent().saveData(dataFilePath);
@@ -94,8 +99,10 @@ public final class AppActions implements ActionComponent {
         if (file != null) {
             dataFilePath = file.toPath();
             applicationTemplate.getDataComponent().loadData(dataFilePath);
-            ((AppUI)applicationTemplate.getUIComponent()).setReadOnly();
+
         }
+
+
     }
 
     @Override
@@ -140,8 +147,13 @@ public final class AppActions implements ActionComponent {
         if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.CANCEL) {
             return false;
         } else if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.YES) {
+            ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
+            ((AppUI) applicationTemplate.getUIComponent()).setEditable();
+
             return true;
         } else {
+            ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
+            ((AppUI) applicationTemplate.getUIComponent()).setEditable();
             applicationTemplate.getDataComponent().clear();
             applicationTemplate.getUIComponent().clear();
             isSaved = false;
