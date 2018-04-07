@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import vilij.components.Dialog;
@@ -212,6 +213,8 @@ public final class AppUI extends UITemplate {
 
 
                         }
+
+                        //Validity Check
                         currentText = newValue;
                         if (!oldValue.equals(newValue))
                             hasNewText = true;

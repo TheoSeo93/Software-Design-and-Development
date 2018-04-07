@@ -6,6 +6,7 @@ import javafx.scene.text.TextFlow;
 import ui.AppUI;
 import vilij.components.DataComponent;
 import vilij.components.Dialog;
+import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 
 import java.io.*;
