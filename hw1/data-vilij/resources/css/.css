@@ -44,7 +44,10 @@
     -fx-stroke: transparent;
 }
 
-
+.chart-vertical-zero-line,
+.chart-horizontal-zero-line  {
+    -fx-stroke: transparent;
+}
 
 
 .onHover{

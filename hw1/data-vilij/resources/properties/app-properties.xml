@@ -15,7 +15,7 @@ functionality within the main workspace. -->
 
         <!-- WARNING MESSAGES -->
         <property name="EXIT_WHILE_RUNNING_WARNING"
-                  value="An algorithm is running. If you exit now, all unsaved changes will be lost. Are you sure?"/>
+                  value="An algorithms is running. If you exit now, all unsaved changes will be lost. Are you sure?"/>
         <property name="WRONG_DATA_FORMAT_ERROR"
                   value="WRONG DATA FORMAT ERROR"/>
         <property name="WRONG_DATA_FORMAT_ERROR_CONTENT"
@@ -56,7 +56,7 @@ functionality within the main workspace. -->
         <property name="SCREEN_TOOLTIP" value="Take a screen shot"/>
         <property name="AT" value="@"/>
         <property name="EMPTY"  value = ""/>
-        <property name="READ_ONLY"  value = "Read Only"/>
+        <property name="READ_ONLY"  value = "Read-Only:Check Validity"/>
         <property name="PNG_EXT"  value = "*.png"/>
         <property name="PNG"  value = "png"/>
         <property name="PNG_EXT_DESC" value="Portable Network Graphics File"/>
@@ -64,6 +64,13 @@ functionality within the main workspace. -->
         <property name="XPOS" value="  X pos: "/>
         <property name="YPOS" value="  Y pos: "/>
         <property name="CSS_ADDRESS" value="/css/.css"/>
+        <property name="CLASSIFICATION" value="Classification Algorithm "/>
+        <property name="CLUSTERING" value="Clustering Algorithm"/>
+        <property name="DISPLAY_ICON" value="display.png"/>
+        <property name="DISPLAY_TOOLTIP" value="Display the data"/>
+        <property name="SETTINGS_ICON" value="settings.png"/>
+        <property name="SETTINGS_TOOLTIP" value="Configure Algorithm"/>
+        <property name="CONFIGIMG_ICON" value="settings_large.png"/>
     </property_list>
     <property_options_list/>
 </properties>

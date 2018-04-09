@@ -27,9 +27,10 @@ import static ui.DataVisualizer.*;
  * @see XYChart
  */
 public final class TSDProcessor {
-        private static String error ="Invalid name '%s'";
+    private static String error = "Invalid name '%s'";
 
-        private static String onHover="onHover";
+    private static String onHover = "onHover";
+
     public static class InvalidDataNameException extends Exception {
 
         public InvalidDataNameException(String name, String wrongPos) {
@@ -37,6 +38,7 @@ public final class TSDProcessor {
         }
     }
 
+    private boolean nullLabel;
     private Map<String, String> dataLabels;
     private Map<String, Point2D> dataPoints;
     private static PropertyManager manager;
@@ -94,6 +96,8 @@ public final class TSDProcessor {
                             String label = secondMatch.group(0);
                             name = name.trim();
                             label = label.trim();
+                            if (label.contains("null"))
+                                nullLabel = true;
                             Point2D point = new Point2D(Double.valueOf(thirdMatch.group(0)), Double.parseDouble(fourthMatch.group(0)));
                             if (!dataLabels.containsKey(name)) {
                                 dataLabels.put(name, label);
@@ -112,14 +116,14 @@ public final class TSDProcessor {
                             } else if (manager != null) {
                                 errorMessage.append(manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR_CONTENT.toString()));
                                 errorMessage.append(manager.getPropertyValue(ERROR_POSITION.toString()));
-                                errorMessage.append(lineNumber.get() +  System.lineSeparator());
+                                errorMessage.append(lineNumber.get() + System.lineSeparator());
                             }
                             lineNumber.getAndIncrement();
                         }
 
                     } catch (Exception e) {
                         lineNumber.getAndIncrement();
-                        errorMessage.append(e.getMessage() +  System.lineSeparator());
+                        errorMessage.append(e.getMessage() + System.lineSeparator());
                         notError.set(false);
                     }
                 });
@@ -142,29 +146,30 @@ public final class TSDProcessor {
 
         ArrayList<Point2D> points = new ArrayList<>();
         points.addAll(dataPoints.values());
-        double startX=points.get(0).getX();
-        double endX =0;
-        double avg=0;
+        double startX = points.get(0).getX();
+        double endX = 0;
+        double avg = 0;
 
-        for(int i=0;i<points.size();i++) {
+        for (int i = 0; i < points.size(); i++) {
             avg += points.get(i).getY();
-            if(endX<points.get(i).getX())
-                endX=points.get(i).getX();
-            if(startX>points.get(i).getX())
-                startX=points.get(i).getX();
+            if (endX < points.get(i).getX())
+                endX = points.get(i).getX();
+            if (startX > points.get(i).getX())
+                startX = points.get(i).getX();
         }
 
-        avg/=points.size();
-        XYChart.Series<Number,Number> avgSeries = new XYChart.Series<>();
+        avg /= points.size();
+        XYChart.Series<Number, Number> avgSeries = new XYChart.Series<>();
 
-        avgSeries.getData().add(new XYChart.Data<>(startX-10,avg));
-        avgSeries.getData().add(new XYChart.Data<>(endX+10,avg));
+        avgSeries.getData().add(new XYChart.Data<>(startX - 10, avg));
+        avgSeries.getData().add(new XYChart.Data<>(endX + 10, avg));
 
         avgSeries.setName(manager.getPropertyValue(AVG.toString()));
 
-        chart.getData().add(0,avgSeries);
+        chart.getData().add(0, avgSeries);
 
         Set<String> labels = new HashSet<>(dataLabels.values());
+
 
         int counter = 1;
         for (String label : labels) {
@@ -177,7 +182,7 @@ public final class TSDProcessor {
 
             dataLabels.entrySet().stream().filter(entry -> entry.getValue().equals(label)).forEach(entry -> {
                 Point2D point = dataPoints.get(entry.getKey());
-                XYChart.Data<Number,Number> data = new XYChart.Data<>(point.getX(), point.getY());
+                XYChart.Data<Number, Number> data = new XYChart.Data<>(point.getX(), point.getY());
                 series.getData().add(data);
                 data.setExtraValue(entry.getKey());
             });
@@ -187,15 +192,15 @@ public final class TSDProcessor {
 
 
         Tooltip toolTip = new Tooltip();
-        int count=0;
-        for (XYChart.Series<Number, Number> series: chart.getData()) {
-            if(count==0) {
+        int count = 0;
+        for (XYChart.Series<Number, Number> series : chart.getData()) {
+            if (count == 0) {
                 count++;
                 continue;
             }
             for (XYChart.Data<Number, Number> data : series.getData()) {
 
-                toolTip.install(data.getNode(), new Tooltip(data.getExtraValue().toString()+manager.getPropertyValue(XPOS.toString())+data.getXValue()+manager.getPropertyValue(YPOS.toString())+data.getYValue()));
+                toolTip.install(data.getNode(), new Tooltip(data.getExtraValue().toString() + manager.getPropertyValue(XPOS.toString()) + data.getXValue() + manager.getPropertyValue(YPOS.toString()) + data.getYValue()));
                 data.getNode().setOnMouseEntered(event -> data.getNode().getStyleClass().add(onHover));
                 data.getNode().setOnMouseExited(event -> data.getNode().getStyleClass().remove(onHover));
 
@@ -217,6 +222,13 @@ public final class TSDProcessor {
         return name;
     }
 
+    public HashSet getLabels() {
+        return new HashSet<>(dataLabels.values());
+    }
+
+    public int getDataLabelCount() {
+        return new HashSet<>(dataLabels.values()).size();
+    }
 
     public void setManager(PropertyManager manager) {
         this.manager = manager;
@@ -228,5 +240,9 @@ public final class TSDProcessor {
 
     public Map<String, Point2D> getDataPoints() {
         return dataPoints;
+    }
+
+    public boolean checkNullLabel() {
+        return nullLabel;
     }
 }

@@ -1,18 +1,18 @@
 package actions;
 
 
+import dataprocessors.AppData;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import ui.AppUI;
 import vilij.components.ActionComponent;
 import vilij.components.ConfirmationDialog;
 import vilij.components.Dialog;
 import vilij.templates.ApplicationTemplate;
+
 import javax.imageio.ImageIO;
 import java.io.*;
 import java.nio.file.Path;
@@ -43,12 +43,12 @@ public final class AppActions implements ActionComponent {
 
     }
 
+
     @Override
     public void handleNewRequest() {
         try {
             if (promptToSave())
                 handleSaveRequest();
-
 
         } catch (Exception ex) {
             if (ex instanceof IOException)
@@ -56,6 +56,8 @@ public final class AppActions implements ActionComponent {
                         applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()));
         }
 
+        ((AppData) applicationTemplate.getDataComponent()).setUpdatedChartData("");
+        ((AppUI) applicationTemplate.getUIComponent()).layoutRenew();
 
     }
 
@@ -74,13 +76,12 @@ public final class AppActions implements ActionComponent {
             file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
             if (file != null)
                 dataFilePath = file.toPath();
-
-
         }
         if (file != null) {
             applicationTemplate.getDataComponent().saveData(dataFilePath);
             ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
             isSaved = true;
+
         }
 
 
@@ -99,7 +100,9 @@ public final class AppActions implements ActionComponent {
         if (file != null) {
             dataFilePath = file.toPath();
             applicationTemplate.getDataComponent().loadData(dataFilePath);
-
+            ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
+            ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(dataFilePath);
+            ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(true);
         }
 
 
@@ -148,15 +151,17 @@ public final class AppActions implements ActionComponent {
             return false;
         } else if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.YES) {
             ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
-            ((AppUI) applicationTemplate.getUIComponent()).setEditable();
-
+            ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
+            ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
             return true;
         } else {
             ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
-            ((AppUI) applicationTemplate.getUIComponent()).setEditable();
+            ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
+            ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
             applicationTemplate.getDataComponent().clear();
             applicationTemplate.getUIComponent().clear();
             isSaved = false;
+
             return false;
         }
     }

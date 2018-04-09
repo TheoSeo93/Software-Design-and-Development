@@ -6,7 +6,6 @@ import javafx.scene.text.TextFlow;
 import ui.AppUI;
 import vilij.components.DataComponent;
 import vilij.components.Dialog;
-import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 
 import java.io.*;
@@ -17,6 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import static settings.AppPropertyTypes.*;
+import static ui.DataVisualizer.newLineRegex;
 
 /**
  * This is the concrete application-specific implementation of the data component defined by the Vilij framework.
@@ -25,15 +25,17 @@ import static settings.AppPropertyTypes.*;
  * @see DataComponent
  */
 public class AppData implements DataComponent {
-    private String wrongDataFormat;
+
     private TSDProcessor processor;
-    private String wrongDataFormatContent;
     private ApplicationTemplate applicationTemplate;
+    private StringBuilder pendingText = new StringBuilder();
+    private String updatedChartData;
+    private String wrongDataFormat;
+    private String wrongDataFormatContent;
     private String empty;
     private String specified;
     private String wrongExtention;
     private String wrongExtentionContent;
-    private StringBuilder pendingText = new StringBuilder();
 
     public AppData(ApplicationTemplate applicationTemplate) {
         this.processor = new TSDProcessor();
@@ -66,49 +68,32 @@ public class AppData implements DataComponent {
 
                     if (counter > 10) {
                         ((AppUI) applicationTemplate.getUIComponent()).setMoreThanTen(true);
-                        pendingText.append(line + System.lineSeparator());
+                        pendingText.append(line + newLineRegex);
+
                     } else {
                         ((AppUI) applicationTemplate.getUIComponent()).setMoreThanTen(false);
-                        textBuilder.append(line + System.lineSeparator());
+                        textBuilder.append(line + newLineRegex);
+
                     }
-
-
                     counter++;
                 }
             }
 
             processor.processString(textBuilder.toString());
-            TextFlow textFlow = ((AppUI)applicationTemplate.getUIComponent()).getTextFlow();
-            if(textFlow.getChildren().size()!=0){
-                ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
-                ((AppUI) applicationTemplate.getUIComponent()).setEditable();
-            }
-            textFlow.setLineSpacing(5);
-            Text firstLine = new Text(processor.getDataSize()+" instances are loaded from "+System.lineSeparator());
-
-            Text labelDescription = new Text(processor.getDataLabelCount()+" labels are named as "+System.lineSeparator());
-            Text pathDescription = new Text(dataFilePath.toAbsolutePath().toString()+System.lineSeparator());
-            textFlow.getChildren().add(firstLine);
-            textFlow.getChildren().add(pathDescription);
-            textFlow.getChildren().add(labelDescription);
-            Iterator labelIterator = processor.getLabels().iterator();
-
-            for(int i = 0; i < processor.getDataLabelCount();i++){
-                textFlow.getChildren().add(new Text("-"+labelIterator.next()+System.lineSeparator()));
-                labelIterator.remove();
-            }
+            updatedChartData = textBuilder.toString();
+            String filePath = dataFilePath.toAbsolutePath().toString() + System.lineSeparator();
+            updateTextFlow(filePath);
             if (processor.getDataSize() > 10)
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(DATA_EXCEEDED.toString(), applicationTemplate.manager.getPropertyValue(DATA_EXCEEDED.toString()) + processor.getDataSize());
             processor.clear();
             ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(textBuilder.toString());
-            ((AppUI)applicationTemplate.getUIComponent()).setReadOnly();
+            ((AppUI) applicationTemplate.getUIComponent()).setReadOnly();
         } catch (Exception ex) {
             applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(LOAD.toString(), ex.getMessage());
             processor.clear();
         }
 
         ((AppUI) applicationTemplate.getUIComponent()).setPendingText(pendingText);
-
 
 
     }
@@ -121,10 +106,19 @@ public class AppData implements DataComponent {
 
     }
 
+    public String getUpdatedChartData() {
+        return updatedChartData;
+    }
+
+    public void setUpdatedChartData(String updatedChartData) {
+        this.updatedChartData = updatedChartData;
+    }
+
     @Override
     public void saveData(Path dataFilePath) {
         String chartData = ((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText().toString();
         String title = SAVE_WRONG_DATA.toString();
+        updatedChartData = chartData;
         processor.setManager(applicationTemplate.manager);
         try {
             processor.clear();
@@ -142,7 +136,26 @@ public class AppData implements DataComponent {
                     applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()));
         }
 
+    }
 
+    public void updateTextFlow(String dataFilePath) {
+        TextFlow textFlow = ((AppUI) applicationTemplate.getUIComponent()).getTextFlow();
+        if (textFlow.getChildren().size() != 0) {
+            ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
+        }
+        textFlow.setLineSpacing(5);
+        Text firstLine = new Text(processor.getDataSize() + " instances are loaded" );
+        Text labelDescription = new Text(processor.getDataLabelCount() + " labels are named as " + System.lineSeparator());
+        Text pathDescription = new Text("from" + System.lineSeparator() + dataFilePath);
+        textFlow.getChildren().add(firstLine);
+        textFlow.getChildren().add(pathDescription);
+        textFlow.getChildren().add(labelDescription);
+        Iterator labelIterator = processor.getLabels().iterator();
+
+        for (int i = 0; i < processor.getDataLabelCount(); i++) {
+            textFlow.getChildren().add(new Text("-" + labelIterator.next() + System.lineSeparator()));
+            labelIterator.remove();
+        }
     }
 
     @Override

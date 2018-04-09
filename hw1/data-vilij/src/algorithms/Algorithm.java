@@ -1,6 +1,6 @@
-package classification;
+package algorithms;
 /**
- * This interface provides a way to run an classification
+ * This interface provides a way to run an algorithms
  * on a thread as a {@link java.lang.Runnable} object.
  *
  * @author Ritwik Banerjee

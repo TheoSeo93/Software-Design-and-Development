@@ -58,9 +58,14 @@ public enum AppPropertyTypes {
     AVG,
     XPOS,
     YPOS,
-    CSS_ADDRESS
-
-
+    CSS_ADDRESS,
+    CLASSIFICATION,
+    CLUSTERING,
+    DISPLAY_ICON,
+    DISPLAY_TOOLTIP,
+    SETTINGS_ICON,
+    SETTINGS_TOOLTIP,
+    CONFIGIMG_ICON
 
 
 }
