@@ -102,6 +102,10 @@ public final class AppActions implements ActionComponent {
             applicationTemplate.getDataComponent().loadData(dataFilePath);
             ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
             ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(dataFilePath);
+            if(((AppUI) applicationTemplate.getUIComponent()).isToggleSelected()){
+                ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
+                ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(true);
+            } else
             ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(true);
         }
 

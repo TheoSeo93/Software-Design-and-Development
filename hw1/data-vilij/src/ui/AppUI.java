@@ -304,7 +304,7 @@ public final class AppUI extends UITemplate {
                     Text algoName = new Text(PropertyManager.getManager().getPropertyValue(CLUSTERING.name()));
                     algoName.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.toString()));
                     algorithmConfig.getChildren().add(algoName);
-                    algoName.setFont(new Font(14));
+
                     ImageView settings;
                     ToggleGroup toggleGroup = new ToggleGroup();
                     radioButtons = new RadioButton[3];
@@ -332,8 +332,9 @@ public final class AppUI extends UITemplate {
                 } else {
                     isClassification = true;
                     Text algoName = new Text(PropertyManager.getManager().getPropertyValue(CLASSIFICATION.name()));
+                    algoName.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.toString()));
                     algorithmConfig.getChildren().add(algoName);
-                    algoName.setFont(new Font(14));
+
                     ImageView settings;
                     ToggleGroup toggleGroup = new ToggleGroup();
                       radioButtons = new RadioButton[3];
@@ -544,17 +545,17 @@ public final class AppUI extends UITemplate {
         }
         textFlow.setLineSpacing(5);
 
-        Text firstLine = new Text(tsdProcessor.getDataSize() + PropertyManager.getManager().getPropertyValue(FIRSTLINE.name()));
+        Text firstLine = new Text(tsdProcessor.getDataSize() + PropertyManager.getManager().getPropertyValue(FIRSTLINE.toString()));
 
-        Text labelDescription = new Text(tsdProcessor.getDataLabelCount() + PropertyManager.getManager().getPropertyValue(LABELNAMES.name()) + System.lineSeparator());
+        Text labelDescription = new Text(tsdProcessor.getDataLabelCount() + PropertyManager.getManager().getPropertyValue(LABELNAMES.toString()) + System.lineSeparator());
         firstLine.getStyleClass().add( PropertyManager.getManager().getPropertyValue(DIALOG_BACKGROUND.name()));
         labelDescription.getStyleClass().add(PropertyManager.getManager().getPropertyValue(DIALOG_BACKGROUND.name()));
 
         Text pathDescription;
         if (dataFilePath != null)
-            pathDescription = new Text(PropertyManager.getManager().getPropertyValue(FROM.name())+ System.lineSeparator() + dataFilePath + System.lineSeparator());
+            pathDescription = new Text(PropertyManager.getManager().getPropertyValue(FROM.toString())+ System.lineSeparator() + dataFilePath + System.lineSeparator());
         else
-            pathDescription = new Text(System.lineSeparator() +PropertyManager.getManager().getPropertyValue(NO_FILEPATH.name())+ System.lineSeparator());
+            pathDescription = new Text(System.lineSeparator()+PropertyManager.getManager().getPropertyValue(NO_FILEPATH.name())+ System.lineSeparator());
 
         firstLine.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.name()));
         pathDescription.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.toString()));
@@ -589,6 +590,9 @@ public final class AppUI extends UITemplate {
         moreThanTen = bool;
     }
 
+    public boolean isToggleSelected(){
+        return toggleButton.isSelected();
+    }
 
     public void showConfigDialog(boolean firstCheck, boolean secondCheck, boolean thirdCheck) {
         GridPane configDialog = new GridPane();
@@ -807,4 +811,5 @@ public final class AppUI extends UITemplate {
 
 
     }
+
 }

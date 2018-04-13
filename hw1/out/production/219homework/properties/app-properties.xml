@@ -91,7 +91,7 @@ functionality within the main workspace. -->
         <property name="RUN_CONFIG" value="Run Configurations"/>
         <property name="TXT_WATCH_NEGATIVE" value="The input has to be positive."/>
         <property name="ALGORITHM" value="  Algorithm "/>
-
+        <property name="FROM" value=" from "/>
 
     </property_list>
     <property_options_list/>
