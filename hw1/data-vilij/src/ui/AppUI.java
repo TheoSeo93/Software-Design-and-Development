@@ -624,7 +624,7 @@ public final class AppUI extends UITemplate {
         vBox.setPrefSize(608, 83);
         TextField[] textFields = new TextField[3];
         Label textWatcher = new Label();
-        textWatcher.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.toString()));
+        textWatcher.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS_TEXTWATCHER.toString()));
         CheckBox isContinuous = new CheckBox();
         for (int i = 0; i < 4; i++) {
             HBox row = new HBox();

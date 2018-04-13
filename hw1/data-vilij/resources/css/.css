@@ -105,6 +105,13 @@
                                  -fx-font-family: Tahoma;
                                  -fx-font-size: 12px;
 }
+.labels-textwatcher{
+
+                              -fx-text-fill: red;
+                                 -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+                                 -fx-font-family: Tahoma;
+                                 -fx-font-size: 12px;
+}
 .radiobuttons{
     -fx-text-fill: white;
                                     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
