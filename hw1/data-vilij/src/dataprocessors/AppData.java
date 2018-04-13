@@ -6,6 +6,7 @@ import javafx.scene.text.TextFlow;
 import ui.AppUI;
 import vilij.components.DataComponent;
 import vilij.components.Dialog;
+import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 
 import java.io.*;
@@ -144,16 +145,16 @@ public class AppData implements DataComponent {
             ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
         }
         textFlow.setLineSpacing(5);
-        Text firstLine = new Text(processor.getDataSize() + " instances are loaded" );
-        Text labelDescription = new Text(processor.getDataLabelCount() + " labels are named as " + System.lineSeparator());
-        Text pathDescription = new Text("from" + System.lineSeparator() + dataFilePath);
+        Text firstLine = new Text(processor.getDataSize() + PropertyManager.getManager().getPropertyValue(FIRSTLINE.toString()));
+        Text labelDescription = new Text(processor.getDataLabelCount() +PropertyManager.getManager().getPropertyValue(LABELNAMES.toString()) + System.lineSeparator());
+        Text pathDescription = new Text(PropertyManager.getManager().getPropertyValue(FROM.toString()) + System.lineSeparator() + dataFilePath);
         textFlow.getChildren().add(firstLine);
         textFlow.getChildren().add(pathDescription);
         textFlow.getChildren().add(labelDescription);
         Iterator labelIterator = processor.getLabels().iterator();
 
         for (int i = 0; i < processor.getDataLabelCount(); i++) {
-            textFlow.getChildren().add(new Text("-" + labelIterator.next() + System.lineSeparator()));
+            textFlow.getChildren().add(new Text( labelIterator.next() + System.lineSeparator()));
             labelIterator.remove();
         }
     }

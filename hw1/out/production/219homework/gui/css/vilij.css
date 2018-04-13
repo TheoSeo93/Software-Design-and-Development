@@ -1,8 +1,5 @@
 /* Visualization Library in Java (ViLiJ) */
-.toolbar{
- -fx-background-color:
-                                     #111316;
-}
+
 .toolbar-button {
     -fx-pref-width: 48px;
     -fx-pref-height: 36px;

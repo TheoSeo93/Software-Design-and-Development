@@ -21,13 +21,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import vilij.components.Dialog;
@@ -102,13 +98,14 @@ public final class AppUI extends UITemplate {
 
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
+        newCss = this.getClass().getResource(applicationTemplate.manager.getPropertyValue(CSS_ADDRESS.toString())).toExternalForm();
         PropertyManager manager = applicationTemplate.manager;
         clusterConfigs = new Clustering[3];
         classificationConfigs = new Classification[3];
         hBox = new HBox();
         textAreaTitle = new Text(manager.getPropertyValue(TEXT_AREA_TITLE.toString()));
         textAreaTitle.setFont(new Font(17));
-        textAreaTitle.getStyleClass().add(manager.getPropertyValue(LABELS.name()));
+        textAreaTitle.getStyleClass().add(manager.getPropertyValue(LABELS.toString()));
         //Text FontSize to be corrected
         textAreaLbl = manager.getPropertyValue(TEXT_AREA.toString());
         textArea = new TextArea();
@@ -116,18 +113,18 @@ public final class AppUI extends UITemplate {
         dataDescription.setPrefWidth(textArea.getWidth());
         toggleButton = new ToggleButton(manager.getPropertyValue(READ_ONLY.toString()));
         toggleButton.getStylesheets().setAll(newCss);
-        toggleButton.getStyleClass().add(manager.getPropertyValue(OTHER_BUTTON.name()));
+        toggleButton.getStyleClass().add(manager.getPropertyValue(OTHER_BUTTON.toString()));
         comboBox = new ComboBox();
-        comboBox.getStylesheets().setAll(cssPath);
+        comboBox.getStylesheets().setAll(newCss);
         displayButton.getStylesheets().setAll(newCss);
-        displayButton.getStyleClass().add(manager.getPropertyValue(OTHER_BUTTON.name()));
+        displayButton.getStyleClass().add(manager.getPropertyValue(OTHER_BUTTON.toString()));
         displayButton.setTooltip(new Tooltip(manager.getPropertyValue(DISPLAY_TOOLTIP.toString())));
         displayButton.setDisable(true);
         settings1 = new ImageView(new Image(getClass().getResourceAsStream(settingIconPath)));
         settings2 = new ImageView(new Image(getClass().getResourceAsStream(settingIconPath)));
         settings3 = new ImageView(new Image(getClass().getResourceAsStream(settingIconPath)));
         configImg = new ImageView(new Image(getClass().getResourceAsStream(configImgPath)));
-        newCss = this.getClass().getResource(applicationTemplate.manager.getPropertyValue(CSS_ADDRESS.toString())).toExternalForm();
+
         imageViews = new ImageView[]{settings1, settings2, settings3};
         comboBox.setConverter(new StringConverter<Object>() {
             @Override
@@ -224,14 +221,14 @@ public final class AppUI extends UITemplate {
         workspace.getChildren().add(dataDescription);
         workspace.getChildren().add(toggleButton);
         workspace.getStylesheets().setAll(newCss);
-        workspace.getStyleClass().add(PropertyManager.getManager().getPropertyValue(BACKGROUND.name()));
+        workspace.getStyleClass().add(PropertyManager.getManager().getPropertyValue(BACKGROUND.toString()));
 
         ((VBox) workspace).setSpacing(5);
         VBox.setMargin(textAreaTitle, new Insets(4, 0, 0, 200));
         hBox.getChildren().add(workspace);
         hBox.getChildren().add(chart);
         hBox.getStylesheets().setAll(newCss);
-        hBox.getStyleClass().add(PropertyManager.getManager().getPropertyValue(BACKGROUND.name()));
+        hBox.getStyleClass().add(PropertyManager.getManager().getPropertyValue(BACKGROUND.toString()));
         super.appPane.getChildren().add(hBox);
 
 
@@ -305,7 +302,7 @@ public final class AppUI extends UITemplate {
                 if (comboBox.getSelectionModel().getSelectedItem().toString().toLowerCase().contains(CLUSTERING.toString().toLowerCase())) {
                     isClassification = false;
                     Text algoName = new Text(PropertyManager.getManager().getPropertyValue(CLUSTERING.name()));
-                    algoName.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.name()));
+                    algoName.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.toString()));
                     algorithmConfig.getChildren().add(algoName);
                     algoName.setFont(new Font(14));
                     ImageView settings;
@@ -314,12 +311,12 @@ public final class AppUI extends UITemplate {
                     for (int i = 0; i < 3; i++) {
                         settings = imageViews[i];
 
-                        RadioButton radioButton = new RadioButton(PropertyManager.getManager().getPropertyValue(ALGORITHM.name()) + (i + 1));
+                        RadioButton radioButton = new RadioButton(PropertyManager.getManager().getPropertyValue(ALGORITHM.toString())+ (i + 1));
                         radioButton.setToggleGroup(toggleGroup);
                         radioButton.setFont(new Font(14));
                         radioButtons[i] = radioButton;
 
-                        radioButton.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.name()));
+                        radioButton.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.toString()));
                         HBox configRow = new HBox();
                         configRow.setSpacing(250);
                         configRow.getChildren().add(new Group(radioButton));
@@ -344,8 +341,8 @@ public final class AppUI extends UITemplate {
                     for (int i = 0; i < 3; i++) {
                         settings = imageViews[i];
 
-                        RadioButton radioButton = new RadioButton(PropertyManager.getManager().getPropertyValue(ALGORITHM.name()) + (i + 1));
-                        radioButton.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.name()));
+                        RadioButton radioButton = new RadioButton(PropertyManager.getManager().getPropertyValue(ALGORITHM.toString()) + (i + 1));
+                        radioButton.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.toString()));
                         radioButton.setToggleGroup(toggleGroup);
                         radioButton.setFont(new Font(14));
                         radioButtons[i] = radioButton;
@@ -471,7 +468,7 @@ public final class AppUI extends UITemplate {
 
 
                         if (workspace.getChildren().size() == 4) {
-                                comboBox.setPromptText(PropertyManager.getManager().getPropertyValue(ALGORITHM_TYPE.name()));
+                                comboBox.setPromptText(PropertyManager.getManager().getPropertyValue(ALGORITHM_TYPE.toString()));
                             workspace.getChildren().add(comboBox); //Index: 4 , size: 5
                         }
 
@@ -560,19 +557,19 @@ public final class AppUI extends UITemplate {
             pathDescription = new Text(System.lineSeparator() +PropertyManager.getManager().getPropertyValue(NO_FILEPATH.name())+ System.lineSeparator());
 
         firstLine.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.name()));
-        pathDescription.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.name()));
-        labelDescription.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.name()));
+        pathDescription.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.toString()));
+        labelDescription.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.toString()));
         textFlow.getChildren().add(firstLine);
         textFlow.getChildren().add(pathDescription);
         textFlow.getChildren().add(labelDescription);
-        textFlow.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.name()));
+        textFlow.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.toString()));
 
 
         Iterator labelIterator = tsdProcessor.getLabels().iterator();
 
         for (int i = 0; i < tsdProcessor.getDataLabelCount(); i++) {
             Label labelName = new Label();
-            labelName.getStyleClass().add(PropertyManager.getManager().getPropertyValue(ROUND_LABELNAMES.name()));
+            labelName.getStyleClass().add(PropertyManager.getManager().getPropertyValue(ROUND_LABELNAMES.toString()));
             labelName.setText(labelIterator.next().toString());
             textFlow.getChildren().add(labelName);
             labelIterator.remove();
@@ -600,9 +597,9 @@ public final class AppUI extends UITemplate {
         configDialog.add(configImg, 0, 1);
         configDialog.setPrefSize(700, 151);
         configDialog.getStylesheets().add(newCss);
-        configDialog.getStyleClass().add(PropertyManager.getManager().getPropertyValue(BACKGROUND.name()));
-        Button cancel = new Button(PropertyManager.getManager().getPropertyValue(CANCEL.name()));
-        Button ok = new Button(PropertyManager.getManager().getPropertyValue(OK.name()));
+        configDialog.getStyleClass().add(PropertyManager.getManager().getPropertyValue(BACKGROUND.toString()));
+        Button cancel = new Button(PropertyManager.getManager().getPropertyValue(CANCEL.toString()));
+        Button ok = new Button(PropertyManager.getManager().getPropertyValue(OK.toString()));
 
         HBox buttonGroup = new HBox();
         ok.setDisable(true);
@@ -619,7 +616,7 @@ public final class AppUI extends UITemplate {
         vBox.setPrefSize(608, 83);
         TextField[] textFields = new TextField[3];
         Label textWatcher = new Label();
-        textWatcher.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.name()));
+        textWatcher.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.toString()));
         CheckBox isContinuous = new CheckBox();
         for (int i = 0; i < 4; i++) {
             HBox row = new HBox();
@@ -628,23 +625,23 @@ public final class AppUI extends UITemplate {
 
             TextField textField = new TextField();
             label.getStylesheets().add(newCss);
-            label.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.name()));
+            label.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.toString()));
 
             if (i == 0) {
-                label.setText(PropertyManager.getManager().getPropertyValue(MAX_ITERATIONS.name()));
+                label.setText(PropertyManager.getManager().getPropertyValue(MAX_ITERATIONS.toString()));
                 label.setPadding(new Insets(0, 50, 0, 0));
             } else if (i == 1) {
-                label.setText(PropertyManager.getManager().getPropertyValue(INTERVAL.name()));
+                label.setText(PropertyManager.getManager().getPropertyValue(INTERVAL.toString()));
                 label.setPadding(new Insets(0, 44, 0, 0));
             } else if (i == 2) {
                 if (isClassification)
                     continue;
                 else {
-                    label.setText(PropertyManager.getManager().getPropertyValue(CLUSTERS.name()));
+                    label.setText(PropertyManager.getManager().getPropertyValue(CLUSTERS.toString()));
                     label.setPadding(new Insets(0, 25, 0, 0));
                 }
             } else {
-                label.setText(PropertyManager.getManager().getPropertyValue(CONTINUOUS.name()));
+                label.setText(PropertyManager.getManager().getPropertyValue(CONTINUOUS.toString()));
                 label.setPadding(new Insets(0, 168, 0, 0));
             }
             row.getChildren().add(label);
@@ -707,7 +704,7 @@ public final class AppUI extends UITemplate {
         Stage newStage = new Stage();
         newStage.setMinWidth(700);
         newStage.setScene(new Scene(configDialog));
-        newStage.setTitle(PropertyManager.getManager().getPropertyValue(RUN_CONFIG.name()));
+        newStage.setTitle(PropertyManager.getManager().getPropertyValue(RUN_CONFIG.toString()));
         newStage.show();
 
         for (int i = 0; i < textFields.length; i++) {
@@ -731,7 +728,7 @@ public final class AppUI extends UITemplate {
                                 }
                                 for (int k = 0; k < textFields[j].getText().length(); k++) {
                                     if (!Character.isDigit(textFields[j].getText().charAt(k))) {
-                                        textWatcher.setText(PropertyManager.getManager().getPropertyValue(TEXTWATCH_MSG.name()));
+                                        textWatcher.setText(PropertyManager.getManager().getPropertyValue(TEXTWATCH_MSG.toString()));
                                         ok.setDisable(true);
                                         isValid = false;
                                         break Outer;
@@ -739,7 +736,7 @@ public final class AppUI extends UITemplate {
                                 }
                                 for (int k = 0; k < newValue.length(); k++) {
                                     if (!Character.isDigit(newValue.charAt(k))) {
-                                        textWatcher.setText(PropertyManager.getManager().getPropertyValue(TEXTWATCH_MSG.name()));
+                                        textWatcher.setText(PropertyManager.getManager().getPropertyValue(TEXTWATCH_MSG.toString()));
                                         ok.setDisable(true);
                                         isValid = false;
                                         break Outer;
@@ -749,7 +746,7 @@ public final class AppUI extends UITemplate {
                                 //Verified the string input is digit
                                 if (isDigit) {
                                     if (Integer.parseInt(newValue) <= 0) {
-                                        textWatcher.setText(PropertyManager.getManager().getPropertyValue(TXT_WATCH_NEGATIVE.name()));
+                                        textWatcher.setText(PropertyManager.getManager().getPropertyValue(TXT_WATCH_NEGATIVE.toString()));
                                         ok.setDisable(true);
                                         isValid = false;
                                     }
