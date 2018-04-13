@@ -92,6 +92,7 @@ functionality within the main workspace. -->
         <property name="TXT_WATCH_NEGATIVE" value="The input has to be positive."/>
         <property name="ALGORITHM" value="  Algorithm "/>
         <property name="FROM" value=" from "/>
+        <property name="NULL" value="null"/>
 
     </property_list>
     <property_options_list/>

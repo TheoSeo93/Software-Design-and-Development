@@ -89,4 +89,5 @@ public enum AppPropertyTypes {
     RUN_CONFIG,
     TXT_WATCH_NEGATIVE,
     ALGORITHM,
+    NULL
 }

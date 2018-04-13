@@ -454,32 +454,36 @@ public final class AppUI extends UITemplate {
             if (newValue) {
                 String chartData = textArea.getText().toString();
                 try {
-                    tsdProcessor.processString(chartData);
-                    if (workspace.getChildren().size() < 5) {
-
-                        if (tsdProcessor.getDataLabelCount() == 2 && !tsdProcessor.checkNullLabel()) {
-                            comboBox.setItems(FXCollections.observableArrayList(
-                                    new Classification(),
-                                    new Clustering()
-                            ));
-                        } else
-                            comboBox.setItems(FXCollections.observableArrayList(
-                                    new Clustering()
-                            ));
+                    if(!chartData.isEmpty()) {
+                        tsdProcessor.processString(chartData);
 
 
-                        if (workspace.getChildren().size() == 4) {
+                        if (workspace.getChildren().size() < 5) {
+
+                            if (tsdProcessor.getDataLabelCount() == 2 && !tsdProcessor.checkNullLabel()) {
+                                comboBox.setItems(FXCollections.observableArrayList(
+                                        new Classification(),
+                                        new Clustering()
+                                ));
+                            } else
+                                comboBox.setItems(FXCollections.observableArrayList(
+                                        new Clustering()
+                                ));
+
+
+                            if (workspace.getChildren().size() == 4) {
                                 comboBox.setPromptText(PropertyManager.getManager().getPropertyValue(ALGORITHM_TYPE.toString()));
-                            workspace.getChildren().add(comboBox); //Index: 4 , size: 5
-                        }
+                                workspace.getChildren().add(comboBox); //Index: 4 , size: 5
+                            }
 
+                        }
+                        textArea.setDisable(true);
                     }
-                    textArea.setDisable(true);
                 } catch (Exception ex) {
                     textArea.setDisable(false);
                     Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
                     error.show(applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR.toString()), ex.getMessage() + System.lineSeparator());
-                } finally {
+                }  {
 
                     if (currentDataPath != null)
                         updateTextFlow(currentDataPath.toAbsolutePath().toString());
