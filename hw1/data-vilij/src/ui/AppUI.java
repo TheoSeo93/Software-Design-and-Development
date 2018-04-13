@@ -39,8 +39,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -90,7 +88,11 @@ public final class AppUI extends UITemplate {
     private String textAreaLbl;
     private TextFlow dataDescription;
     private ImageView[] imageViews;
+    private RadioButton[] radioButtons;
     private ImageView configImg;
+    private String newCss;
+    private Clustering[] clusterConfigs;
+    private Classification[] classificationConfigs;
 
     public LineChart<Number, Number> getChart() {
         return chart;
@@ -101,23 +103,31 @@ public final class AppUI extends UITemplate {
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
         PropertyManager manager = applicationTemplate.manager;
+        clusterConfigs = new Clustering[3];
+        classificationConfigs = new Classification[3];
         hBox = new HBox();
         textAreaTitle = new Text(manager.getPropertyValue(TEXT_AREA_TITLE.toString()));
         textAreaTitle.setFont(new Font(17));
+        textAreaTitle.getStyleClass().add(manager.getPropertyValue(LABELS.name()));
         //Text FontSize to be corrected
         textAreaLbl = manager.getPropertyValue(TEXT_AREA.toString());
         textArea = new TextArea();
         dataDescription = new TextFlow();
         dataDescription.setPrefWidth(textArea.getWidth());
         toggleButton = new ToggleButton(manager.getPropertyValue(READ_ONLY.toString()));
+        toggleButton.getStylesheets().setAll(newCss);
+        toggleButton.getStyleClass().add(manager.getPropertyValue(OTHER_BUTTON.name()));
         comboBox = new ComboBox();
-        displayButton.getStyleClass().add("toolbar-button");
+        comboBox.getStylesheets().setAll(cssPath);
+        displayButton.getStylesheets().setAll(newCss);
+        displayButton.getStyleClass().add(manager.getPropertyValue(OTHER_BUTTON.name()));
         displayButton.setTooltip(new Tooltip(manager.getPropertyValue(DISPLAY_TOOLTIP.toString())));
         displayButton.setDisable(true);
         settings1 = new ImageView(new Image(getClass().getResourceAsStream(settingIconPath)));
         settings2 = new ImageView(new Image(getClass().getResourceAsStream(settingIconPath)));
         settings3 = new ImageView(new Image(getClass().getResourceAsStream(settingIconPath)));
         configImg = new ImageView(new Image(getClass().getResourceAsStream(configImgPath)));
+        newCss = this.getClass().getResource(applicationTemplate.manager.getPropertyValue(CSS_ADDRESS.toString())).toExternalForm();
         imageViews = new ImageView[]{settings1, settings2, settings3};
         comboBox.setConverter(new StringConverter<Object>() {
             @Override
@@ -158,7 +168,8 @@ public final class AppUI extends UITemplate {
     @Override
     protected void setToolBar(ApplicationTemplate applicationTemplate) {
         super.setToolBar(applicationTemplate);
-        scrnshotButton = setToolbarButton(scrnShotIconPath, applicationTemplate.manager.getPropertyValue(SCREENSHOT_TOOLTIP.toString()), true);
+        scrnshotButton = super.setToolbarButton(scrnShotIconPath, applicationTemplate.manager.getPropertyValue(SCREENSHOT_TOOLTIP.name()), true);
+
         super.toolBar = new ToolBar(newButton, saveButton, loadButton, printButton, scrnshotButton, exitButton);
     }
 
@@ -171,7 +182,12 @@ public final class AppUI extends UITemplate {
         super.loadButton.setOnAction(e -> applicationTemplate.getActionComponent().handleLoadRequest());
         super.exitButton.setOnAction(e -> applicationTemplate.getActionComponent().handleExitRequest());
         super.printButton.setOnAction(e -> applicationTemplate.getActionComponent().handlePrintRequest());
-
+        scrnshotButton.getStylesheets().setAll(cssPath);
+        loadButton.getStylesheets().setAll(cssPath);
+        exitButton.getStylesheets().setAll(cssPath);
+        newButton.getStylesheets().setAll(cssPath);
+        saveButton.getStylesheets().setAll(cssPath);
+        printButton.getStylesheets().setAll(cssPath);
 
     }
 
@@ -197,18 +213,25 @@ public final class AppUI extends UITemplate {
     private void layout() {
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
+        primaryScene.getStylesheets().add(newCss);
+
         chart = new LineChart<>(xAxis, yAxis);
-        chart.getStylesheets().add(this.getClass().getResource(applicationTemplate.manager.getPropertyValue(CSS_ADDRESS.toString())).toExternalForm());
+        chart.getStylesheets().add(newCss);
         chart.setTitle(applicationTemplate.manager.getPropertyValue(DATA_VISUALIZATION.toString()));
         workspace = new VBox();
         workspace.getChildren().add(textAreaTitle);
         workspace.getChildren().add(textArea);
         workspace.getChildren().add(dataDescription);
         workspace.getChildren().add(toggleButton);
+        workspace.getStylesheets().setAll(newCss);
+        workspace.getStyleClass().add(PropertyManager.getManager().getPropertyValue(BACKGROUND.name()));
+
         ((VBox) workspace).setSpacing(5);
-        VBox.setMargin(textAreaTitle, new Insets(12, 0, 0, 200));
+        VBox.setMargin(textAreaTitle, new Insets(4, 0, 0, 200));
         hBox.getChildren().add(workspace);
         hBox.getChildren().add(chart);
+        hBox.getStylesheets().setAll(newCss);
+        hBox.getStyleClass().add(PropertyManager.getManager().getPropertyValue(BACKGROUND.name()));
         super.appPane.getChildren().add(hBox);
 
 
@@ -217,7 +240,7 @@ public final class AppUI extends UITemplate {
     private void setWorkspaceActions() {
         tsdProcessor.setManager(this.applicationTemplate.manager);
         settings1.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            showConfigDialog();
+            showConfigDialog(true, false, false);
         });
         settings1.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
             primaryScene.setCursor(Cursor.HAND);
@@ -230,7 +253,7 @@ public final class AppUI extends UITemplate {
 
         });
         settings2.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            showConfigDialog();
+            showConfigDialog(false, true, false);
         });
         settings2.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
             primaryScene.setCursor(Cursor.HAND);
@@ -244,7 +267,7 @@ public final class AppUI extends UITemplate {
         });
 
         settings3.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            showConfigDialog();
+            showConfigDialog(false, false, true);
         });
         settings3.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
             primaryScene.setCursor(Cursor.HAND);
@@ -282,18 +305,21 @@ public final class AppUI extends UITemplate {
                 if (comboBox.getSelectionModel().getSelectedItem().toString().toLowerCase().contains(CLUSTERING.toString().toLowerCase())) {
                     isClassification = false;
                     Text algoName = new Text(PropertyManager.getManager().getPropertyValue(CLUSTERING.name()));
+                    algoName.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.name()));
                     algorithmConfig.getChildren().add(algoName);
                     algoName.setFont(new Font(14));
                     ImageView settings;
                     ToggleGroup toggleGroup = new ToggleGroup();
-                    RadioButton[] radioButtons = new RadioButton[3];
+                    radioButtons = new RadioButton[3];
                     for (int i = 0; i < 3; i++) {
                         settings = imageViews[i];
 
-                        RadioButton radioButton = new RadioButton("  Algorithm " + (i + 1));
+                        RadioButton radioButton = new RadioButton(PropertyManager.getManager().getPropertyValue(ALGORITHM.name()) + (i + 1));
                         radioButton.setToggleGroup(toggleGroup);
                         radioButton.setFont(new Font(14));
                         radioButtons[i] = radioButton;
+
+                        radioButton.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.name()));
                         HBox configRow = new HBox();
                         configRow.setSpacing(250);
                         configRow.getChildren().add(new Group(radioButton));
@@ -306,7 +332,6 @@ public final class AppUI extends UITemplate {
                     }
 
 
-
                 } else {
                     isClassification = true;
                     Text algoName = new Text(PropertyManager.getManager().getPropertyValue(CLASSIFICATION.name()));
@@ -314,11 +339,13 @@ public final class AppUI extends UITemplate {
                     algoName.setFont(new Font(14));
                     ImageView settings;
                     ToggleGroup toggleGroup = new ToggleGroup();
-                    RadioButton[] radioButtons = new RadioButton[3];
+                      radioButtons = new RadioButton[3];
+
                     for (int i = 0; i < 3; i++) {
                         settings = imageViews[i];
 
-                        RadioButton radioButton = new RadioButton("  Algorithm " + (i + 1));
+                        RadioButton radioButton = new RadioButton(PropertyManager.getManager().getPropertyValue(ALGORITHM.name()) + (i + 1));
+                        radioButton.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.name()));
                         radioButton.setToggleGroup(toggleGroup);
                         radioButton.setFont(new Font(14));
                         radioButtons[i] = radioButton;
@@ -444,7 +471,7 @@ public final class AppUI extends UITemplate {
 
 
                         if (workspace.getChildren().size() == 4) {
-                            comboBox.setPromptText("Set Algorithm Type");
+                                comboBox.setPromptText(PropertyManager.getManager().getPropertyValue(ALGORITHM_TYPE.name()));
                             workspace.getChildren().add(comboBox); //Index: 4 , size: 5
                         }
 
@@ -519,23 +546,35 @@ public final class AppUI extends UITemplate {
             ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
         }
         textFlow.setLineSpacing(5);
-        Text firstLine = new Text(tsdProcessor.getDataSize() + " instances are loaded ");
 
-        Text labelDescription = new Text(tsdProcessor.getDataLabelCount() + " labels are named as " + System.lineSeparator());
+        Text firstLine = new Text(tsdProcessor.getDataSize() + PropertyManager.getManager().getPropertyValue(FIRSTLINE.name()));
+
+        Text labelDescription = new Text(tsdProcessor.getDataLabelCount() + PropertyManager.getManager().getPropertyValue(LABELNAMES.name()) + System.lineSeparator());
+        firstLine.getStyleClass().add( PropertyManager.getManager().getPropertyValue(DIALOG_BACKGROUND.name()));
+        labelDescription.getStyleClass().add(PropertyManager.getManager().getPropertyValue(DIALOG_BACKGROUND.name()));
 
         Text pathDescription;
         if (dataFilePath != null)
-            pathDescription = new Text("from" + System.lineSeparator() + dataFilePath + System.lineSeparator());
+            pathDescription = new Text(PropertyManager.getManager().getPropertyValue(FROM.name())+ System.lineSeparator() + dataFilePath + System.lineSeparator());
         else
-            pathDescription = new Text(System.lineSeparator() + "The file path has not been specified yet" + System.lineSeparator());
+            pathDescription = new Text(System.lineSeparator() +PropertyManager.getManager().getPropertyValue(NO_FILEPATH.name())+ System.lineSeparator());
 
+        firstLine.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.name()));
+        pathDescription.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.name()));
+        labelDescription.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.name()));
         textFlow.getChildren().add(firstLine);
         textFlow.getChildren().add(pathDescription);
         textFlow.getChildren().add(labelDescription);
+        textFlow.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.name()));
+
+
         Iterator labelIterator = tsdProcessor.getLabels().iterator();
 
         for (int i = 0; i < tsdProcessor.getDataLabelCount(); i++) {
-            textFlow.getChildren().add(new Text("-" + labelIterator.next() + System.lineSeparator()));
+            Label labelName = new Label();
+            labelName.getStyleClass().add(PropertyManager.getManager().getPropertyValue(ROUND_LABELNAMES.name()));
+            labelName.setText(labelIterator.next().toString());
+            textFlow.getChildren().add(labelName);
             labelIterator.remove();
         }
     }
@@ -553,24 +592,25 @@ public final class AppUI extends UITemplate {
         moreThanTen = bool;
     }
 
-    public void layoutRenew() {
-        workspace.getChildren().remove(workspace.getChildren().size() - 1);
-    }
 
-    public void showConfigDialog() {
+    public void showConfigDialog(boolean firstCheck, boolean secondCheck, boolean thirdCheck) {
         GridPane configDialog = new GridPane();
-        configDialog.setHgap(14);
-        configDialog.setVgap(20);
+
         configDialog.setPadding(new Insets(14, 14, 14, 14));
         configDialog.add(configImg, 0, 1);
         configDialog.setPrefSize(700, 151);
-        Button cancel = new Button("Cancel");
-        Button ok = new Button("Ok");
+        configDialog.getStylesheets().add(newCss);
+        configDialog.getStyleClass().add(PropertyManager.getManager().getPropertyValue(BACKGROUND.name()));
+        Button cancel = new Button(PropertyManager.getManager().getPropertyValue(CANCEL.name()));
+        Button ok = new Button(PropertyManager.getManager().getPropertyValue(OK.name()));
 
         HBox buttonGroup = new HBox();
-        cancel.setMinSize(80, 25);
-        ok.setMinSize(80, 25);
         ok.setDisable(true);
+        ok.getStylesheets().add(newCss);
+        ok.getStyleClass().add(PropertyManager.getManager().getPropertyValue(OTHER_BUTTON.name()));
+        cancel.getStylesheets().add(newCss);
+        cancel.getStyleClass().add(PropertyManager.getManager().getPropertyValue(OTHER_BUTTON.name()));
+
         buttonGroup.getChildren().addAll(cancel, ok);
         buttonGroup.setSpacing(14);
         buttonGroup.setPadding(new Insets(0, 0, 0, 120));
@@ -579,30 +619,32 @@ public final class AppUI extends UITemplate {
         vBox.setPrefSize(608, 83);
         TextField[] textFields = new TextField[3];
         Label textWatcher = new Label();
+        textWatcher.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.name()));
         CheckBox isContinuous = new CheckBox();
         for (int i = 0; i < 4; i++) {
             HBox row = new HBox();
             Label label = new Label();
-            label.setMinSize(96, 19);
-            label.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 13));
+
 
             TextField textField = new TextField();
+            label.getStylesheets().add(newCss);
+            label.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.name()));
 
             if (i == 0) {
-                label.setText("Max Iterations");
+                label.setText(PropertyManager.getManager().getPropertyValue(MAX_ITERATIONS.name()));
                 label.setPadding(new Insets(0, 50, 0, 0));
             } else if (i == 1) {
-                label.setText("Update Interval");
+                label.setText(PropertyManager.getManager().getPropertyValue(INTERVAL.name()));
                 label.setPadding(new Insets(0, 44, 0, 0));
             } else if (i == 2) {
                 if (isClassification)
                     continue;
                 else {
-                    label.setText("Number of Clusters");
-                    label.setPadding(new Insets(0, 22, 0, 0));
+                    label.setText(PropertyManager.getManager().getPropertyValue(CLUSTERS.name()));
+                    label.setPadding(new Insets(0, 25, 0, 0));
                 }
             } else {
-                label.setText("Continuous Run?");
+                label.setText(PropertyManager.getManager().getPropertyValue(CONTINUOUS.name()));
                 label.setPadding(new Insets(0, 168, 0, 0));
             }
             row.getChildren().add(label);
@@ -613,21 +655,64 @@ public final class AppUI extends UITemplate {
                 if (i == 1)
                     row.getChildren().add(buttonGroup);
             } else {
+
                 row.getChildren().add(isContinuous);
                 row.getChildren().add(textWatcher);
             }
             vBox.getChildren().add(row);
         }
+        if (isClassification) {
+            for (int i = 0; i < 3; i++) {
+                if (classificationConfigs[i] != null) {
+                    if (firstCheck) {
+                        textFields[0].setText(String.valueOf(classificationConfigs[0].getMaxIterations()));
+                        textFields[1].setText(String.valueOf(classificationConfigs[0].getUpdateInterval()));
+                        isContinuous.setSelected(classificationConfigs[0].tocontinue());
+                    } else if (secondCheck) {
+                        textFields[0].setText(String.valueOf(classificationConfigs[1].getMaxIterations()));
+                        textFields[1].setText(String.valueOf(classificationConfigs[1].getUpdateInterval()));
+                        isContinuous.setSelected(classificationConfigs[1].tocontinue());
+                    } else {
+                        textFields[0].setText(String.valueOf(classificationConfigs[2].getMaxIterations()));
+                        textFields[1].setText(String.valueOf(classificationConfigs[2].getUpdateInterval()));
+                        isContinuous.setSelected(classificationConfigs[2].tocontinue());
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < 3; i++) {
 
+                    if (clusterConfigs[0]!=null&&firstCheck) {
+                        textFields[0].setText(String.valueOf(clusterConfigs[0].getMaxIterations()));
+                        textFields[1].setText(String.valueOf(clusterConfigs[0].getUpdateInterval()));
+                        textFields[2].setText(String.valueOf(clusterConfigs[0].getClusters()));
+                        isContinuous.setSelected(clusterConfigs[0].tocontinue());
+                    } else if (clusterConfigs[1]!=null&&secondCheck) {
+                        textFields[0].setText(String.valueOf(clusterConfigs[1].getMaxIterations()));
+                        textFields[1].setText(String.valueOf(clusterConfigs[1].getUpdateInterval()));
+                        textFields[2].setText(String.valueOf(clusterConfigs[1].getClusters()));
+                        isContinuous.setSelected(clusterConfigs[1].tocontinue());
+                    } else if (clusterConfigs[2]!=null&&thirdCheck){
+                        textFields[0].setText(String.valueOf(clusterConfigs[2].getMaxIterations()));
+                        textFields[1].setText(String.valueOf(clusterConfigs[2].getUpdateInterval()));
+                        textFields[2].setText(String.valueOf(clusterConfigs[2].getClusters()));
+                        isContinuous.setSelected(clusterConfigs[2].tocontinue());
+                    }
+
+                }
+
+        }
         configDialog.add(vBox, 1, 1);
         configDialog.setEffect(new Glow(0.44));
         Stage newStage = new Stage();
         newStage.setMinWidth(700);
         newStage.setScene(new Scene(configDialog));
-        newStage.setTitle("Run Configurations");
+        newStage.setTitle(PropertyManager.getManager().getPropertyValue(RUN_CONFIG.name()));
         newStage.show();
 
         for (int i = 0; i < textFields.length; i++) {
+            if(isClassification&&i==2)
+                continue;
             textFields[i].textProperty().
                     addListener((observable, oldValue, newValue) -> {
                         boolean isDigit = false;
@@ -639,14 +724,14 @@ public final class AppUI extends UITemplate {
                                     continue;
                                 }
                             } else {
-                                if(textFields[j].getText().length()==0||newValue.length()==0) {
+                                if (textFields[j].getText().length() == 0 || newValue.length() == 0) {
                                     ok.setDisable(true);
                                     isValid = false;
                                     break Outer;
                                 }
                                 for (int k = 0; k < textFields[j].getText().length(); k++) {
                                     if (!Character.isDigit(textFields[j].getText().charAt(k))) {
-                                        textWatcher.setText("The input has to be a positive integer.");
+                                        textWatcher.setText(PropertyManager.getManager().getPropertyValue(TEXTWATCH_MSG.name()));
                                         ok.setDisable(true);
                                         isValid = false;
                                         break Outer;
@@ -654,7 +739,7 @@ public final class AppUI extends UITemplate {
                                 }
                                 for (int k = 0; k < newValue.length(); k++) {
                                     if (!Character.isDigit(newValue.charAt(k))) {
-                                        textWatcher.setText("The input has to be a positive integer.");
+                                        textWatcher.setText(PropertyManager.getManager().getPropertyValue(TEXTWATCH_MSG.name()));
                                         ok.setDisable(true);
                                         isValid = false;
                                         break Outer;
@@ -664,7 +749,7 @@ public final class AppUI extends UITemplate {
                                 //Verified the string input is digit
                                 if (isDigit) {
                                     if (Integer.parseInt(newValue) <= 0) {
-                                        textWatcher.setText("The input has to be positive.");
+                                        textWatcher.setText(PropertyManager.getManager().getPropertyValue(TXT_WATCH_NEGATIVE.name()));
                                         ok.setDisable(true);
                                         isValid = false;
                                     }
@@ -676,13 +761,46 @@ public final class AppUI extends UITemplate {
 
 
                         if (isValid) {
-                            textWatcher.setText("");
+                            textWatcher.setText(PropertyManager.getManager().getPropertyValue(EMPTY.name()));
                             ok.setDisable(false);
                         }
                     });
 
         }
         ok.setOnAction(event -> {
+            if (firstCheck) {
+                radioButtons[0].setDisable(false);
+                if (isClassification) {
+                    classificationConfigs[0] = new Classification(Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
+                } else {
+                    clusterConfigs[0] = new Clustering(Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+                }
+                radioButtons[0].setOnMouseClicked(e -> {
+                    displayButton.setDisable(false);
+                });
+            } else if (secondCheck) {
+                radioButtons[1].setDisable(false);
+                if (isClassification) {
+                    classificationConfigs[1] = new Classification(Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
+                } else {
+                    clusterConfigs[1] = new Clustering(Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+                }
+
+                radioButtons[1].setOnMouseClicked(e -> {
+                    displayButton.setDisable(false);
+                });
+            } else {
+                radioButtons[2].setDisable(false);
+                if (isClassification) {
+                    classificationConfigs[2] = new Classification(Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
+                } else {
+                    clusterConfigs[2] = new Clustering(Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+                }
+
+                radioButtons[2].setOnMouseClicked(e -> {
+                    displayButton.setDisable(false);
+                });
+            }
 
             newStage.close();
         });

@@ -1,5 +1,7 @@
 package settings;
 
+import java.util.Set;
+
 /**
  * This enumerable type lists the various application-specific property types listed in the initial set of properties to
  * be loaded from the workspace properties <code>xml</code> file specified by the initialization parameters.
@@ -65,7 +67,26 @@ public enum AppPropertyTypes {
     DISPLAY_TOOLTIP,
     SETTINGS_ICON,
     SETTINGS_TOOLTIP,
-    CONFIGIMG_ICON
-
-
+    CONFIGIMG_ICON,
+    OTHER_BUTTON,
+    ALGORITHM_TYPE,
+    TEXTWATCH_MSG,
+    RADIOBUTTONS,
+    MAX_ITERATIONS,
+    INTERVAL,
+    CLUSTERS,
+    CONTINUOUS,
+    FIRSTLINE,
+    LABELNAMES,
+    DIALOG_BACKGROUND,
+    FROM,
+    NO_FILEPATH,
+    LABELS,
+    ROUND_LABELNAMES,
+    BACKGROUND,
+    CANCEL,
+    OK,
+    RUN_CONFIG,
+    TXT_WATCH_NEGATIVE,
+    ALGORITHM,
 }

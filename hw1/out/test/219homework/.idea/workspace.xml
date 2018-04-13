@@ -1,42 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d01c038e-9d6c-4edd-a648-6542df9f4f56" name="Default" comment="Imported the files uploaded from professor Ritwik Banerjee&#10;&#10;-Algorithm.java&#10;-Classifier.java&#10;-RandomClassifier.java&#10;-DataSet.java">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/display.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/settings.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/settings_large.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/settings_white.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Classification.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Clustering.java" />
+    <list default="true" id="d01c038e-9d6c-4edd-a648-6542df9f4f56" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/hw1/data-vilij/resources/css/.css" afterPath="$PROJECT_DIR$/hw1/data-vilij/resources/css/.css" />
-      <change beforePath="$PROJECT_DIR$/hw1/data-vilij/resources/data/asd.tsd" afterPath="$PROJECT_DIR$/hw1/data-vilij/resources/data/asd.tsd" />
-      <change beforePath="$PROJECT_DIR$/hw1/data-vilij/resources/data/sample-data.tsd" afterPath="$PROJECT_DIR$/hw1/data-vilij/resources/data/sample-data.tsd" />
+      <change beforePath="$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/settings_white.png" afterPath="$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/settings_white.png" />
       <change beforePath="$PROJECT_DIR$/hw1/data-vilij/resources/properties/app-properties.xml" afterPath="$PROJECT_DIR$/hw1/data-vilij/resources/properties/app-properties.xml" />
       <change beforePath="$PROJECT_DIR$/hw1/data-vilij/src/actions/AppActions.java" afterPath="$PROJECT_DIR$/hw1/data-vilij/src/actions/AppActions.java" />
-      <change beforePath="$PROJECT_DIR$/hw1/data-vilij/src/classification/Algorithm.java" afterPath="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Algorithm.java" />
-      <change beforePath="$PROJECT_DIR$/hw1/data-vilij/src/classification/Classifier.java" afterPath="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Classifier.java" />
-      <change beforePath="$PROJECT_DIR$/hw1/data-vilij/src/classification/RandomClassifier.java" afterPath="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/RandomClassifier.java" />
-      <change beforePath="$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/AppData.java" afterPath="$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/AppData.java" />
-      <change beforePath="$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/TSDProcessor.java" afterPath="$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/TSDProcessor.java" />
-      <change beforePath="$PROJECT_DIR$/hw1/data-vilij/src/settings/AppPropertyTypes.java" afterPath="$PROJECT_DIR$/hw1/data-vilij/src/settings/AppPropertyTypes.java" />
+      <change beforePath="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Classification.java" afterPath="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Classification.java" />
+      <change beforePath="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Clustering.java" afterPath="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Clustering.java" />
       <change beforePath="$PROJECT_DIR$/hw1/data-vilij/src/ui/AppUI.java" afterPath="$PROJECT_DIR$/hw1/data-vilij/src/ui/AppUI.java" />
       <change beforePath="$PROJECT_DIR$/hw1/out/production/219homework/actions/AppActions.class" afterPath="$PROJECT_DIR$/hw1/out/production/219homework/actions/AppActions.class" />
-      <change beforePath="$PROJECT_DIR$/hw1/out/production/219homework/data/asd.tsd" afterPath="$PROJECT_DIR$/hw1/out/production/219homework/data/asd.tsd" />
-      <change beforePath="$PROJECT_DIR$/hw1/out/production/219homework/data/sample-data.tsd" afterPath="$PROJECT_DIR$/hw1/out/production/219homework/data/sample-data.tsd" />
-      <change beforePath="$PROJECT_DIR$/hw1/out/production/219homework/dataprocessors/AppData.class" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/hw1/out/production/219homework/dataprocessors/TSDProcessor$InvalidDataNameException.class" afterPath="$PROJECT_DIR$/hw1/out/production/219homework/dataprocessors/TSDProcessor$InvalidDataNameException.class" />
-      <change beforePath="$PROJECT_DIR$/hw1/out/production/219homework/dataprocessors/TSDProcessor.class" afterPath="$PROJECT_DIR$/hw1/out/production/219homework/dataprocessors/TSDProcessor.class" />
+      <change beforePath="$PROJECT_DIR$/hw1/out/production/219homework/gui/css/vilij.css" afterPath="$PROJECT_DIR$/hw1/out/production/219homework/gui/css/vilij.css" />
       <change beforePath="$PROJECT_DIR$/hw1/out/production/219homework/properties/app-properties.xml" afterPath="$PROJECT_DIR$/hw1/out/production/219homework/properties/app-properties.xml" />
-      <change beforePath="$PROJECT_DIR$/hw1/out/production/219homework/settings/AppPropertyTypes.class" afterPath="$PROJECT_DIR$/hw1/out/production/219homework/settings/AppPropertyTypes.class" />
       <change beforePath="$PROJECT_DIR$/hw1/out/production/219homework/ui/AppUI$1.class" afterPath="$PROJECT_DIR$/hw1/out/production/219homework/ui/AppUI$1.class" />
-      <change beforePath="$PROJECT_DIR$/hw1/out/production/219homework/ui/AppUI$2.class" afterPath="$PROJECT_DIR$/hw1/out/production/219homework/ui/AppUI$2.class" />
       <change beforePath="$PROJECT_DIR$/hw1/out/production/219homework/ui/AppUI.class" afterPath="$PROJECT_DIR$/hw1/out/production/219homework/ui/AppUI.class" />
       <change beforePath="$PROJECT_DIR$/hw1/out/test/219homework/.idea/workspace.xml" afterPath="$PROJECT_DIR$/hw1/out/test/219homework/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/hw1/out/test/219homework/hw1/data-vilij/resources/data/asd.tsd" afterPath="$PROJECT_DIR$/hw1/out/test/219homework/hw1/data-vilij/resources/data/asd.tsd" />
-      <change beforePath="$PROJECT_DIR$/hw1/out/test/219homework/hw1/data-vilij/resources/data/sample-data.tsd" afterPath="$PROJECT_DIR$/hw1/out/test/219homework/hw1/data-vilij/resources/data/sample-data.tsd" />
       <change beforePath="$PROJECT_DIR$/hw1/out/test/219homework/hw1/data-vilij/resources/properties/app-properties.xml" afterPath="$PROJECT_DIR$/hw1/out/test/219homework/hw1/data-vilij/resources/properties/app-properties.xml" />
-      <change beforePath="$PROJECT_DIR$/hw1/out/test/219homework/settings/AppPropertyTypes.class" afterPath="$PROJECT_DIR$/hw1/out/test/219homework/settings/AppPropertyTypes.class" />
+      <change beforePath="$PROJECT_DIR$/hw1/out/test/219homework/hw1/vilij/resources/gui/css/vilij.css" afterPath="$PROJECT_DIR$/hw1/out/test/219homework/hw1/vilij/resources/gui/css/vilij.css" />
+      <change beforePath="$PROJECT_DIR$/hw1/out/test/219homework/vilij/templates/ApplicationTemplate$1.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/hw1/out/test/219homework/vilij/templates/ApplicationTemplate.class" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/hw1/vilij/resources/gui/css/vilij.css" afterPath="$PROJECT_DIR$/hw1/vilij/resources/gui/css/vilij.css" />
     </list>
     <ignored path="$PROJECT_DIR$/hw1/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -51,129 +34,71 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="TSDProcessor.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/TSDProcessor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4161">
+              <caret line="244" column="37" lean-forward="false" selection-start-line="244" selection-start-column="37" selection-end-line="244" selection-end-column="37" />
+              <folding>
+                <element signature="e#9528#9529#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="AppUI.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/ui/AppUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="148">
-              <caret line="665" column="24" lean-forward="false" selection-start-line="665" selection-start-column="24" selection-end-line="665" selection-end-column="24" />
+            <state relative-caret-position="266">
+              <caret line="121" column="55" lean-forward="true" selection-start-line="121" selection-start-column="55" selection-end-line="121" selection-end-column="55" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#5217#5218#0" expanded="true" />
-                <element signature="e#5260#5261#0" expanded="true" />
-                <element signature="e#7821#7822#0" expanded="true" />
-                <element signature="e#7852#7853#0" expanded="true" />
-                <element signature="e#20561#20562#0" expanded="true" />
-                <element signature="e#20599#20600#0" expanded="true" />
-                <element signature="e#20632#20633#0" expanded="true" />
-                <element signature="e#20673#20674#0" expanded="true" />
-                <element signature="e#20713#20714#0" expanded="true" />
-                <element signature="e#20764#20765#0" expanded="true" />
-                <element signature="e#20821#20822#0" expanded="true" />
-                <element signature="e#20873#20874#0" expanded="true" />
-                <element signature="e#20934#20935#0" expanded="true" />
-                <element signature="e#20980#20981#0" expanded="true" />
-                <element signature="e#21017#21018#0" expanded="true" />
-                <element signature="e#21060#21061#0" expanded="true" />
-                <element signature="e#21096#21097#0" expanded="true" />
-                <element signature="e#21144#21145#0" expanded="true" />
-                <element signature="e#21181#21182#0" expanded="true" />
-                <element signature="e#21228#21229#0" expanded="true" />
-                <element signature="e#22597#22598#0" expanded="true" />
-                <element signature="e#22631#22632#0" expanded="true" />
-                <element signature="e#22668#22669#0" expanded="true" />
-                <element signature="e#22706#22707#0" expanded="true" />
-                <element signature="e#22754#22755#0" expanded="true" />
-                <element signature="e#22788#22789#0" expanded="true" />
-                <element signature="e#22821#22822#0" expanded="true" />
-                <element signature="e#22903#22904#0" expanded="true" />
+                <element signature="e#5803#5804#0" expanded="true" />
+                <element signature="e#5846#5847#0" expanded="true" />
+                <element signature="e#8731#8732#0" expanded="true" />
+                <element signature="e#8762#8763#0" expanded="true" />
+                <element signature="e#22095#22096#0" expanded="true" />
+                <element signature="e#22133#22134#0" expanded="true" />
+                <element signature="e#22166#22167#0" expanded="true" />
+                <element signature="e#22207#22208#0" expanded="true" />
+                <element signature="e#22247#22248#0" expanded="true" />
+                <element signature="e#22298#22299#0" expanded="true" />
+                <element signature="e#22355#22356#0" expanded="true" />
+                <element signature="e#22407#22408#0" expanded="true" />
+                <element signature="e#22468#22469#0" expanded="true" />
+                <element signature="e#22514#22515#0" expanded="true" />
+                <element signature="e#22551#22552#0" expanded="true" />
+                <element signature="e#22594#22595#0" expanded="true" />
+                <element signature="e#22630#22631#0" expanded="true" />
+                <element signature="e#22678#22679#0" expanded="true" />
+                <element signature="e#22715#22716#0" expanded="true" />
+                <element signature="e#22762#22763#0" expanded="true" />
+                <element signature="e#24587#24588#0" expanded="true" />
+                <element signature="e#24621#24622#0" expanded="true" />
+                <element signature="e#24658#24659#0" expanded="true" />
+                <element signature="e#24696#24697#0" expanded="true" />
+                <element signature="e#24744#24745#0" expanded="true" />
+                <element signature="e#24778#24779#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Font.java" pinned="false" current-in-tab="false">
-        <entry file="jar://C:/Program Files/Java/jdk1.8.0_162/javafx-src.zip!/javafx/scene/text/Font.java">
+      <file leaf-file-name="UITemplate.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/templates/UITemplate.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="149">
-              <caret line="330" column="12" lean-forward="false" selection-start-line="330" selection-start-column="12" selection-end-line="330" selection-end-column="12" />
+            <state relative-caret-position="608">
+              <caret line="45" column="35" lean-forward="false" selection-start-line="45" selection-start-column="35" selection-end-line="45" selection-end-column="35" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FontWeight.java" pinned="false" current-in-tab="false">
-        <entry file="jar://C:/Program Files/Java/jdk1.8.0_162/javafx-src.zip!/javafx/scene/text/FontWeight.java">
+      <file leaf-file-name=".css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/css/.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="157">
-              <caret line="86" column="12" lean-forward="false" selection-start-line="86" selection-start-column="12" selection-end-line="86" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Dialog.java" pinned="false" current-in-tab="false">
-        <entry file="jar://C:/Program Files/Java/jdk1.8.0_162/javafx-src.zip!/javafx/scene/control/Dialog.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="157">
-              <caret line="348" column="22" lean-forward="false" selection-start-line="348" selection-start-column="22" selection-end-line="348" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DataVisualizer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/ui/DataVisualizer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="26" column="35" lean-forward="true" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Algorithm.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Algorithm.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="15" column="1" lean-forward="false" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AppData.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/AppData.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="129">
-              <caret line="88" column="70" lean-forward="false" selection-start-line="88" selection-start-column="62" selection-end-line="88" selection-end-column="70" />
-              <folding>
-                <element signature="e#4329#4330#0" expanded="true" />
-                <element signature="e#4368#4369#0" expanded="true" />
-                <element signature="e#4432#4433#0" expanded="true" />
-                <element signature="e#4488#4489#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Classification.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Classification.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="27" column="1" lean-forward="false" selection-start-line="27" selection-start-column="1" selection-end-line="27" selection-end-column="1" />
-              <folding>
-                <element signature="e#428#429#0" expanded="true" />
-                <element signature="e#478#479#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RandomClassifier.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/RandomClassifier.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="129">
-              <caret line="24" column="54" lean-forward="false" selection-start-line="24" selection-start-column="54" selection-end-line="24" selection-end-column="54" />
+            <state relative-caret-position="1311">
+              <caret line="69" column="30" lean-forward="false" selection-start-line="69" selection-start-column="30" selection-end-line="69" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -182,8 +107,58 @@
       <file leaf-file-name="Clustering.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Clustering.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
-              <caret line="24" column="18" lean-forward="false" selection-start-line="24" selection-start-column="18" selection-end-line="24" selection-end-column="18" />
+            <state relative-caret-position="456">
+              <caret line="26" column="25" lean-forward="false" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vilij.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hw1/vilij/resources/gui/css/vilij.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="532">
+              <caret line="28" column="17" lean-forward="false" selection-start-line="28" selection-start-column="17" selection-end-line="28" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app-properties.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/properties/app-properties.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1368">
+              <caret line="72" column="68" lean-forward="false" selection-start-line="72" selection-start-column="68" selection-end-line="72" selection-end-column="68" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AppData.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/AppData.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1349">
+              <caret line="87" column="30" lean-forward="false" selection-start-line="87" selection-start-column="30" selection-end-line="87" selection-end-column="30" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AppActions.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/actions/AppActions.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1995">
+              <caret line="123" column="46" lean-forward="false" selection-start-line="123" selection-start-column="46" selection-end-line="123" selection-end-column="46" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ApplicationTemplate.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/templates/ApplicationTemplate.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="437">
+              <caret line="31" column="28" lean-forward="false" selection-start-line="31" selection-start-column="28" selection-end-line="31" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -202,41 +177,44 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>title</find>
-      <find>text</find>
-      <find>togglegro</find>
-      <find>display</find>
-      <find>displayButton.set</find>
-      <find>displayButton.setDisable(false</find>
-      <find>popup</find>
-      <find>fancy</find>
-      <find>iconpath</find>
-      <find>config</find>
-      <find>con</find>
-      <find>80</find>
-      <find>buttons</find>
-      <find>Pref</find>
+      <find>imageviews</find>
+      <find>settings</find>
+      <find>imageViews[i]</find>
+      <find>imageViews</find>
+      <find>showconfig</find>
+      <find>combobox.get</find>
+      <find>firstline</find>
+      <find>firs</find>
+      <find>background_dialog</find>
+      <find>radiobuttons</find>
+      <find>configDialog</find>
+      <find>max i</find>
+      <find>imageview</find>
       <find>img</find>
-      <find>configImg</find>
-      <find>manager</find>
-      <find>iconsPath</find>
-      <find>-&gt;</find>
-      <find>show</find>
-      <find>alert</find>
-      <find>classification</find>
-      <find>label</find>
-      <find>labels</find>
-      <find>insets</find>
-      <find>chec</find>
-      <find>textWatcher</find>
-      <find>textArea</find>
-      <find>textField</find>
-      <find>checkbox</find>
+      <find>newButton</find>
+      <find>clear</find>
+      <find>&quot;tahoma&quot;</find>
+      <find>number</find>
+      <find>toggle</find>
+      <find>&quot;Arial&quot;</find>
+      <find>togglebutton</find>
+      <find>handleNew</find>
+      <find>#090a0c</find>
+      <find>read</find>
+      <find>red</find>
+      <find>ok</find>
+      <find>#38424b</find>
+      <find>title</find>
+      <find>padding</find>
+      <find>spacing</find>
     </findStrings>
     <replaceStrings>
       <replace>150</replace>
       <replace>250</replace>
       <replace>Min</replace>
+      <replace>Tahoma</replace>
+      <replace>#111316</replace>
+      <replace>#38444f</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -251,7 +229,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/sequence.puml" />
-        <option value="$PROJECT_DIR$/hw1/vilij/resources/gui/css/vilij.css" />
         <option value="$PROJECT_DIR$/hw1/data-vilij/src/ui/DataVisualizer.java" />
         <option value="$PROJECT_DIR$/hw1/data-vilij/resources/data/new.tsd" />
         <option value="$PROJECT_DIR$/hw1/data-vilij/src/actions/Classifier.java" />
@@ -266,15 +243,19 @@
         <option value="$PROJECT_DIR$/hw1/data-vilij/resources/data/asd.tsd" />
         <option value="$PROJECT_DIR$/hw1/data-vilij/resources/data/sample-data.tsd" />
         <option value="$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/TSDProcessor.java" />
-        <option value="$PROJECT_DIR$/hw1/data-vilij/src/actions/AppActions.java" />
         <option value="$PROJECT_DIR$/hw1/data-vilij/src/classification/Classification.java" />
-        <option value="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Clustering.java" />
-        <option value="$PROJECT_DIR$/hw1/data-vilij/resources/css/.css" />
         <option value="$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/AppData.java" />
         <option value="$PROJECT_DIR$/hw1/data-vilij/resources/gui/dialog.fxml" />
         <option value="$PROJECT_DIR$/hw1/data-vilij/src/settings/AppPropertyTypes.java" />
-        <option value="$PROJECT_DIR$/hw1/data-vilij/resources/properties/app-properties.xml" />
         <option value="$PROJECT_DIR$/hw1/data-vilij/src/ui/ConfigDialog.java" />
+        <option value="$PROJECT_DIR$/hw1/vilij/src/vilij/templates/UITemplate.java" />
+        <option value="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Classification.java" />
+        <option value="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Algorithm.java" />
+        <option value="$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Clustering.java" />
+        <option value="$PROJECT_DIR$/hw1/data-vilij/resources/properties/app-properties.xml" />
+        <option value="$PROJECT_DIR$/hw1/data-vilij/src/actions/AppActions.java" />
+        <option value="$PROJECT_DIR$/hw1/vilij/resources/gui/css/vilij.css" />
+        <option value="$PROJECT_DIR$/hw1/data-vilij/resources/css/.css" />
         <option value="$PROJECT_DIR$/hw1/data-vilij/src/ui/AppUI.java" />
       </list>
     </option>
@@ -285,11 +266,10 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="346" />
-    <option name="y" value="10" />
-    <option name="width" value="1257" />
-    <option name="height" value="874" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-8" />
+    <option name="width" value="894" />
+    <option name="height" value="876" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -306,6 +286,35 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AndroidView" />
+      <pane id="PackagesPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="younghseo" type="58d84e3e:PackageViewProjectNode" />
+              <item name="219homework" type="616d4139:PackageViewModuleNode" />
+            </path>
+            <path>
+              <item name="younghseo" type="58d84e3e:PackageViewProjectNode" />
+              <item name="219homework" type="616d4139:PackageViewModuleNode" />
+              <item name="gui" type="1f31426a:PackageElementNode" />
+            </path>
+            <path>
+              <item name="younghseo" type="58d84e3e:PackageViewProjectNode" />
+              <item name="219homework" type="616d4139:PackageViewModuleNode" />
+              <item name="hw1" type="1f31426a:PackageElementNode" />
+            </path>
+            <path>
+              <item name="younghseo" type="58d84e3e:PackageViewProjectNode" />
+              <item name="219homework" type="616d4139:PackageViewModuleNode" />
+              <item name="properties" type="1f31426a:PackageElementNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -529,39 +538,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
-      <pane id="PackagesPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="younghseo" type="58d84e3e:PackageViewProjectNode" />
-              <item name="219homework" type="616d4139:PackageViewModuleNode" />
-            </path>
-            <path>
-              <item name="younghseo" type="58d84e3e:PackageViewProjectNode" />
-              <item name="219homework" type="616d4139:PackageViewModuleNode" />
-              <item name="gui" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="younghseo" type="58d84e3e:PackageViewProjectNode" />
-              <item name="219homework" type="616d4139:PackageViewModuleNode" />
-              <item name="hw1" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="younghseo" type="58d84e3e:PackageViewProjectNode" />
-              <item name="219homework" type="616d4139:PackageViewModuleNode" />
-              <item name="properties" type="1f31426a:PackageElementNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Recitation1" />
     <property name="SearchEverywhereHistoryKey" value="plugins&#9;ACTION&#9;WelcomeScreen.Plugins" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
@@ -745,42 +725,49 @@
       <option name="project" value="LOCAL" />
       <updated>1523139065507</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Use case 1~6 done&#10;-Configuration Dialog:&#10; Implemented a textwatcher.">
+      <created>1523256044840</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1523256044840</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32926044" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.4852185" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.47750643" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32972974" sideWeight="0.4485861" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32972974" sideWeight="0.47429305" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32943144" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.52570695" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32972974" sideWeight="0.5514139" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Sequence" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4554054" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.218509" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.49550128" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22107969" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.4903599" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.49517685" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Code Iris" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32926044" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32972974" sideWeight="0.49550128" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="UnknownFeatures">
@@ -795,7 +782,8 @@
     <MESSAGE value="Revision from HW2 &#10;&#10;-Removed zero vertical and horizontal axis for correction." />
     <MESSAGE value="ActionListener changed to Lambda Expression (Java 8)" />
     <MESSAGE value="Imported the files uploaded from professor Ritwik Banerjee&#10;&#10;-Algorithm.java&#10;-Classifier.java&#10;-RandomClassifier.java&#10;-DataSet.java" />
-    <option name="LAST_COMMIT_MESSAGE" value="Imported the files uploaded from professor Ritwik Banerjee&#10;&#10;-Algorithm.java&#10;-Classifier.java&#10;-RandomClassifier.java&#10;-DataSet.java" />
+    <MESSAGE value="Use case 1~6 done&#10;-Configuration Dialog:&#10; Implemented a textwatcher." />
+    <option name="LAST_COMMIT_MESSAGE" value="Use case 1~6 done&#10;-Configuration Dialog:&#10; Implemented a textwatcher." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -804,48 +792,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_162/src.zip!/java/lang/StringBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="131">
-          <caret line="405" column="47" lean-forward="true" selection-start-line="405" selection-start-column="47" selection-end-line="405" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_162/src.zip!/java/lang/String.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="605">
-          <caret line="2866" column="18" lean-forward="false" selection-start-line="2866" selection-start-column="18" selection-end-line="2866" selection-end-column="18" />
-          <folding>
-            <element signature="e#23072#23073#0" expanded="false" />
-            <element signature="e#23112#23113#0" expanded="false" />
-            <element signature="e#113343#113344#0" expanded="false" />
-            <element signature="e#113370#113371#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/data/sample-data.tsd">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="6" column="25" lean-forward="true" selection-start-line="6" selection-start-column="25" selection-end-line="6" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/data/asd.tsd">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/vilij/resources/gui/icons/file.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hw1/vilij/resources/gui/icons/export.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -864,19 +810,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/components/UIComponent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="13" column="36" lean-forward="false" selection-start-line="13" selection-start-column="36" selection-end-line="13" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hw1/vilij/resources/properties/property-schema.xsd">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-388">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -893,45 +830,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/xmlutil/src/xmlutil/InvalidXMLFileFormatException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-46">
-          <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/templates/ApplicationTemplate.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="84" column="29" lean-forward="false" selection-start-line="84" selection-start-column="29" selection-end-line="84" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hw1/vilij/resources/properties/properties.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="167">
           <caret line="29" column="67" lean-forward="false" selection-start-line="29" selection-start-column="67" selection-end-line="29" selection-end-column="67" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/propertymanager/PropertyManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="110" column="13" lean-forward="false" selection-start-line="110" selection-start-column="13" selection-end-line="110" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/settings/PropertyTypes.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="87">
-          <caret line="38" column="67" lean-forward="false" selection-start-line="38" selection-start-column="67" selection-end-line="38" selection-end-column="67" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -947,22 +849,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="95">
           <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding>
-            <marker date="1517184496690" expanded="false" signature="0:104" ph="/.../" />
-            <marker date="1517184496690" expanded="false" signature="147:340" ph="..." />
-            <marker date="1517184496690" expanded="true" signature="342:487" ph="@{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_162/javafx-src.zip!/javafx/scene/Node.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="1564" column="22" lean-forward="false" selection-start-line="1564" selection-start-column="22" selection-end-line="1564" selection-end-column="22" />
-          <folding>
-            <element signature="e#64639#64640#0" expanded="false" />
-            <element signature="e#64683#64684#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -974,42 +860,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/settings.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/screenshot.png">
       <provider selected="true" editor-type-id="images">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/display.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/data/DataSet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="68" column="0" lean-forward="true" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/templates/UITemplate.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="3" column="22" lean-forward="false" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="22" />
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_162/javafx-src.zip!/javafx/scene/control/SelectionModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="112" column="6" lean-forward="true" selection-start-line="112" selection-start-column="6" selection-end-line="112" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1017,10 +876,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="149">
           <caret line="234" column="18" lean-forward="false" selection-start-line="234" selection-start-column="18" selection-end-line="234" selection-end-column="18" />
-          <folding>
-            <element signature="e#10065#10066#0" expanded="false" />
-            <element signature="e#10148#10149#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1032,110 +887,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/TSDProcessor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="244" column="37" lean-forward="true" selection-start-line="244" selection-start-column="37" selection-end-line="244" selection-end-column="37" />
-          <folding>
-            <element signature="e#9049#9050#0" expanded="false" />
-            <element signature="e#9106#9107#0" expanded="false" />
-            <element signature="e#9144#9145#0" expanded="false" />
-            <element signature="e#9208#9209#0" expanded="false" />
-            <element signature="e#9528#9529#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/actions/AppActions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="143" column="23" lean-forward="false" selection-start-line="143" selection-start-column="23" selection-end-line="143" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Classifier.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-27">
-          <caret line="5" column="28" lean-forward="false" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/gui/dialog.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="11" column="30" lean-forward="false" selection-start-line="11" selection-start-column="30" selection-end-line="11" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/css/.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1121">
-          <caret line="59" column="0" lean-forward="false" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/vilij/resources/gui/css/vilij.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/settings/AppPropertyTypes.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="67" column="18" lean-forward="false" selection-start-line="67" selection-start-column="4" selection-end-line="67" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/properties/app-properties.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="72" column="33" lean-forward="false" selection-start-line="72" selection-start-column="33" selection-end-line="72" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/ConfigDialog.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/ConfigDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/gui/dialog.fxml" />
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/ConfigDialog.form" />
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/ConfigDialog.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_162/javafx-src.zip!/javafx/scene/control/Alert.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-185">
           <caret line="221" column="11" lean-forward="false" selection-start-line="221" selection-start-column="11" selection-end-line="221" selection-end-column="11" />
-          <folding>
-            <element signature="e#8634#8635#0" expanded="true" />
-            <element signature="e#8669#8670#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/ui/ConfigDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1143,15 +901,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="157">
           <caret line="348" column="22" lean-forward="false" selection-start-line="348" selection-start-column="22" selection-end-line="348" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/ui/DataVisualizer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="26" column="35" lean-forward="true" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1159,42 +908,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="157">
           <caret line="86" column="12" lean-forward="false" selection-start-line="86" selection-start-column="12" selection-end-line="86" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Algorithm.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="15" column="1" lean-forward="false" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Classification.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="27" column="1" lean-forward="false" selection-start-line="27" selection-start-column="1" selection-end-line="27" selection-end-column="1" />
-          <folding>
-            <element signature="e#428#429#0" expanded="true" />
-            <element signature="e#478#479#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Clustering.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="319">
-          <caret line="24" column="18" lean-forward="false" selection-start-line="24" selection-start-column="18" selection-end-line="24" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/RandomClassifier.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="24" column="54" lean-forward="false" selection-start-line="24" selection-start-column="54" selection-end-line="24" selection-end-column="54" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1206,53 +919,249 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/AppData.java">
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/RandomClassifier.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="129">
-          <caret line="88" column="70" lean-forward="false" selection-start-line="88" selection-start-column="62" selection-end-line="88" selection-end-column="70" />
+          <caret line="24" column="54" lean-forward="false" selection-start-line="24" selection-start-column="54" selection-end-line="24" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_162/src.zip!/java/util/Iterator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-863">
+          <caret line="53" column="17" lean-forward="false" selection-start-line="53" selection-start-column="17" selection-end-line="53" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/settings/AppPropertyTypes.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="60" column="10" lean-forward="false" selection-start-line="60" selection-start-column="10" selection-end-line="60" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_162/javafx-src.zip!/javafx/scene/Node.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="1047" column="40" lean-forward="false" selection-start-line="1047" selection-start-column="40" selection-end-line="1047" selection-end-column="40" />
           <folding>
-            <element signature="e#4329#4330#0" expanded="true" />
-            <element signature="e#4368#4369#0" expanded="true" />
-            <element signature="e#4432#4433#0" expanded="true" />
-            <element signature="e#4488#4489#0" expanded="true" />
+            <element signature="e#44916#44917#0" expanded="false" />
+            <element signature="e#44949#44950#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/ui/DataVisualizer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="26" column="35" lean-forward="false" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/propertymanager/PropertyManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="19" column="18" lean-forward="false" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/settings/PropertyTypes.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="19" column="7" lean-forward="false" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/settings/InitializationParams.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="25" column="47" lean-forward="false" selection-start-line="25" selection-start-column="47" selection-end-line="25" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/xmlutil/src/xmlutil/InvalidXMLFileFormatException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="9" column="36" lean-forward="false" selection-start-line="9" selection-start-column="36" selection-end-line="9" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Classifier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="12" column="22" lean-forward="false" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Algorithm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="13" column="12" lean-forward="false" selection-start-line="13" selection-start-column="12" selection-end-line="13" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/data/DataSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="68" column="0" lean-forward="false" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/settings_large.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/settings.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/data/asd.tsd">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/settings_white.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Classification.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" column="29" lean-forward="false" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/components/UIComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="34" column="9" lean-forward="false" selection-start-line="34" selection-start-column="9" selection-end-line="34" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/gui/icons/display.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/actions/AppActions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1995">
+          <caret line="123" column="46" lean-forward="false" selection-start-line="123" selection-start-column="46" selection-end-line="123" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/templates/ApplicationTemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="31" column="28" lean-forward="false" selection-start-line="31" selection-start-column="28" selection-end-line="31" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/vilij/src/vilij/templates/UITemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="608">
+          <caret line="45" column="35" lean-forward="false" selection-start-line="45" selection-start-column="35" selection-end-line="45" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/properties/app-properties.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1368">
+          <caret line="72" column="68" lean-forward="false" selection-start-line="72" selection-start-column="68" selection-end-line="72" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/ui/ConfigDialog.java" />
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/algorithms/Clustering.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="26" column="25" lean-forward="false" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/AppData.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1349">
+          <caret line="87" column="30" lean-forward="false" selection-start-line="87" selection-start-column="30" selection-end-line="87" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/dataprocessors/TSDProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4161">
+          <caret line="244" column="37" lean-forward="false" selection-start-line="244" selection-start-column="37" selection-end-line="244" selection-end-column="37" />
+          <folding>
+            <element signature="e#9528#9529#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/vilij/resources/gui/css/vilij.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="532">
+          <caret line="28" column="17" lean-forward="false" selection-start-line="28" selection-start-column="17" selection-end-line="28" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1/data-vilij/resources/css/.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1311">
+          <caret line="69" column="30" lean-forward="false" selection-start-line="69" selection-start-column="30" selection-end-line="69" selection-end-column="30" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hw1/data-vilij/src/ui/AppUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="665" column="24" lean-forward="false" selection-start-line="665" selection-start-column="24" selection-end-line="665" selection-end-column="24" />
+        <state relative-caret-position="266">
+          <caret line="121" column="55" lean-forward="true" selection-start-line="121" selection-start-column="55" selection-end-line="121" selection-end-column="55" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5217#5218#0" expanded="true" />
-            <element signature="e#5260#5261#0" expanded="true" />
-            <element signature="e#7821#7822#0" expanded="true" />
-            <element signature="e#7852#7853#0" expanded="true" />
-            <element signature="e#20561#20562#0" expanded="true" />
-            <element signature="e#20599#20600#0" expanded="true" />
-            <element signature="e#20632#20633#0" expanded="true" />
-            <element signature="e#20673#20674#0" expanded="true" />
-            <element signature="e#20713#20714#0" expanded="true" />
-            <element signature="e#20764#20765#0" expanded="true" />
-            <element signature="e#20821#20822#0" expanded="true" />
-            <element signature="e#20873#20874#0" expanded="true" />
-            <element signature="e#20934#20935#0" expanded="true" />
-            <element signature="e#20980#20981#0" expanded="true" />
-            <element signature="e#21017#21018#0" expanded="true" />
-            <element signature="e#21060#21061#0" expanded="true" />
-            <element signature="e#21096#21097#0" expanded="true" />
-            <element signature="e#21144#21145#0" expanded="true" />
-            <element signature="e#21181#21182#0" expanded="true" />
-            <element signature="e#21228#21229#0" expanded="true" />
-            <element signature="e#22597#22598#0" expanded="true" />
-            <element signature="e#22631#22632#0" expanded="true" />
-            <element signature="e#22668#22669#0" expanded="true" />
-            <element signature="e#22706#22707#0" expanded="true" />
-            <element signature="e#22754#22755#0" expanded="true" />
-            <element signature="e#22788#22789#0" expanded="true" />
-            <element signature="e#22821#22822#0" expanded="true" />
-            <element signature="e#22903#22904#0" expanded="true" />
+            <element signature="e#5803#5804#0" expanded="true" />
+            <element signature="e#5846#5847#0" expanded="true" />
+            <element signature="e#8731#8732#0" expanded="true" />
+            <element signature="e#8762#8763#0" expanded="true" />
+            <element signature="e#22095#22096#0" expanded="true" />
+            <element signature="e#22133#22134#0" expanded="true" />
+            <element signature="e#22166#22167#0" expanded="true" />
+            <element signature="e#22207#22208#0" expanded="true" />
+            <element signature="e#22247#22248#0" expanded="true" />
+            <element signature="e#22298#22299#0" expanded="true" />
+            <element signature="e#22355#22356#0" expanded="true" />
+            <element signature="e#22407#22408#0" expanded="true" />
+            <element signature="e#22468#22469#0" expanded="true" />
+            <element signature="e#22514#22515#0" expanded="true" />
+            <element signature="e#22551#22552#0" expanded="true" />
+            <element signature="e#22594#22595#0" expanded="true" />
+            <element signature="e#22630#22631#0" expanded="true" />
+            <element signature="e#22678#22679#0" expanded="true" />
+            <element signature="e#22715#22716#0" expanded="true" />
+            <element signature="e#22762#22763#0" expanded="true" />
+            <element signature="e#24587#24588#0" expanded="true" />
+            <element signature="e#24621#24622#0" expanded="true" />
+            <element signature="e#24658#24659#0" expanded="true" />
+            <element signature="e#24696#24697#0" expanded="true" />
+            <element signature="e#24744#24745#0" expanded="true" />
+            <element signature="e#24778#24779#0" expanded="true" />
           </folding>
         </state>
       </provider>

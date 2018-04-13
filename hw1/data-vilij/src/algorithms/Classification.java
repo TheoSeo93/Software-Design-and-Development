@@ -3,19 +3,28 @@ package algorithms;
 import static settings.AppPropertyTypes.CLASSIFICATION;
 
 public class Classification extends Classifier  {
+    private int maxIterations;
+    private int updateInterval;
+    private boolean toContinue;
+    public Classification(){}
+    public Classification(int maxIterations, int updateInterval,boolean toContinue){
+        this.maxIterations=maxIterations;
+        this.updateInterval=updateInterval;
+        this.toContinue=toContinue;
+    }
     @Override
     public int getMaxIterations() {
-        return 0;
+        return maxIterations;
     }
 
     @Override
     public int getUpdateInterval() {
-        return 0;
+        return updateInterval;
     }
 
     @Override
     public boolean tocontinue() {
-        return false;
+        return toContinue;
     }
 
     @Override

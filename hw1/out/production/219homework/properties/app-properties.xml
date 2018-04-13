@@ -56,7 +56,7 @@ functionality within the main workspace. -->
         <property name="SCREEN_TOOLTIP" value="Take a screen shot"/>
         <property name="AT" value="@"/>
         <property name="EMPTY"  value = ""/>
-        <property name="READ_ONLY"  value = "Read-Only:Check Validity"/>
+        <property name="READ_ONLY"  value = "Check Validity"/>
         <property name="PNG_EXT"  value = "*.png"/>
         <property name="PNG"  value = "png"/>
         <property name="PNG_EXT_DESC" value="Portable Network Graphics File"/>
@@ -68,9 +68,31 @@ functionality within the main workspace. -->
         <property name="CLUSTERING" value="Clustering Algorithm"/>
         <property name="DISPLAY_ICON" value="display.png"/>
         <property name="DISPLAY_TOOLTIP" value="Display the data"/>
-        <property name="SETTINGS_ICON" value="settings.png"/>
+        <property name="SETTINGS_ICON" value="settings_white.png"/>
         <property name="SETTINGS_TOOLTIP" value="Configure Algorithm"/>
         <property name="CONFIGIMG_ICON" value="settings_large.png"/>
+        <property name="OTHER_BUTTON" value="other-button"/>
+
+        <property name="ALGORITHM_TYPE" value="Set Algorithm Type"/>
+        <property name="TEXTWATCH_MSG" value="The input has to be positive."/>
+        <property name="RADIOBUTTONS" value="radiobuttons"/>
+        <property name="MAX_ITERATIONS" value="Max Iterations"/>
+        <property name="INTERVAL" value="Update Interval"/>
+        <property name="CLUSTERS" value="Number of Clusters"/>
+        <property name="CONTINUOUS" value="Continuous Run?"/>
+        <property name="FIRSTLINE" value=" instances are loaded "/>
+        <property name="LABELNAMES" value=" labels are named as "/>
+        <property name="NO_FILEPATH" value="The file path has not been specified yet"/>
+        <property name="LABELS" value="labels"/>
+        <property name="ROUND_LABELNAMES" value="round_labelNames"/>
+        <property name="BACKGROUND" value="background"/>
+        <property name="CANCEL" value="Cancel"/>
+        <property name="OK" value="Ok"/>
+        <property name="RUN_CONFIG" value="Run Configurations"/>
+        <property name="TXT_WATCH_NEGATIVE" value="The input has to be positive."/>
+        <property name="ALGORITHM" value="  Algorithm "/>
+
+
     </property_list>
     <property_options_list/>
 </properties>

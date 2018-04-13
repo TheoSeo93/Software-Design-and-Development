@@ -11,6 +11,7 @@ import ui.AppUI;
 import vilij.components.ActionComponent;
 import vilij.components.ConfirmationDialog;
 import vilij.components.Dialog;
+import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 
 import javax.imageio.ImageIO;
@@ -56,8 +57,7 @@ public final class AppActions implements ActionComponent {
                         applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()));
         }
 
-        ((AppData) applicationTemplate.getDataComponent()).setUpdatedChartData("");
-        ((AppUI) applicationTemplate.getUIComponent()).layoutRenew();
+        ((AppData) applicationTemplate.getDataComponent()).setUpdatedChartData(PropertyManager.getManager().getPropertyValue(EMPTY.name()));
 
     }
 
@@ -128,6 +128,7 @@ public final class AppActions implements ActionComponent {
         File initFile = new File(applicationTemplate.manager.getPropertyValue(DATA_RESOURCE_PATH.toString()));
         fileChooser.setInitialDirectory(initFile);
         file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+        if(file!=null)
         ImageIO.write(SwingFXUtils.fromFXImage(screenShot, null), applicationTemplate.manager.getPropertyValue(PNG.toString()), file);
     }
 
