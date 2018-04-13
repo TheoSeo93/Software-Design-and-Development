@@ -96,7 +96,7 @@ public final class TSDProcessor {
                             String label = secondMatch.group(0);
                             name = name.trim();
                             label = label.trim();
-                            if (label.contains("null"))
+                            if (label.contains(PropertyManager.getManager().getPropertyValue(NULL.toString())))
                                 nullLabel = true;
                             Point2D point = new Point2D(Double.valueOf(thirdMatch.group(0)), Double.parseDouble(fourthMatch.group(0)));
                             if (!dataLabels.containsKey(name)) {
