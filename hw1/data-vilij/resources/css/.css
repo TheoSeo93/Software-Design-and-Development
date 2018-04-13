@@ -119,6 +119,10 @@
     -fx-show-duration: 1s ;
 }
 
+.toggle-button:selected {
+ -fx-opacity: .4;
+}
+
 .other-button {
 
   -fx-background-color:
