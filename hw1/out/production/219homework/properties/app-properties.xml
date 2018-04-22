@@ -74,7 +74,7 @@ functionality within the main workspace. -->
         <property name="OTHER_BUTTON" value="other-button"/>
 
         <property name="ALGORITHM_TYPE" value="Set Algorithm Type"/>
-        <property name="TEXTWATCH_MSG" value="The input has to be positive."/>
+        <property name="TEXTWATCH_MSG" value="The input has to be a positive integer."/>
         <property name="RADIOBUTTONS" value="radiobuttons"/>
         <property name="MAX_ITERATIONS" value="Max Iterations"/>
         <property name="INTERVAL" value="Update Interval"/>
@@ -93,6 +93,10 @@ functionality within the main workspace. -->
         <property name="ALGORITHM" value="  Algorithm "/>
         <property name="FROM" value=" from "/>
         <property name="NULL" value="null"/>
+        <property name="LABELS_TEXTWATCHER" value="labels-textwatcher"/>
+
+        <property name="RANDOMCLASSIFIER" value="RANDOMCLASSIFIER"/>
+        <property name="RANDOMCLUSTERING" value="RANDOMCLUSTERING"/>
 
     </property_list>
     <property_options_list/>

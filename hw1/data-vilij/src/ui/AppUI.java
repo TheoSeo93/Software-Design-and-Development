@@ -1,17 +1,22 @@
 package ui;
 
 import actions.AppActions;
-import algorithms.Classification;
+import algorithms.Algorithm;
+import classification.Classification;
 import algorithms.Clustering;
+import classification.RandomClassifier;
+import data.DataSet;
 import dataprocessors.AppData;
 import dataprocessors.TSDProcessor;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
@@ -21,6 +26,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -33,8 +39,7 @@ import vilij.templates.UITemplate;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,7 +65,6 @@ public final class AppUI extends UITemplate {
     TSDProcessor tsdProcessor = new TSDProcessor();
 
     @SuppressWarnings("FieldCanBeLocal")
-    private boolean isClassification;
     private Path currentDataPath;
     private ComboBox comboBox;
     private ToggleButton toggleButton;
@@ -82,6 +86,7 @@ public final class AppUI extends UITemplate {
     private boolean moreThanTen;
     private StringBuilder pendingText;
     private String textAreaLbl;
+    private Algorithm[] randomClassifiers;
     private TextFlow dataDescription;
     private ImageView[] imageViews;
     private RadioButton[] radioButtons;
@@ -89,6 +94,7 @@ public final class AppUI extends UITemplate {
     private String newCss;
     private Clustering[] clusterConfigs;
     private Classification[] classificationConfigs;
+    private Algorithm.AlgorithmType algorithmType;
 
     public LineChart<Number, Number> getChart() {
         return chart;
@@ -98,10 +104,12 @@ public final class AppUI extends UITemplate {
 
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
+
         newCss = this.getClass().getResource(applicationTemplate.manager.getPropertyValue(CSS_ADDRESS.toString())).toExternalForm();
         PropertyManager manager = applicationTemplate.manager;
         clusterConfigs = new Clustering[3];
         classificationConfigs = new Classification[3];
+        randomClassifiers = new RandomClassifier[3];
         hBox = new HBox();
         textAreaTitle = new Text(manager.getPropertyValue(TEXT_AREA_TITLE.toString()));
         textAreaTitle.setFont(new Font(17));
@@ -124,25 +132,7 @@ public final class AppUI extends UITemplate {
         settings2 = new ImageView(new Image(getClass().getResourceAsStream(settingIconPath)));
         settings3 = new ImageView(new Image(getClass().getResourceAsStream(settingIconPath)));
         configImg = new ImageView(new Image(getClass().getResourceAsStream(configImgPath)));
-
         imageViews = new ImageView[]{settings1, settings2, settings3};
-        comboBox.setConverter(new StringConverter<Object>() {
-            @Override
-            public String toString(Object object) {
-                if (object instanceof Classification) {
-                    return ((Classification) object).getName();
-                } else if (object instanceof Clustering) {
-                    return ((Clustering) object).getName();
-                }
-                return null;
-            }
-
-            @Override
-            public Object fromString(String string) {
-                return null;
-            }
-        });
-
 
     }
 
@@ -199,6 +189,25 @@ public final class AppUI extends UITemplate {
         return textArea;
     }
 
+    public RadioButton[] getRadioButtons() {
+        return radioButtons;
+    }
+
+    public Algorithm.AlgorithmType getAlgorithmType() {
+        return algorithmType;
+    }
+
+    public Algorithm[] getRandomClassifiers() {
+        return randomClassifiers;
+    }
+
+    public Clustering[] getClusterConfigs() {
+        return clusterConfigs;
+    }
+
+    public Classification[] getClassificationConfigs() {
+        return classificationConfigs;
+    }
 
     @Override
     public void clear() {
@@ -269,7 +278,6 @@ public final class AppUI extends UITemplate {
         settings3.addEventHandler(MouseEvent.MOUSE_ENTERED, e -> {
             primaryScene.setCursor(Cursor.HAND);
             settings3.setRotate(10);
-
         });
         settings3.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
             primaryScene.setCursor(Cursor.DEFAULT);
@@ -277,18 +285,19 @@ public final class AppUI extends UITemplate {
 
         });
         displayButton.setOnAction(e -> {
+
             String chartData = textArea.getText().toString();
             if (hasNewText) {
                 try {
                     new AppData(applicationTemplate).loadData(chartData);
                     AppUI.super.saveButton.setDisable(false);
                     hasNewText = false;
-
                 } catch (Exception ex) {
                     Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
                     error.show(applicationTemplate.manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.toString()), ex.getMessage() + System.lineSeparator());
                     ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
                 }
+
 
             }
 
@@ -296,71 +305,53 @@ public final class AppUI extends UITemplate {
         });
         comboBox.setOnAction((event -> {
             if (!comboBox.getSelectionModel().isEmpty()) {
+                displayButton.setDisable(true);
                 VBox algorithmConfig = new VBox();
                 algorithmConfig.setSpacing(5);
-
-                if (comboBox.getSelectionModel().getSelectedItem().toString().toLowerCase().contains(CLUSTERING.toString().toLowerCase())) {
-                    isClassification = false;
-                    Text algoName = new Text(PropertyManager.getManager().getPropertyValue(CLUSTERING.name()));
-                    algoName.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.toString()));
-                    algorithmConfig.getChildren().add(algoName);
-
-                    ImageView settings;
-                    ToggleGroup toggleGroup = new ToggleGroup();
-                    radioButtons = new RadioButton[3];
-                    for (int i = 0; i < 3; i++) {
-                        settings = imageViews[i];
-
-                        RadioButton radioButton = new RadioButton(PropertyManager.getManager().getPropertyValue(ALGORITHM.toString())+ (i + 1));
-                        radioButton.setToggleGroup(toggleGroup);
-                        radioButton.setFont(new Font(14));
-                        radioButtons[i] = radioButton;
-
-                        radioButton.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.toString()));
-                        HBox configRow = new HBox();
-                        configRow.setSpacing(250);
-                        configRow.getChildren().add(new Group(radioButton));
-                        configRow.getChildren().add(new Group(settings));
-                        algorithmConfig.getChildren().add(configRow);
-
-                    }
-                    for (int i = 0; i < radioButtons.length; i++) {
-                        radioButtons[i].setDisable(true);
-                    }
-
-
+                Text algoName;
+                if (comboBox.getSelectionModel().getSelectedItem().toString().equals(Algorithm.AlgorithmType.CLUSTERING.toString())) {
+                    algorithmType = Algorithm.AlgorithmType.CLUSTERING;
+                    algoName = new Text((CLUSTERING.name()));
+                } else if (comboBox.getSelectionModel().getSelectedItem().toString().equals(Algorithm.AlgorithmType.CLASSIFICATION.toString())) {
+                    algorithmType = Algorithm.AlgorithmType.CLASSIFICATION;
+                    algoName = new Text((CLASSIFICATION.name()));
+                } else if (comboBox.getSelectionModel().getSelectedItem().toString().equals(Algorithm.AlgorithmType.RANDOMCLASSIFIER.toString())) {
+                    algorithmType = Algorithm.AlgorithmType.RANDOMCLASSIFIER;
+                    algoName = new Text((RANDOMCLASSIFIER.name()));
                 } else {
-                    isClassification = true;
-                    Text algoName = new Text(PropertyManager.getManager().getPropertyValue(CLASSIFICATION.name()));
-                    algoName.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.toString()));
-                    algorithmConfig.getChildren().add(algoName);
+                    algorithmType = Algorithm.AlgorithmType.RANDOMCLUSTERING;
+                    algoName = new Text((RANDOMCLUSTERING.name()));
+                }
 
-                    ImageView settings;
-                    ToggleGroup toggleGroup = new ToggleGroup();
-                      radioButtons = new RadioButton[3];
+                algoName.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.toString()));
+                algorithmConfig.getChildren().add(algoName);
+                ImageView settings;
+                ToggleGroup toggleGroup = new ToggleGroup();
+                radioButtons = new RadioButton[3];
 
-                    for (int i = 0; i < 3; i++) {
-                        settings = imageViews[i];
+                for (int i = 0; i < 3; i++) {
+                    settings = imageViews[i];
+                    RadioButton radioButton;
+                    radioButton = new RadioButton(PropertyManager.getManager().getPropertyValue(ALGORITHM.toString()) + (i + 1));
+                    radioButton.setToggleGroup(toggleGroup);
+                    radioButton.setFont(new Font(14));
+                    radioButtons[i] = radioButton;
+                    radioButton.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.toString()));
 
-                        RadioButton radioButton = new RadioButton(PropertyManager.getManager().getPropertyValue(ALGORITHM.toString()) + (i + 1));
-                        radioButton.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.toString()));
-                        radioButton.setToggleGroup(toggleGroup);
-                        radioButton.setFont(new Font(14));
-                        radioButtons[i] = radioButton;
-                        HBox configRow = new HBox();
-                        configRow.setSpacing(250);
-                        radioButton.setToggleGroup(toggleGroup);
-                        configRow.getChildren().add(new Group(radioButton));
-                        configRow.getChildren().add(new Group(settings));
-                        algorithmConfig.getChildren().add(configRow);
+                    radioButtons[i].setOnMouseClicked(e -> {
+                        displayButton.setDisable(false);
+                    });
 
-                    }
-                    for (int i = 0; i < radioButtons.length; i++) {
-                        radioButtons[i].setDisable(true);
-                    }
-
+                    HBox configRow = new HBox();
+                    configRow.setSpacing(250);
+                    configRow.getChildren().add(new Group(radioButton));
+                    configRow.getChildren().add(new Group(settings));
+                    algorithmConfig.getChildren().add(configRow);
 
                 }
+
+                enableSavedConfigs();
+
                 if (workspace.getChildren().size() <= 5) {
                     workspace.getChildren().add(algorithmConfig);
                     workspace.getChildren().add(displayButton);
@@ -370,10 +361,13 @@ public final class AppUI extends UITemplate {
             } else {
                 displayButton.setDisable(true);
             }
+
         }));
         textArea.textProperty().
 
-                addListener((observable, oldValue, newValue) -> {
+                addListener((observable, oldValue, newValue) ->
+
+                {
                     if (pendingText != null && pendingText.toString().length() != 0 && isMoreThanTen()) {
 
                         StringBuilder oldStrbfr = new StringBuilder(oldValue);
@@ -450,56 +444,66 @@ public final class AppUI extends UITemplate {
                 });
 
 
-        toggleButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                String chartData = textArea.getText().toString();
-                try {
-                    if(!chartData.isEmpty()) {
-                        tsdProcessor.processString(chartData);
+        toggleButton.selectedProperty().
+
+                addListener((observable, oldValue, newValue) ->
+
+                {
+                    if (newValue) {
+                        String chartData = textArea.getText().toString();
+                        try {
+                            if (!chartData.isEmpty()) {
+                                tsdProcessor.processString(chartData);
 
 
-                        if (workspace.getChildren().size() < 5) {
+                                if (workspace.getChildren().size() < 5) {
 
-                            if (tsdProcessor.getDataLabelCount() == 2 && !tsdProcessor.checkNullLabel()) {
-                                comboBox.setItems(FXCollections.observableArrayList(
-                                        new Classification(),
-                                        new Clustering()
-                                ));
-                            } else
-                                comboBox.setItems(FXCollections.observableArrayList(
-                                        new Clustering()
-                                ));
+                                    if (tsdProcessor.getDataLabelCount() == 2 && !tsdProcessor.checkNullLabel()) {
+                                        comboBox.setItems(FXCollections.observableArrayList(
+                                                Algorithm.AlgorithmType.CLASSIFICATION,
+                                                Algorithm.AlgorithmType.CLUSTERING,
+                                                Algorithm.AlgorithmType.RANDOMCLASSIFIER,
+                                                Algorithm.AlgorithmType.RANDOMCLUSTERING
+                                        ));
+                                    } else
+                                        comboBox.setItems(FXCollections.observableArrayList(
+                                                Algorithm.AlgorithmType.CLUSTERING,
+                                                Algorithm.AlgorithmType.RANDOMCLUSTERING
+                                        ));
 
 
-                            if (workspace.getChildren().size() == 4) {
-                                comboBox.setPromptText(PropertyManager.getManager().getPropertyValue(ALGORITHM_TYPE.toString()));
-                                workspace.getChildren().add(comboBox); //Index: 4 , size: 5
+                                    if (workspace.getChildren().size() == 4) {
+                                        comboBox.setPromptText(PropertyManager.getManager().getPropertyValue(ALGORITHM_TYPE.toString()));
+                                        workspace.getChildren().add(comboBox); //Index: 4 , size: 5
+                                    }
+
+                                }
+                                textArea.setDisable(true);
                             }
-
+                        } catch (Exception ex) {
+                            textArea.setDisable(false);
+                            Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+                            error.show(applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR.toString()), ex.getMessage() + System.lineSeparator());
                         }
-                        textArea.setDisable(true);
+                        {
+
+                            if (currentDataPath != null)
+                                updateTextFlow(currentDataPath.toAbsolutePath().toString());
+                            else
+                                updateTextFlow(null);
+                            tsdProcessor.update();
+                        }
+                    } else {
+                        for (int i = workspace.getChildren().size() - 1; i > 3; i--)
+                            workspace.getChildren().remove(i);
+                        textArea.setDisable(false);
                     }
-                } catch (Exception ex) {
-                    textArea.setDisable(false);
-                    Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
-                    error.show(applicationTemplate.manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR.toString()), ex.getMessage() + System.lineSeparator());
-                }  {
-
-                    if (currentDataPath != null)
-                        updateTextFlow(currentDataPath.toAbsolutePath().toString());
-                    else
-                        updateTextFlow(null);
-                    tsdProcessor.update();
-                }
-            } else {
-                for (int i = workspace.getChildren().size() - 1; i > 3; i--)
-                    workspace.getChildren().remove(i);
-                textArea.setDisable(false);
-            }
-        });
+                });
 
 
-        scrnshotButton.setOnAction(e -> {
+        scrnshotButton.setOnAction(e ->
+
+        {
             try {
                 ((AppActions) applicationTemplate.getActionComponent()).handleScreenshotRequest();
             } catch (IOException e1) {
@@ -552,14 +556,14 @@ public final class AppUI extends UITemplate {
         Text firstLine = new Text(tsdProcessor.getDataSize() + PropertyManager.getManager().getPropertyValue(FIRSTLINE.toString()));
 
         Text labelDescription = new Text(tsdProcessor.getDataLabelCount() + PropertyManager.getManager().getPropertyValue(LABELNAMES.toString()) + System.lineSeparator());
-        firstLine.getStyleClass().add( PropertyManager.getManager().getPropertyValue(DIALOG_BACKGROUND.name()));
+        firstLine.getStyleClass().add(PropertyManager.getManager().getPropertyValue(DIALOG_BACKGROUND.name()));
         labelDescription.getStyleClass().add(PropertyManager.getManager().getPropertyValue(DIALOG_BACKGROUND.name()));
 
         Text pathDescription;
         if (dataFilePath != null)
-            pathDescription = new Text(PropertyManager.getManager().getPropertyValue(FROM.toString())+ System.lineSeparator() + dataFilePath + System.lineSeparator());
+            pathDescription = new Text(PropertyManager.getManager().getPropertyValue(FROM.toString()) + System.lineSeparator() + dataFilePath + System.lineSeparator());
         else
-            pathDescription = new Text(System.lineSeparator()+PropertyManager.getManager().getPropertyValue(NO_FILEPATH.name())+ System.lineSeparator());
+            pathDescription = new Text(System.lineSeparator() + PropertyManager.getManager().getPropertyValue(NO_FILEPATH.name()) + System.lineSeparator());
 
         firstLine.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.name()));
         pathDescription.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS.toString()));
@@ -594,13 +598,19 @@ public final class AppUI extends UITemplate {
         moreThanTen = bool;
     }
 
-    public boolean isToggleSelected(){
+    public boolean isToggleSelected() {
         return toggleButton.isSelected();
+    }
+
+    public void disableState(boolean disable) {
+
+            toggleButton.setDisable(disable);
+            displayButton.setDisable(disable);
+
     }
 
     public void showConfigDialog(boolean firstCheck, boolean secondCheck, boolean thirdCheck) {
         GridPane configDialog = new GridPane();
-
         configDialog.setPadding(new Insets(14, 14, 14, 14));
         configDialog.add(configImg, 0, 1);
         configDialog.setPrefSize(700, 151);
@@ -642,12 +652,10 @@ public final class AppUI extends UITemplate {
                 label.setText(PropertyManager.getManager().getPropertyValue(INTERVAL.toString()));
                 label.setPadding(new Insets(0, 44, 0, 0));
             } else if (i == 2) {
-                if (isClassification)
-                    continue;
-                else {
+                if (algorithmType == Algorithm.AlgorithmType.CLUSTERING || algorithmType == Algorithm.AlgorithmType.RANDOMCLUSTERING) {
                     label.setText(PropertyManager.getManager().getPropertyValue(CLUSTERS.toString()));
                     label.setPadding(new Insets(0, 25, 0, 0));
-                }
+                } else continue;
             } else {
                 label.setText(PropertyManager.getManager().getPropertyValue(CONTINUOUS.toString()));
                 label.setPadding(new Insets(0, 168, 0, 0));
@@ -666,45 +674,62 @@ public final class AppUI extends UITemplate {
             }
             vBox.getChildren().add(row);
         }
-        if (isClassification) {
+        if (algorithmType == Algorithm.AlgorithmType.CLASSIFICATION) {
             for (int i = 0; i < 3; i++) {
-                if (classificationConfigs[i] != null) {
-                    if (firstCheck) {
-                        textFields[0].setText(String.valueOf(classificationConfigs[0].getMaxIterations()));
-                        textFields[1].setText(String.valueOf(classificationConfigs[0].getUpdateInterval()));
-                        isContinuous.setSelected(classificationConfigs[0].tocontinue());
-                    } else if (secondCheck) {
-                        textFields[0].setText(String.valueOf(classificationConfigs[1].getMaxIterations()));
-                        textFields[1].setText(String.valueOf(classificationConfigs[1].getUpdateInterval()));
-                        isContinuous.setSelected(classificationConfigs[1].tocontinue());
-                    } else {
-                        textFields[0].setText(String.valueOf(classificationConfigs[2].getMaxIterations()));
-                        textFields[1].setText(String.valueOf(classificationConfigs[2].getUpdateInterval()));
-                        isContinuous.setSelected(classificationConfigs[2].tocontinue());
-                    }
+                if (classificationConfigs[0] != null && firstCheck) {
+                    textFields[0].setText(String.valueOf(classificationConfigs[0].getMaxIterations()));
+                    textFields[1].setText(String.valueOf(classificationConfigs[0].getUpdateInterval()));
+                    isContinuous.setSelected(classificationConfigs[0].tocontinue());
+                } else if (classificationConfigs[1] != null && secondCheck) {
+                    textFields[0].setText(String.valueOf(classificationConfigs[1].getMaxIterations()));
+                    textFields[1].setText(String.valueOf(classificationConfigs[1].getUpdateInterval()));
+                    isContinuous.setSelected(classificationConfigs[1].tocontinue());
+                } else if (classificationConfigs[2] != null && thirdCheck) {
+                    textFields[0].setText(String.valueOf(classificationConfigs[2].getMaxIterations()));
+                    textFields[1].setText(String.valueOf(classificationConfigs[2].getUpdateInterval()));
+                    isContinuous.setSelected(classificationConfigs[2].tocontinue());
                 }
+            }
+
+        } else if (algorithmType == Algorithm.AlgorithmType.RANDOMCLASSIFIER) {
+            for (int i = 0; i < 3; i++) {
+
+                if (randomClassifiers[0] != null && firstCheck) {
+                    textFields[0].setText(String.valueOf(randomClassifiers[0].getMaxIterations()));
+                    textFields[1].setText(String.valueOf(randomClassifiers[0].getUpdateInterval()));
+                    isContinuous.setSelected(randomClassifiers[0].tocontinue());
+                } else if (randomClassifiers[1] != null && secondCheck) {
+                    textFields[0].setText(String.valueOf(randomClassifiers[1].getMaxIterations()));
+                    textFields[1].setText(String.valueOf(randomClassifiers[1].getUpdateInterval()));
+                    isContinuous.setSelected(randomClassifiers[1].tocontinue());
+                } else if (randomClassifiers[2] != null && thirdCheck) {
+                    textFields[0].setText(String.valueOf(randomClassifiers[2].getMaxIterations()));
+                    textFields[1].setText(String.valueOf(randomClassifiers[2].getUpdateInterval()));
+                    isContinuous.setSelected(randomClassifiers[2].tocontinue());
+                }
+
             }
         } else {
             for (int i = 0; i < 3; i++) {
 
-                    if (clusterConfigs[0]!=null&&firstCheck) {
-                        textFields[0].setText(String.valueOf(clusterConfigs[0].getMaxIterations()));
-                        textFields[1].setText(String.valueOf(clusterConfigs[0].getUpdateInterval()));
-                        textFields[2].setText(String.valueOf(clusterConfigs[0].getClusters()));
-                        isContinuous.setSelected(clusterConfigs[0].tocontinue());
-                    } else if (clusterConfigs[1]!=null&&secondCheck) {
-                        textFields[0].setText(String.valueOf(clusterConfigs[1].getMaxIterations()));
-                        textFields[1].setText(String.valueOf(clusterConfigs[1].getUpdateInterval()));
-                        textFields[2].setText(String.valueOf(clusterConfigs[1].getClusters()));
-                        isContinuous.setSelected(clusterConfigs[1].tocontinue());
-                    } else if (clusterConfigs[2]!=null&&thirdCheck){
-                        textFields[0].setText(String.valueOf(clusterConfigs[2].getMaxIterations()));
-                        textFields[1].setText(String.valueOf(clusterConfigs[2].getUpdateInterval()));
-                        textFields[2].setText(String.valueOf(clusterConfigs[2].getClusters()));
-                        isContinuous.setSelected(clusterConfigs[2].tocontinue());
-                    }
-
+                if (clusterConfigs[0] != null && firstCheck) {
+                    textFields[0].setText(String.valueOf(clusterConfigs[0].getMaxIterations()));
+                    textFields[1].setText(String.valueOf(clusterConfigs[0].getUpdateInterval()));
+                    textFields[2].setText(String.valueOf(clusterConfigs[0].getClusters()));
+                    isContinuous.setSelected(clusterConfigs[0].tocontinue());
+                } else if (clusterConfigs[1] != null && secondCheck) {
+                    textFields[0].setText(String.valueOf(clusterConfigs[1].getMaxIterations()));
+                    textFields[1].setText(String.valueOf(clusterConfigs[1].getUpdateInterval()));
+                    textFields[2].setText(String.valueOf(clusterConfigs[1].getClusters()));
+                    isContinuous.setSelected(clusterConfigs[1].tocontinue());
+                } else if (clusterConfigs[2] != null && thirdCheck) {
+                    textFields[0].setText(String.valueOf(clusterConfigs[2].getMaxIterations()));
+                    textFields[1].setText(String.valueOf(clusterConfigs[2].getUpdateInterval()));
+                    textFields[2].setText(String.valueOf(clusterConfigs[2].getClusters()));
+                    isContinuous.setSelected(clusterConfigs[2].tocontinue());
                 }
+
+            }
 
         }
         configDialog.add(vBox, 1, 1);
@@ -716,7 +741,7 @@ public final class AppUI extends UITemplate {
         newStage.show();
 
         for (int i = 0; i < textFields.length; i++) {
-            if(isClassification&&i==2)
+            if ((algorithmType == Algorithm.AlgorithmType.RANDOMCLASSIFIER || algorithmType == Algorithm.AlgorithmType.CLASSIFICATION) && i == 2)
                 continue;
             textFields[i].textProperty().
                     addListener((observable, oldValue, newValue) -> {
@@ -724,9 +749,39 @@ public final class AppUI extends UITemplate {
                         boolean isValid = true;
                         Outer:
                         for (int j = 0; j < textFields.length; j++) {
-                            if (isClassification) {
+                            if ((algorithmType == Algorithm.AlgorithmType.RANDOMCLASSIFIER || algorithmType == Algorithm.AlgorithmType.CLASSIFICATION)) {
                                 if (j == 2) {
                                     continue;
+                                }
+                                if (textFields[j].getText().length() == 0 || newValue.length() == 0) {
+                                    ok.setDisable(true);
+                                    isValid = false;
+                                    break Outer;
+                                }
+                                for (int k = 0; k < textFields[j].getText().length(); k++) {
+                                    if (!Character.isDigit(textFields[j].getText().charAt(k))) {
+                                        textWatcher.setText(PropertyManager.getManager().getPropertyValue(TEXTWATCH_MSG.toString()));
+                                        ok.setDisable(true);
+                                        isValid = false;
+                                        break Outer;
+                                    }
+                                }
+                                for (int k = 0; k < newValue.length(); k++) {
+                                    if (!Character.isDigit(newValue.charAt(k))) {
+                                        textWatcher.setText(PropertyManager.getManager().getPropertyValue(TEXTWATCH_MSG.toString()));
+                                        ok.setDisable(true);
+                                        isValid = false;
+                                        break Outer;
+                                    }
+                                    isDigit = true;
+                                }
+                                //Verified the string input is digit
+                                if (isDigit) {
+                                    if (Integer.parseInt(newValue) <= 0) {
+                                        textWatcher.setText(PropertyManager.getManager().getPropertyValue(TXT_WATCH_NEGATIVE.toString()));
+                                        ok.setDisable(true);
+                                        isValid = false;
+                                    }
                                 }
                             } else {
                                 if (textFields[j].getText().length() == 0 || newValue.length() == 0) {
@@ -773,40 +828,50 @@ public final class AppUI extends UITemplate {
 
         }
         ok.setOnAction(event -> {
+            try {
+                ((AppData) applicationTemplate.getDataComponent()).setDataSet(textArea.getText());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (firstCheck) {
+
                 radioButtons[0].setDisable(false);
-                if (isClassification) {
+                if (algorithmType == Algorithm.AlgorithmType.CLASSIFICATION) {
                     classificationConfigs[0] = new Classification(Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
-                } else {
+                } else if (algorithmType == Algorithm.AlgorithmType.CLUSTERING) {
                     clusterConfigs[0] = new Clustering(Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+                } else if (algorithmType == Algorithm.AlgorithmType.RANDOMCLASSIFIER) {
+                    randomClassifiers[0] = new RandomClassifier(new DataSet((((AppData) applicationTemplate.getDataComponent()).getLabels()), ((AppData) applicationTemplate.getDataComponent()).getDataPoints()), Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
+                } else {
+
                 }
-                radioButtons[0].setOnMouseClicked(e -> {
-                    displayButton.setDisable(false);
-                });
+
             } else if (secondCheck) {
                 radioButtons[1].setDisable(false);
-                if (isClassification) {
+                if (algorithmType == Algorithm.AlgorithmType.CLASSIFICATION) {
                     classificationConfigs[1] = new Classification(Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
-                } else {
+                } else if (algorithmType == Algorithm.AlgorithmType.CLUSTERING) {
                     clusterConfigs[1] = new Clustering(Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+                } else if (algorithmType == Algorithm.AlgorithmType.RANDOMCLASSIFIER) {
+                    randomClassifiers[1] = new RandomClassifier(new DataSet((((AppData) applicationTemplate.getDataComponent()).getLabels()), ((AppData) applicationTemplate.getDataComponent()).getDataPoints()), Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
+                } else {
+
                 }
 
-                radioButtons[1].setOnMouseClicked(e -> {
-                    displayButton.setDisable(false);
-                });
+
             } else {
                 radioButtons[2].setDisable(false);
-                if (isClassification) {
+                if (algorithmType == Algorithm.AlgorithmType.CLASSIFICATION) {
                     classificationConfigs[2] = new Classification(Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
-                } else {
+                } else if (algorithmType == Algorithm.AlgorithmType.CLUSTERING) {
                     clusterConfigs[2] = new Clustering(Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+                } else if (algorithmType == Algorithm.AlgorithmType.RANDOMCLASSIFIER) {
+                    randomClassifiers[2] = new RandomClassifier(new DataSet((((AppData) applicationTemplate.getDataComponent()).getLabels()), ((AppData) applicationTemplate.getDataComponent()).getDataPoints()), Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
+                } else {
+
                 }
 
-                radioButtons[2].setOnMouseClicked(e -> {
-                    displayButton.setDisable(false);
-                });
             }
-
             newStage.close();
         });
         cancel.setOnAction(event -> {
@@ -816,4 +881,41 @@ public final class AppUI extends UITemplate {
 
     }
 
+
+    public void enableSavedConfigs() {
+        switch (algorithmType) {
+            case RANDOMCLASSIFIER:
+                for (int i = 0; i < randomClassifiers.length; i++) {
+
+                    if (randomClassifiers[i] != null)
+                        radioButtons[i].setDisable(false);
+                    else
+                        radioButtons[i].setDisable(true);
+                }
+                break;
+            case CLUSTERING:
+                for (int i = 0; i < clusterConfigs.length; i++) {
+                    if (clusterConfigs[i] != null)
+                        radioButtons[i].setDisable(false);
+                    else
+                        radioButtons[i].setDisable(true);
+                }
+                break;
+            case CLASSIFICATION:
+                for (int i = 0; i < classificationConfigs.length; i++) {
+                    if (classificationConfigs[i] != null)
+                        radioButtons[i].setDisable(false);
+                    else
+                        radioButtons[i].setDisable(true);
+                }
+                break;
+            case RANDOMCLUSTERING:
+
+
+                break;
+        }
+    }
+
 }
+
+

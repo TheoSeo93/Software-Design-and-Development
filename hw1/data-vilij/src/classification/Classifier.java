@@ -1,8 +1,10 @@
-package algorithms;
+package classification;
+import algorithms.Algorithm;
+
 import java.util.List;
 
 /**
- * An abstract class for algorithms algorithms. The output
+ * An abstract class for classification algorithms. The output
  * for these algorithms is a straight line, as described in
  * Appendix C of the software requirements specification
  * (SRS). The {@link #output} is defined with extensibility

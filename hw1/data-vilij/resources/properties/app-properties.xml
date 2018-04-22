@@ -94,6 +94,10 @@ functionality within the main workspace. -->
         <property name="FROM" value=" from "/>
         <property name="NULL" value="null"/>
         <property name="LABELS_TEXTWATCHER" value="labels-textwatcher"/>
+
+        <property name="RANDOMCLASSIFIER" value="RANDOMCLASSIFIER"/>
+        <property name="RANDOMCLUSTERING" value="RANDOMCLUSTERING"/>
+
     </property_list>
     <property_options_list/>
 </properties>

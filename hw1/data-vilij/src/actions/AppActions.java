@@ -102,11 +102,11 @@ public final class AppActions implements ActionComponent {
             applicationTemplate.getDataComponent().loadData(dataFilePath);
             ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
             ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(dataFilePath);
-            if(((AppUI) applicationTemplate.getUIComponent()).isToggleSelected()){
+            if (((AppUI) applicationTemplate.getUIComponent()).isToggleSelected()) {
                 ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
                 ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(true);
             } else
-            ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(true);
+                ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(true);
         }
 
 
@@ -132,8 +132,8 @@ public final class AppActions implements ActionComponent {
         File initFile = new File(applicationTemplate.manager.getPropertyValue(DATA_RESOURCE_PATH.toString()));
         fileChooser.setInitialDirectory(initFile);
         file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
-        if(file!=null)
-        ImageIO.write(SwingFXUtils.fromFXImage(screenShot, null), applicationTemplate.manager.getPropertyValue(PNG.toString()), file);
+        if (file != null)
+            ImageIO.write(SwingFXUtils.fromFXImage(screenShot, null), applicationTemplate.manager.getPropertyValue(PNG.toString()), file);
     }
 
     /**

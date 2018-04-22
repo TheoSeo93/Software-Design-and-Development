@@ -1,8 +1,9 @@
-package algorithms;
+package classification;
+
 
 import static settings.AppPropertyTypes.CLASSIFICATION;
 
-public class Classification extends Classifier  {
+public class Classification extends Classifier {
     private int maxIterations;
     private int updateInterval;
     private boolean toContinue;
@@ -26,6 +27,8 @@ public class Classification extends Classifier  {
     public boolean tocontinue() {
         return toContinue;
     }
+
+
 
     @Override
     public void run() {

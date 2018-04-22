@@ -1,6 +1,12 @@
 package dataprocessors;
 
+import algorithms.Algorithm;
+import algorithms.Clustering;
+import classification.Classification;
+import classification.RandomClassifier;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
+import javafx.scene.control.RadioButton;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import ui.AppUI;
@@ -63,8 +69,6 @@ public class AppData implements DataComponent {
             try (Reader reader = new BufferedReader(new InputStreamReader(inputStream))) {
                 String line;
                 int counter = 1;
-
-
                 while ((line = ((BufferedReader) reader).readLine()) != null) {
 
                     if (counter > 10) {
@@ -146,7 +150,7 @@ public class AppData implements DataComponent {
         }
         textFlow.setLineSpacing(5);
         Text firstLine = new Text(processor.getDataSize() + PropertyManager.getManager().getPropertyValue(FIRSTLINE.toString()));
-        Text labelDescription = new Text(processor.getDataLabelCount() +PropertyManager.getManager().getPropertyValue(LABELNAMES.toString()) + System.lineSeparator());
+        Text labelDescription = new Text(processor.getDataLabelCount() + PropertyManager.getManager().getPropertyValue(LABELNAMES.toString()) + System.lineSeparator());
         Text pathDescription = new Text(PropertyManager.getManager().getPropertyValue(FROM.toString()) + System.lineSeparator() + dataFilePath);
         textFlow.getChildren().add(firstLine);
         textFlow.getChildren().add(pathDescription);
@@ -154,7 +158,7 @@ public class AppData implements DataComponent {
         Iterator labelIterator = processor.getLabels().iterator();
 
         for (int i = 0; i < processor.getDataLabelCount(); i++) {
-            textFlow.getChildren().add(new Text( labelIterator.next() + System.lineSeparator()));
+            textFlow.getChildren().add(new Text(labelIterator.next() + System.lineSeparator()));
             labelIterator.remove();
         }
     }
@@ -164,12 +168,68 @@ public class AppData implements DataComponent {
         processor.clear();
     }
 
+    public void setDataSet(String chartData) throws Exception {
+        processor.processString(chartData);
+    }
+
+    public Map<String, Point2D> getDataPoints() {
+        return processor.getDataPoints();
+    }
+
+    public Map<String, String> getLabels() {
+        return processor.getLabelsAsMap();
+    }
 
     public void displayData() {
+
+
         processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
         Map<String, Point2D> dataPoints = processor.getDataPoints();
         ArrayList<Point2D> points = new ArrayList<>();
         points.addAll(dataPoints.values());
+        Classification[] classificationConfigs = ((AppUI) applicationTemplate.getUIComponent()).getClassificationConfigs();
+        Algorithm[] randomClassifiers = ((AppUI) applicationTemplate.getUIComponent()).getRandomClassifiers();
+        Clustering[] clusterConfigs = ((AppUI) applicationTemplate.getUIComponent()).getClusterConfigs();
+        RadioButton[] radioButtons = ((AppUI) applicationTemplate.getUIComponent()).getRadioButtons();
+        switch (((AppUI) applicationTemplate.getUIComponent()).getAlgorithmType()) {
+            case RANDOMCLUSTERING:
+//                    for(int i=0;i<3;i++){
+//                        if(radioButtons[i].isSelected()){
+//                            randomClassifiers[i].run();
+//                            break;
+//                        }
+//                    }
+                break;
+            case CLASSIFICATION:
+                for (int i = 0; i < 3; i++) {
+                    if (radioButtons[i].isSelected()) {
+                        if (classificationConfigs[i].tocontinue())
+                            ((AppUI) applicationTemplate.getUIComponent()).disableState(true);
+                        new Thread(classificationConfigs[i]).start();
+                        ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
+
+                        break;
+                    }
+                }
+                break;
+            case CLUSTERING:
+                for (int i = 0; i < 3; i++) {
+                    if (radioButtons[i].isSelected()) {
+                        clusterConfigs[i].run();
+                        break;
+                    }
+                }
+                break;
+            case RANDOMCLASSIFIER:
+                for (int i = 0; i < 3; i++) {
+                    if (radioButtons[i].isSelected()) {
+                        ((RandomClassifier) randomClassifiers[i]).setApplicationTemplate(applicationTemplate);
+                       randomClassifiers[i].run();
+                        break;
+                    }
+                }
+                break;
+        }
         ((AppUI) applicationTemplate.getUIComponent()).enableScrnshot();
         processor.clear();
 

@@ -148,25 +148,26 @@ public final class TSDProcessor {
         points.addAll(dataPoints.values());
         double startX = points.get(0).getX();
         double endX = 0;
-        double avg = 0;
-
+        double startY = points.get(0).getY();
+        double endY =0;
         for (int i = 0; i < points.size(); i++) {
-            avg += points.get(i).getY();
+
             if (endX < points.get(i).getX())
                 endX = points.get(i).getX();
             if (startX > points.get(i).getX())
                 startX = points.get(i).getX();
+            if (endY < points.get(i).getY())
+                endY = points.get(i).getY();
+            if (startY > points.get(i).getY())
+                startY = points.get(i).getY();
         }
 
-        avg /= points.size();
         XYChart.Series<Number, Number> avgSeries = new XYChart.Series<>();
-
-        avgSeries.getData().add(new XYChart.Data<>(startX - 10, avg));
-        avgSeries.getData().add(new XYChart.Data<>(endX + 10, avg));
 
         avgSeries.setName(manager.getPropertyValue(AVG.toString()));
 
-        chart.getData().add(0, avgSeries);
+        chart.getData().add(0, new XYChart.Series<>());
+
 
         Set<String> labels = new HashSet<>(dataLabels.values());
 
@@ -224,6 +225,10 @@ public final class TSDProcessor {
 
     public HashSet getLabels() {
         return new HashSet<>(dataLabels.values());
+    }
+
+    public Map<String, String> getLabelsAsMap() {
+        return dataLabels;
     }
 
     public int getDataLabelCount() {
