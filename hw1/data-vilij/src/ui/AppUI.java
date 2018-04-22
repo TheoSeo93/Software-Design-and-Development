@@ -93,8 +93,13 @@ public final class AppUI extends UITemplate {
     private ImageView configImg;
     private String newCss;
     private Clustering[] clusterConfigs;
+    private int countClicked;
     private Classification[] classificationConfigs;
     private Algorithm.AlgorithmType algorithmType;
+    private boolean lock;
+    private HBox displayBox;
+    private Algorithm currentAlgorithm;
+    private Label textWatchDisplay;
 
     public LineChart<Number, Number> getChart() {
         return chart;
@@ -133,7 +138,7 @@ public final class AppUI extends UITemplate {
         settings3 = new ImageView(new Image(getClass().getResourceAsStream(settingIconPath)));
         configImg = new ImageView(new Image(getClass().getResourceAsStream(configImgPath)));
         imageViews = new ImageView[]{settings1, settings2, settings3};
-
+        displayBox = new HBox();
     }
 
     @Override
@@ -220,7 +225,7 @@ public final class AppUI extends UITemplate {
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
         primaryScene.getStylesheets().add(newCss);
-
+        textWatchDisplay = new Label();
         chart = new LineChart<>(xAxis, yAxis);
         chart.getStylesheets().add(newCss);
         chart.setTitle(applicationTemplate.manager.getPropertyValue(DATA_VISUALIZATION.toString()));
@@ -231,7 +236,8 @@ public final class AppUI extends UITemplate {
         workspace.getChildren().add(toggleButton);
         workspace.getStylesheets().setAll(newCss);
         workspace.getStyleClass().add(PropertyManager.getManager().getPropertyValue(BACKGROUND.toString()));
-
+        displayBox.getChildren().add(displayButton);
+        displayBox.getChildren().add(textWatchDisplay);
         ((VBox) workspace).setSpacing(5);
         VBox.setMargin(textAreaTitle, new Insets(4, 0, 0, 200));
         hBox.getChildren().add(workspace);
@@ -287,11 +293,35 @@ public final class AppUI extends UITemplate {
         displayButton.setOnAction(e -> {
 
             String chartData = textArea.getText().toString();
-            if (hasNewText) {
+
                 try {
-                    new AppData(applicationTemplate).loadData(chartData);
-                    AppUI.super.saveButton.setDisable(false);
-                    hasNewText = false;
+                    if (currentAlgorithm.tocontinue()) {
+                        chart.getData().clear();
+                        tsdProcessor.update();
+
+                        new AppData(applicationTemplate).loadData(chartData);
+                        AppUI.super.saveButton.setDisable(false);
+                        hasNewText = false;
+                    } else {
+
+                        if(countClicked==0) {
+                            chart.getData().clear();
+                            tsdProcessor.update();
+                            new AppData(applicationTemplate).loadData(chartData);
+                        }
+                        else
+                        new AppData(applicationTemplate).applyAlgorithm();
+                        if (currentAlgorithm.getMaxIterations()/currentAlgorithm.getUpdateInterval()<=countClicked) {
+                            countClicked=0;
+                            for(int i=0;i<3;i++)
+                            radioButtons[i].setSelected(false);
+                            ((RandomClassifier)currentAlgorithm).setFinished(true);
+                            textWatchDisplay.setText("Algorithm running finished.");
+                        } else {
+                            textWatchDisplay.setText("Algorithm running..current iteration is : "+(countClicked+1));
+                            countClicked++;
+                        }
+                    }
                 } catch (Exception ex) {
                     Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
                     error.show(applicationTemplate.manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.toString()), ex.getMessage() + System.lineSeparator());
@@ -299,7 +329,6 @@ public final class AppUI extends UITemplate {
                 }
 
 
-            }
 
 
         });
@@ -338,8 +367,22 @@ public final class AppUI extends UITemplate {
                     radioButtons[i] = radioButton;
                     radioButton.getStyleClass().add(PropertyManager.getManager().getPropertyValue(RADIOBUTTONS.toString()));
 
+                    int finalI = i;
                     radioButtons[i].setOnMouseClicked(e -> {
                         displayButton.setDisable(false);
+                        switch (algorithmType) {
+                            case RANDOMCLUSTERING:
+                                break;
+                            case CLASSIFICATION:
+                                currentAlgorithm = classificationConfigs[finalI];
+                                break;
+                            case CLUSTERING:
+                                currentAlgorithm = clusterConfigs[finalI];
+                                break;
+                            case RANDOMCLASSIFIER:
+                                currentAlgorithm = randomClassifiers[finalI];
+                                break;
+                        }
                     });
 
                     HBox configRow = new HBox();
@@ -354,7 +397,7 @@ public final class AppUI extends UITemplate {
 
                 if (workspace.getChildren().size() <= 5) {
                     workspace.getChildren().add(algorithmConfig);
-                    workspace.getChildren().add(displayButton);
+                    workspace.getChildren().add(displayBox);
                 } else {
                     workspace.getChildren().set(5, algorithmConfig);
                 }
@@ -438,6 +481,7 @@ public final class AppUI extends UITemplate {
                                 chart.getData().clear();
                                 disableScrnshot();
                                 tsdProcessor.update();
+                                textWatchDisplay.setText(PropertyManager.getManager().getPropertyValue(EMPTY.toString()));
                             });
 
 
@@ -602,13 +646,16 @@ public final class AppUI extends UITemplate {
         return toggleButton.isSelected();
     }
 
+    public Button getDisplayButton(){ return displayButton;}
+
     public void disableState(boolean disable) {
 
-            toggleButton.setDisable(disable);
-            displayButton.setDisable(disable);
+        toggleButton.setDisable(disable);
+        displayButton.setDisable(disable);
 
     }
 
+    public ToggleButton getToggleButton(){ return toggleButton; }
     public void showConfigDialog(boolean firstCheck, boolean secondCheck, boolean thirdCheck) {
         GridPane configDialog = new GridPane();
         configDialog.setPadding(new Insets(14, 14, 14, 14));
@@ -635,6 +682,7 @@ public final class AppUI extends UITemplate {
         TextField[] textFields = new TextField[3];
         Label textWatcher = new Label();
         textWatcher.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS_TEXTWATCHER.toString()));
+        textWatchDisplay.getStyleClass().add(PropertyManager.getManager().getPropertyValue(LABELS_TEXTWATCHER.toString()));
         CheckBox isContinuous = new CheckBox();
         for (int i = 0; i < 4; i++) {
             HBox row = new HBox();
@@ -829,7 +877,8 @@ public final class AppUI extends UITemplate {
         }
         ok.setOnAction(event -> {
             try {
-                ((AppData) applicationTemplate.getDataComponent()).setDataSet(textArea.getText());
+                tsdProcessor.update();
+                ((AppData) applicationTemplate.getDataComponent()).setDataSet(textArea.getText().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -915,6 +964,7 @@ public final class AppUI extends UITemplate {
                 break;
         }
     }
+    public Label getTextWatchDisplay(){return textWatchDisplay; }
 
 }
 

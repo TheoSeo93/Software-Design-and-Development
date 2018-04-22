@@ -4,7 +4,6 @@ import algorithms.Algorithm;
 import algorithms.Clustering;
 import classification.Classification;
 import classification.RandomClassifier;
-import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.control.RadioButton;
 import javafx.scene.text.Text;
@@ -18,7 +17,6 @@ import vilij.templates.ApplicationTemplate;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -36,6 +34,7 @@ public class AppData implements DataComponent {
     private TSDProcessor processor;
     private ApplicationTemplate applicationTemplate;
     private StringBuilder pendingText = new StringBuilder();
+    private boolean toContinue;
     private String updatedChartData;
     private String wrongDataFormat;
     private String wrongDataFormatContent;
@@ -43,6 +42,7 @@ public class AppData implements DataComponent {
     private String specified;
     private String wrongExtention;
     private String wrongExtentionContent;
+
 
     public AppData(ApplicationTemplate applicationTemplate) {
         this.processor = new TSDProcessor();
@@ -57,10 +57,8 @@ public class AppData implements DataComponent {
 
     @Override
     public void loadData(Path dataFilePath) {
-
         pendingText.setLength(0);
         pendingText.trimToSize();
-
         processor.setManager(applicationTemplate.manager);
         ((AppUI) applicationTemplate.getUIComponent()).getTextArea().clear();
         try {
@@ -145,9 +143,9 @@ public class AppData implements DataComponent {
 
     public void updateTextFlow(String dataFilePath) {
         TextFlow textFlow = ((AppUI) applicationTemplate.getUIComponent()).getTextFlow();
-        if (textFlow.getChildren().size() != 0) {
+        if (textFlow.getChildren().size() != 0)
             ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
-        }
+
         textFlow.setLineSpacing(5);
         Text firstLine = new Text(processor.getDataSize() + PropertyManager.getManager().getPropertyValue(FIRSTLINE.toString()));
         Text labelDescription = new Text(processor.getDataLabelCount() + PropertyManager.getManager().getPropertyValue(LABELNAMES.toString()) + System.lineSeparator());
@@ -169,6 +167,7 @@ public class AppData implements DataComponent {
     }
 
     public void setDataSet(String chartData) throws Exception {
+        processor.clear();
         processor.processString(chartData);
     }
 
@@ -182,11 +181,14 @@ public class AppData implements DataComponent {
 
     public void displayData() {
 
-
         processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
-        Map<String, Point2D> dataPoints = processor.getDataPoints();
-        ArrayList<Point2D> points = new ArrayList<>();
-        points.addAll(dataPoints.values());
+        applyAlgorithm();
+        ((AppUI) applicationTemplate.getUIComponent()).enableScrnshot();
+        processor.clear();
+
+    }
+
+    public void applyAlgorithm() {
         Classification[] classificationConfigs = ((AppUI) applicationTemplate.getUIComponent()).getClassificationConfigs();
         Algorithm[] randomClassifiers = ((AppUI) applicationTemplate.getUIComponent()).getRandomClassifiers();
         Clustering[] clusterConfigs = ((AppUI) applicationTemplate.getUIComponent()).getClusterConfigs();
@@ -207,7 +209,6 @@ public class AppData implements DataComponent {
                             ((AppUI) applicationTemplate.getUIComponent()).disableState(true);
                         new Thread(classificationConfigs[i]).start();
                         ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
-
                         break;
                     }
                 }
@@ -224,16 +225,16 @@ public class AppData implements DataComponent {
                 for (int i = 0; i < 3; i++) {
                     if (radioButtons[i].isSelected()) {
                         ((RandomClassifier) randomClassifiers[i]).setApplicationTemplate(applicationTemplate);
-                       randomClassifiers[i].run();
+                            new Thread(randomClassifiers[i]).start();
                         break;
                     }
                 }
                 break;
         }
-        ((AppUI) applicationTemplate.getUIComponent()).enableScrnshot();
-        processor.clear();
-
     }
 
+    public boolean getContinue() {
+        return toContinue;
+    }
 
 }

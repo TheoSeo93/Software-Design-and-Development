@@ -8,11 +8,13 @@ public class Classification extends Classifier {
     private int updateInterval;
     private boolean toContinue;
     public Classification(){}
+
     public Classification(int maxIterations, int updateInterval,boolean toContinue){
         this.maxIterations=maxIterations;
         this.updateInterval=updateInterval;
         this.toContinue=toContinue;
     }
+
     @Override
     public int getMaxIterations() {
         return maxIterations;
