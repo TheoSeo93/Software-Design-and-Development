@@ -57,6 +57,7 @@ public class RandomClassifier extends Classifier {
     public void run() {
 
             if(tocontinue.get()) {
+                finished=false;
                 Timeline timeline = new Timeline();
                 KeyFrame keyFrame = new KeyFrame(Duration.millis(500), (ActionEvent actionEvent) -> {
                     int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
@@ -99,6 +100,7 @@ public class RandomClassifier extends Classifier {
                 timeline.getKeyFrames().add(keyFrame);
                 timeline.play();
                 timeline.setOnFinished(e -> {
+                    finished=true;
                     ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(false);
                     ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
                     ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText("Continuous Algorithm Running finished ");
@@ -144,7 +146,7 @@ public class RandomClassifier extends Classifier {
                         ((AppUI) applicationTemplate.getUIComponent()).getToggleButton().setDisable(true);
                     else {
                         ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
-                        finished=false;
+                        finished=true;
                     }
                     ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(false);
                 });
@@ -154,6 +156,7 @@ public class RandomClassifier extends Classifier {
     public void setApplicationTemplate(ApplicationTemplate applicationTemplate) {
         this.applicationTemplate = applicationTemplate;
     }
+    public boolean isFinished(){ return finished; }
     public void setFinished(boolean finished){
         this.finished=finished;
     }

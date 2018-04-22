@@ -17,5 +17,7 @@ public interface Algorithm extends Runnable {
 
     boolean tocontinue();
 
+    boolean isFinished();
 
+    void setFinished(boolean finished);
 }

@@ -1,11 +1,17 @@
 package actions;
 
 
+import classification.RandomClassifier;
 import dataprocessors.AppData;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import ui.AppUI;
 import vilij.components.ActionComponent;
@@ -17,6 +23,7 @@ import vilij.templates.ApplicationTemplate;
 import javax.imageio.ImageIO;
 import java.io.*;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static settings.AppPropertyTypes.*;
 
@@ -38,6 +45,7 @@ public final class AppActions implements ActionComponent {
 
     private boolean isSaved;
     private File file;
+    private boolean exitCalled;
 
     public AppActions(ApplicationTemplate applicationTemplate) {
         this.applicationTemplate = applicationTemplate;
@@ -48,9 +56,9 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleNewRequest() {
         try {
-            if (promptToSave())
+            if (promptToSave(false)) {
                 handleSaveRequest();
-
+            }
         } catch (Exception ex) {
             if (ex instanceof IOException)
                 applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()),
@@ -76,6 +84,7 @@ public final class AppActions implements ActionComponent {
             file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
             if (file != null)
                 dataFilePath = file.toPath();
+
         }
         if (file != null) {
             applicationTemplate.getDataComponent().saveData(dataFilePath);
@@ -114,8 +123,34 @@ public final class AppActions implements ActionComponent {
 
     @Override
     public void handleExitRequest() {
-        Platform.exit();
+        try {
+
+            if (!((AppUI) applicationTemplate.getUIComponent()).getCurrentAlgorithm().isFinished()) {
+
+                System.out.print(((AppUI) applicationTemplate.getUIComponent()).getCurrentAlgorithm().isFinished());
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setContentText("Would you terminate the task and exit?");
+                alert.setHeaderText("The algorithm is currently running");
+                alert.setTitle("Exit");
+                DialogPane dialogPane = alert.getDialogPane();
+
+                Optional<ButtonType> check = alert.showAndWait();
+                if (check.get() == ButtonType.OK) {
+                    Platform.exit();
+                }
+            } else if (promptToSave(true)) {
+                handleSaveRequest();
+
+            }
+        } catch (Exception ex) {
+            if (ex instanceof IOException)
+                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()),
+                        applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()));
+        }
+
+
     }
+
 
     @Override
     public void handlePrintRequest() {
@@ -148,26 +183,46 @@ public final class AppActions implements ActionComponent {
      *
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
      */
-    private boolean promptToSave() throws IOException {
+    private boolean promptToSave(boolean isExit) throws IOException {
+        if (isExit) {
+            ConfirmationDialog confirmationDialog = (ConfirmationDialog) applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION);
+            confirmationDialog.show(applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.toString()), applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK.toString()));
+            if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.CANCEL) {
+                return false;
+            } else if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.YES) {
+                ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
+                ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
+                ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
+                return true;
+            } else {
+                ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
+                ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
+                ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
+                Platform.exit();
+                isSaved = false;
 
-        ConfirmationDialog confirmationDialog = (ConfirmationDialog) applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION);
-        confirmationDialog.show(applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.toString()), applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK.toString()));
-        if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.CANCEL) {
-            return false;
-        } else if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.YES) {
-            ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
-            ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
-            ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
-            return true;
+                return false;
+            }
         } else {
-            ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
-            ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
-            ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
-            applicationTemplate.getDataComponent().clear();
-            applicationTemplate.getUIComponent().clear();
-            isSaved = false;
+            ConfirmationDialog confirmationDialog = (ConfirmationDialog) applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION);
+            confirmationDialog.show(applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.toString()), applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK.toString()));
+            if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.CANCEL) {
+                return false;
+            } else if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.YES) {
+                ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
+                ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
+                ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
+                return true;
+            } else {
+                ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
+                ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
+                ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
+                applicationTemplate.getDataComponent().clear();
+                applicationTemplate.getUIComponent().clear();
+                isSaved = false;
 
-            return false;
+                return false;
+            }
         }
     }
 

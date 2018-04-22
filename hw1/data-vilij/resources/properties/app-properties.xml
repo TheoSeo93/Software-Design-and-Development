@@ -64,6 +64,7 @@ functionality within the main workspace. -->
         <property name="XPOS" value="  X pos: "/>
         <property name="YPOS" value="  Y pos: "/>
         <property name="CSS_ADDRESS" value="/css/.css"/>
+        <property name="CSS_ADDRESS_DIALOG" value="/css/dialog.css"/>
         <property name="CLASSIFICATION" value="Classification Algorithm "/>
         <property name="CLUSTERING" value="Clustering Algorithm"/>
         <property name="DISPLAY_ICON" value="display.png"/>
@@ -95,6 +96,7 @@ functionality within the main workspace. -->
         <property name="NULL" value="null"/>
         <property name="LABELS_TEXTWATCHER" value="labels-textwatcher"/>
 
+        <property name="MDIALOG" value="mDialog"/>
         <property name="RANDOMCLASSIFIER" value="RANDOMCLASSIFIER"/>
         <property name="RANDOMCLUSTERING" value="RANDOMCLUSTERING"/>
 

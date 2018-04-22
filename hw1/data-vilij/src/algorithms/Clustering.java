@@ -7,7 +7,7 @@ public class Clustering implements Algorithm {
     private int updateInterval;
     private boolean toContinue;
     private int clusters;
-
+    private boolean isFinished;
     public Clustering() {
 
     }
@@ -36,6 +36,16 @@ public class Clustering implements Algorithm {
     @Override
     public boolean tocontinue() {
         return toContinue;
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    @Override
+    public void setFinished(boolean finished) {
+        this.isFinished=finished;
     }
 
 

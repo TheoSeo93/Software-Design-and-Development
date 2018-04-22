@@ -101,6 +101,8 @@ public class AppData implements DataComponent {
 
     }
 
+
+
     public void loadData(String dataString) throws Exception {
         processor.setManager(applicationTemplate.manager);
         processor.processString(dataString);

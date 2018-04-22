@@ -315,7 +315,7 @@ public final class AppUI extends UITemplate {
                             countClicked=0;
                             for(int i=0;i<3;i++)
                             radioButtons[i].setSelected(false);
-                            ((RandomClassifier)currentAlgorithm).setFinished(true);
+                            currentAlgorithm.setFinished(true);
                             textWatchDisplay.setText("Algorithm running finished.");
                             disableState(false);
                         } else {
@@ -933,6 +933,10 @@ public final class AppUI extends UITemplate {
     }
 
 
+    public Algorithm getCurrentAlgorithm() {
+        return currentAlgorithm;
+    }
+
     public void enableSavedConfigs() {
         switch (algorithmType) {
             case RANDOMCLASSIFIER:
@@ -968,6 +972,7 @@ public final class AppUI extends UITemplate {
     }
     public Label getTextWatchDisplay(){return textWatchDisplay; }
     public Button getScrnshotButton(){ return scrnshotButton; }
+
 }
 
 
