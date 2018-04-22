@@ -82,6 +82,7 @@ public class RandomClassifier extends Classifier {
                     ((AppUI) applicationTemplate.getUIComponent()).getChart().setAnimated(false);
 //            ((AppUI) applicationTemplate.getUIComponent()).getChart().getYAxis().setAutoRanging(false);
 //            ((AppUI) applicationTemplate.getUIComponent()).getChart().getXAxis().setAutoRanging(false);
+                    ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(true);
                     ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText("Continuous Algorithm Running..");
                     ((AppUI) applicationTemplate.getUIComponent()).disableState(true);
                     ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().set(0, line);
@@ -98,6 +99,7 @@ public class RandomClassifier extends Classifier {
                 timeline.getKeyFrames().add(keyFrame);
                 timeline.play();
                 timeline.setOnFinished(e -> {
+                    ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(false);
                     ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
                     ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText("Continuous Algorithm Running finished ");
                 });
@@ -130,7 +132,7 @@ public class RandomClassifier extends Classifier {
                     ((AppUI) applicationTemplate.getUIComponent()).getChart().setAnimated(false);
         //            ((AppUI) applicationTemplate.getUIComponent()).getChart().getYAxis().setAutoRanging(false);
         //            ((AppUI) applicationTemplate.getUIComponent()).getChart().getXAxis().setAutoRanging(false);
-
+                    ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(true);
                     ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().set(0, line);
                 });
 
@@ -139,11 +141,12 @@ public class RandomClassifier extends Classifier {
                 timeline.play();
                 timeline.setOnFinished(e -> {
                     if(!finished)
-                        ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
+                        ((AppUI) applicationTemplate.getUIComponent()).getToggleButton().setDisable(true);
                     else {
-                        ((AppUI) applicationTemplate.getUIComponent()).getDisplayButton().setDisable(true);
+                        ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
                         finished=false;
                     }
+                    ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(false);
                 });
             }
     }

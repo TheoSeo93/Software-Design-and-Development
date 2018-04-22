@@ -317,8 +317,10 @@ public final class AppUI extends UITemplate {
                             radioButtons[i].setSelected(false);
                             ((RandomClassifier)currentAlgorithm).setFinished(true);
                             textWatchDisplay.setText("Algorithm running finished.");
+                            disableState(false);
                         } else {
-                            textWatchDisplay.setText("Algorithm running..current iteration is : "+(countClicked+1));
+                            toggleButton.setDisable(true);
+                            textWatchDisplay.setText("Algorithm running..current iteration is : "+(countClicked+1)+System.lineSeparator()+"Please click display button to proceed.");
                             countClicked++;
                         }
                     }
@@ -649,7 +651,7 @@ public final class AppUI extends UITemplate {
     public Button getDisplayButton(){ return displayButton;}
 
     public void disableState(boolean disable) {
-
+        comboBox.setDisable(disable);
         toggleButton.setDisable(disable);
         displayButton.setDisable(disable);
 
@@ -965,7 +967,7 @@ public final class AppUI extends UITemplate {
         }
     }
     public Label getTextWatchDisplay(){return textWatchDisplay; }
-
+    public Button getScrnshotButton(){ return scrnshotButton; }
 }
 
 
