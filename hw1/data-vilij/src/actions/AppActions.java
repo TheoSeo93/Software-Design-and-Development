@@ -134,77 +134,19 @@ public final class AppActions implements ActionComponent {
                 Optional<ButtonType> check = alert.showAndWait();
                 if (check.get() == ButtonType.OK) {
                     if (!isSaved) {
-                        ConfirmationDialog confirmationDialog = (ConfirmationDialog) applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION);
-                        confirmationDialog.show(applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.toString()), applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK.toString()));
-                        if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.CANCEL) {
-                            return;
-                        } else if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.YES) {
-                            ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
-                            ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
-                            ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
-
-                            FileChooser fileChooser = new FileChooser();
-                            fileChooser.setTitle(applicationTemplate.manager.getPropertyValue(SAVE_TITLE.toString()));
-                            fileChooser.getExtensionFilters().add(
-                                    new FileChooser.ExtensionFilter(applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT_DESC.toString()),
-                                            applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT.toString())));
-                            File initFile = new File(applicationTemplate.manager.getPropertyValue(DATA_RESOURCE_PATH.toString()));
-                            fileChooser.setInitialDirectory(initFile);
-                            fileChooser.setInitialFileName(applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT.toString()));
-                            file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
-                            if (file != null) {
-                                dataFilePath = file.toPath();
-                                applicationTemplate.getDataComponent().saveData(dataFilePath);
-                                ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
-                                isSaved = true;
-                            }
-                        } else {
-                            ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
-                            ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
-                            ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
-                            Platform.exit();
-                            isSaved = false;
-                        }
-
+                        promptToSaveExit();
                     } else Platform.exit();
-
-
                 }
+            } else {
+                if (!isSaved) {
+                    promptToSaveExit();
+
+                } else Platform.exit();
             }
 
         } else {
             if (!isSaved) {
-                ConfirmationDialog confirmationDialog = (ConfirmationDialog) applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION);
-                confirmationDialog.show(applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.toString()), applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK.toString()));
-                if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.CANCEL) {
-                    return;
-                } else if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.YES) {
-                    ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
-                    ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
-                    ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
-                    FileChooser fileChooser = new FileChooser();
-                    fileChooser.setTitle(applicationTemplate.manager.getPropertyValue(SAVE_TITLE.toString()));
-                    fileChooser.getExtensionFilters().add(
-                            new FileChooser.ExtensionFilter(applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT_DESC.toString()),
-                                    applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT.toString())));
-                    File initFile = new File(applicationTemplate.manager.getPropertyValue(DATA_RESOURCE_PATH.toString()));
-                    fileChooser.setInitialDirectory(initFile);
-                    fileChooser.setInitialFileName(applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT.toString()));
-                    file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
-                    if (file != null) {
-                        dataFilePath = file.toPath();
-                        applicationTemplate.getDataComponent().saveData(dataFilePath);
-                        ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
-                        isSaved = true;
-
-                    }
-                } else {
-                    ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
-                    ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
-                    ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
-                    Platform.exit();
-                    isSaved = false;
-                }
+                promptToSaveExit();
 
             } else Platform.exit();
 
@@ -251,6 +193,43 @@ public final class AppActions implements ActionComponent {
      *
      * @return <code>false</code> if the user presses the <i>cancel</i>, and <code>true</code> otherwise.
      */
+    private void promptToSaveExit() {
+        if (!isSaved) {
+            ConfirmationDialog confirmationDialog = (ConfirmationDialog) applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION);
+            confirmationDialog.show(applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK_TITLE.toString()), applicationTemplate.manager.getPropertyValue(SAVE_UNSAVED_WORK.toString()));
+            if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.CANCEL) {
+                return;
+            } else if (confirmationDialog.getSelectedOption() == ConfirmationDialog.Option.YES) {
+                ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
+                ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
+                ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
+
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle(applicationTemplate.manager.getPropertyValue(SAVE_TITLE.toString()));
+                fileChooser.getExtensionFilters().add(
+                        new FileChooser.ExtensionFilter(applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT_DESC.toString()),
+                                applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT.toString())));
+                File initFile = new File(applicationTemplate.manager.getPropertyValue(DATA_RESOURCE_PATH.toString()));
+                fileChooser.setInitialDirectory(initFile);
+                fileChooser.setInitialFileName(applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT.toString()));
+                file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+                if (file != null) {
+                    dataFilePath = file.toPath();
+                    applicationTemplate.getDataComponent().saveData(dataFilePath);
+                    ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
+                    isSaved = true;
+                }
+            } else {
+                ((AppUI) applicationTemplate.getUIComponent()).getTextFlow().getChildren().clear();
+                ((AppUI) applicationTemplate.getUIComponent()).setToggleSelected(false);
+                ((AppUI) applicationTemplate.getUIComponent()).setCurrentDataFilePath(null);
+                Platform.exit();
+                isSaved = false;
+            }
+
+        } else Platform.exit();
+    }
+
     private boolean promptToSave() throws IOException {
         {
             ConfirmationDialog confirmationDialog = (ConfirmationDialog) applicationTemplate.getDialog(Dialog.DialogType.CONFIRMATION);

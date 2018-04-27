@@ -559,7 +559,7 @@ public final class AppUI extends UITemplate {
             try {
                 ((AppActions) applicationTemplate.getActionComponent()).handleScreenshotRequest();
             } catch (IOException e1) {
-                e1.printStackTrace();
+
             }
         });
 
@@ -919,7 +919,7 @@ public final class AppUI extends UITemplate {
                 tsdProcessor.update();
                 ((AppData) applicationTemplate.getDataComponent()).setDataSet(textArea.getText().toString());
             } catch (Exception e) {
-                e.printStackTrace();
+
             }
             if (firstCheck) {
 
