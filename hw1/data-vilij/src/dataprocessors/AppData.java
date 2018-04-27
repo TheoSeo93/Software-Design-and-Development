@@ -184,6 +184,7 @@ public class AppData implements DataComponent {
     public void displayData() {
 
         processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
+        if(((AppUI) applicationTemplate.getUIComponent()).getCurrentAlgorithm().tocontinue())
         applyAlgorithm();
         ((AppUI) applicationTemplate.getUIComponent()).enableScrnshot();
         processor.clear();
@@ -235,8 +236,6 @@ public class AppData implements DataComponent {
         }
     }
 
-    public boolean getContinue() {
-        return toContinue;
-    }
+
 
 }

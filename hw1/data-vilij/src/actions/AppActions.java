@@ -45,7 +45,6 @@ public final class AppActions implements ActionComponent {
 
     private boolean isSaved;
     private File file;
-    private boolean exitCalled;
 
     public AppActions(ApplicationTemplate applicationTemplate) {
         this.applicationTemplate = applicationTemplate;
@@ -124,33 +123,81 @@ public final class AppActions implements ActionComponent {
     @Override
     public void handleExitRequest() {
         try {
+            if (((AppUI) applicationTemplate.getUIComponent()).getCurrentAlgorithm() != null) {
+                if (!(((AppUI) applicationTemplate.getUIComponent()).getCurrentAlgorithm().isFinished())) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setContentText(PropertyManager.getManager().getPropertyValue(RUNNING_EXIT.toString()));
+                    alert.setHeaderText(PropertyManager.getManager().getPropertyValue(CURRENTLY_RUNNING.toString()));
+                    alert.setTitle(PropertyManager.getManager().getPropertyValue(EXIT.toString()));
 
-            if (!((AppUI) applicationTemplate.getUIComponent()).getCurrentAlgorithm().isFinished()) {
 
-                System.out.print(((AppUI) applicationTemplate.getUIComponent()).getCurrentAlgorithm().isFinished());
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setContentText("Would you terminate the task and exit?");
-                alert.setHeaderText("The algorithm is currently running");
-                alert.setTitle("Exit");
-                DialogPane dialogPane = alert.getDialogPane();
+                    Optional<ButtonType> check = alert.showAndWait();
+                    if (check.get() == ButtonType.OK) {
+                        Platform.exit();
+                    } else {
+                        if (!isSaved) {
+                            boolean save = promptToSave(true);
+                            if (save) {
+                                FileChooser fileChooser = new FileChooser();
+                                fileChooser.setTitle(applicationTemplate.manager.getPropertyValue(SAVE_TITLE.toString()));
+                                fileChooser.getExtensionFilters().add(
+                                        new FileChooser.ExtensionFilter(applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT_DESC.toString()),
+                                                applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT.toString())));
+                                File initFile = new File(applicationTemplate.manager.getPropertyValue(DATA_RESOURCE_PATH.toString()));
+                                fileChooser.setInitialDirectory(initFile);
+                                fileChooser.setInitialFileName(applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT.toString()));
+                                file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+                                if (file != null)
+                                    dataFilePath = file.toPath();
 
-                Optional<ButtonType> check = alert.showAndWait();
-                if (check.get() == ButtonType.OK) {
+                            }
+                            if (file != null) {
+                                applicationTemplate.getDataComponent().saveData(dataFilePath);
+                                ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
+                                if (save)
+                                    Platform.exit();
+                                isSaved = true;
+
+                            }
+
+                        }
+                    }
+                }
+
+            } else {
+                if (!isSaved) {
+                    boolean save = promptToSave(true);
+                    if (save) {
+                        FileChooser fileChooser = new FileChooser();
+                        fileChooser.setTitle(applicationTemplate.manager.getPropertyValue(SAVE_TITLE.toString()));
+                        fileChooser.getExtensionFilters().add(
+                                new FileChooser.ExtensionFilter(applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT_DESC.toString()),
+                                        applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT.toString())));
+                        File initFile = new File(applicationTemplate.manager.getPropertyValue(DATA_RESOURCE_PATH.toString()));
+                        fileChooser.setInitialDirectory(initFile);
+                        fileChooser.setInitialFileName(applicationTemplate.manager.getPropertyValue(DATA_FILE_EXT.toString()));
+                        file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
+                        if (file != null)
+                            dataFilePath = file.toPath();
+
+                    }
+                    if (file != null) {
+                        applicationTemplate.getDataComponent().saveData(dataFilePath);
+                        ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
+                        if (save)
+                            Platform.exit();
+                        isSaved = true;
+
+                    }
                     Platform.exit();
                 }
-            } else if (promptToSave(true)) {
-                handleSaveRequest();
-
             }
-        } catch (Exception ex) {
-            if (ex instanceof IOException)
-                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()),
-                        applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()));
+        } catch (IOException ex) {
+
+            applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()),
+                    applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()));
         }
-
-
     }
-
 
     @Override
     public void handlePrintRequest() {

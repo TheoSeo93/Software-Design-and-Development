@@ -8,6 +8,8 @@ import classification.RandomClassifier;
 import data.DataSet;
 import dataprocessors.AppData;
 import dataprocessors.TSDProcessor;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -294,43 +296,46 @@ public final class AppUI extends UITemplate {
 
             String chartData = textArea.getText().toString();
 
-                try {
-                    if (currentAlgorithm.tocontinue()) {
+            try {
+                if (currentAlgorithm.tocontinue()) {
+                    chart.getData().clear();
+                    tsdProcessor.update();
+                    new AppData(applicationTemplate).loadData(chartData);
+                    AppUI.super.saveButton.setDisable(false);
+                    hasNewText = false;
+                } else {
+                    if (countClicked == 0) {
+                        currentAlgorithm.setFinished(false);
                         chart.getData().clear();
                         tsdProcessor.update();
-
                         new AppData(applicationTemplate).loadData(chartData);
-                        AppUI.super.saveButton.setDisable(false);
-                        hasNewText = false;
+                        textWatchDisplay.setText(PropertyManager.getManager().getPropertyValue(CHART_DISPLAYED.toString())+ System.lineSeparator() + PropertyManager.getManager().getPropertyValue(PROMPT_PROCEED.toString()));
+                        countClicked++;
+
                     } else {
 
-                        if(countClicked==0) {
-                            chart.getData().clear();
-                            tsdProcessor.update();
-                            new AppData(applicationTemplate).loadData(chartData);
-                        }
-                        else
-                        new AppData(applicationTemplate).applyAlgorithm();
-                        if (currentAlgorithm.getMaxIterations()/currentAlgorithm.getUpdateInterval()<=countClicked) {
-                            countClicked=0;
-                            for(int i=0;i<3;i++)
-                            radioButtons[i].setSelected(false);
-                            currentAlgorithm.setFinished(true);
-                            textWatchDisplay.setText("Algorithm running finished.");
+                        if (currentAlgorithm.getMaxIterations() / currentAlgorithm.getUpdateInterval() <= countClicked) {
+                            new AppData(applicationTemplate).applyAlgorithm();
+                            disableRadioButtons();
+                            textWatchDisplay.setText(PropertyManager.getManager().getPropertyValue(ALGO_FINISHED.toString())+System.lineSeparator()+PropertyManager.getManager().getPropertyValue(TOTAL_ITERATION.toString())+ (countClicked ) );
                             disableState(false);
+                            displayButton.setDisable(true);
+                            countClicked = 0;
+                            currentAlgorithm.setFinished(true);
                         } else {
                             toggleButton.setDisable(true);
-                            textWatchDisplay.setText("Algorithm running..current iteration is : "+(countClicked+1)+System.lineSeparator()+"Please click display button to proceed.");
+                            new AppData(applicationTemplate).applyAlgorithm();
+                            textWatchDisplay.setText(PropertyManager.getManager().getPropertyValue(CURRENT_ITERATION.toString()) + (countClicked ) + System.lineSeparator() +PropertyManager.getManager().getPropertyValue(PROMPT_PROCEED.toString()));
                             countClicked++;
+                            currentAlgorithm.setFinished(false);
                         }
                     }
-                } catch (Exception ex) {
-                    Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
-                    error.show(applicationTemplate.manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.toString()), ex.getMessage() + System.lineSeparator());
-                    ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
                 }
-
-
+            } catch (Exception ex) {
+                Dialog error = applicationTemplate.getDialog(Dialog.DialogType.ERROR);
+                error.show(applicationTemplate.manager.getPropertyValue(RESOURCE_SUBDIR_NOT_FOUND.toString()), ex.getMessage() + System.lineSeparator());
+                ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
+            }
 
 
         });
@@ -648,7 +653,9 @@ public final class AppUI extends UITemplate {
         return toggleButton.isSelected();
     }
 
-    public Button getDisplayButton(){ return displayButton;}
+    public Button getDisplayButton() {
+        return displayButton;
+    }
 
     public void disableState(boolean disable) {
         comboBox.setDisable(disable);
@@ -657,7 +664,10 @@ public final class AppUI extends UITemplate {
 
     }
 
-    public ToggleButton getToggleButton(){ return toggleButton; }
+    public ToggleButton getToggleButton() {
+        return toggleButton;
+    }
+
     public void showConfigDialog(boolean firstCheck, boolean secondCheck, boolean thirdCheck) {
         GridPane configDialog = new GridPane();
         configDialog.setPadding(new Insets(14, 14, 14, 14));
@@ -730,15 +740,22 @@ public final class AppUI extends UITemplate {
                     textFields[0].setText(String.valueOf(classificationConfigs[0].getMaxIterations()));
                     textFields[1].setText(String.valueOf(classificationConfigs[0].getUpdateInterval()));
                     isContinuous.setSelected(classificationConfigs[0].tocontinue());
+                    if(validText(textFields))
+                        ok.setDisable(false);
                 } else if (classificationConfigs[1] != null && secondCheck) {
                     textFields[0].setText(String.valueOf(classificationConfigs[1].getMaxIterations()));
                     textFields[1].setText(String.valueOf(classificationConfigs[1].getUpdateInterval()));
                     isContinuous.setSelected(classificationConfigs[1].tocontinue());
+                    if(validText(textFields))
+                        ok.setDisable(false);
                 } else if (classificationConfigs[2] != null && thirdCheck) {
                     textFields[0].setText(String.valueOf(classificationConfigs[2].getMaxIterations()));
                     textFields[1].setText(String.valueOf(classificationConfigs[2].getUpdateInterval()));
                     isContinuous.setSelected(classificationConfigs[2].tocontinue());
+                    if(validText(textFields))
+                        ok.setDisable(false);
                 }
+
             }
 
         } else if (algorithmType == Algorithm.AlgorithmType.RANDOMCLASSIFIER) {
@@ -748,14 +765,20 @@ public final class AppUI extends UITemplate {
                     textFields[0].setText(String.valueOf(randomClassifiers[0].getMaxIterations()));
                     textFields[1].setText(String.valueOf(randomClassifiers[0].getUpdateInterval()));
                     isContinuous.setSelected(randomClassifiers[0].tocontinue());
+                    if(validText(textFields))
+                        ok.setDisable(false);
                 } else if (randomClassifiers[1] != null && secondCheck) {
                     textFields[0].setText(String.valueOf(randomClassifiers[1].getMaxIterations()));
                     textFields[1].setText(String.valueOf(randomClassifiers[1].getUpdateInterval()));
                     isContinuous.setSelected(randomClassifiers[1].tocontinue());
+                    if(validText(textFields))
+                        ok.setDisable(false);
                 } else if (randomClassifiers[2] != null && thirdCheck) {
                     textFields[0].setText(String.valueOf(randomClassifiers[2].getMaxIterations()));
                     textFields[1].setText(String.valueOf(randomClassifiers[2].getUpdateInterval()));
                     isContinuous.setSelected(randomClassifiers[2].tocontinue());
+                    if(validText(textFields))
+                        ok.setDisable(false);
                 }
 
             }
@@ -767,16 +790,22 @@ public final class AppUI extends UITemplate {
                     textFields[1].setText(String.valueOf(clusterConfigs[0].getUpdateInterval()));
                     textFields[2].setText(String.valueOf(clusterConfigs[0].getClusters()));
                     isContinuous.setSelected(clusterConfigs[0].tocontinue());
+                    if(validText(textFields))
+                        ok.setDisable(false);
                 } else if (clusterConfigs[1] != null && secondCheck) {
                     textFields[0].setText(String.valueOf(clusterConfigs[1].getMaxIterations()));
                     textFields[1].setText(String.valueOf(clusterConfigs[1].getUpdateInterval()));
                     textFields[2].setText(String.valueOf(clusterConfigs[1].getClusters()));
                     isContinuous.setSelected(clusterConfigs[1].tocontinue());
+                    if(validText(textFields))
+                        ok.setDisable(false);
                 } else if (clusterConfigs[2] != null && thirdCheck) {
                     textFields[0].setText(String.valueOf(clusterConfigs[2].getMaxIterations()));
                     textFields[1].setText(String.valueOf(clusterConfigs[2].getUpdateInterval()));
                     textFields[2].setText(String.valueOf(clusterConfigs[2].getClusters()));
                     isContinuous.setSelected(clusterConfigs[2].tocontinue());
+                    if(validText(textFields))
+                        ok.setDisable(false);
                 }
 
             }
@@ -793,6 +822,7 @@ public final class AppUI extends UITemplate {
         for (int i = 0; i < textFields.length; i++) {
             if ((algorithmType == Algorithm.AlgorithmType.RANDOMCLASSIFIER || algorithmType == Algorithm.AlgorithmType.CLASSIFICATION) && i == 2)
                 continue;
+
             textFields[i].textProperty().
                     addListener((observable, oldValue, newValue) -> {
                         boolean isDigit = false;
@@ -873,6 +903,9 @@ public final class AppUI extends UITemplate {
                         if (isValid) {
                             textWatcher.setText(PropertyManager.getManager().getPropertyValue(EMPTY.name()));
                             ok.setDisable(false);
+                            isContinuous.selectedProperty().addListener((observable1, oldValue1, newValue1) -> {
+
+                            });
                         }
                     });
 
@@ -970,9 +1003,65 @@ public final class AppUI extends UITemplate {
                 break;
         }
     }
-    public Label getTextWatchDisplay(){return textWatchDisplay; }
-    public Button getScrnshotButton(){ return scrnshotButton; }
 
+    public boolean validText(TextField[] textFields) {
+        boolean isValid = true;
+        Outer:
+        for (int j = 0; j < textFields.length; j++) {
+            if ((algorithmType == Algorithm.AlgorithmType.RANDOMCLASSIFIER || algorithmType == Algorithm.AlgorithmType.CLASSIFICATION)) {
+                if (j == 2) {
+                    continue;
+                }
+                if (textFields[j].getText().length() == 0) {
+                    isValid = false;
+                    break Outer;
+                }
+                for (int k = 0; k < textFields[j].getText().length(); k++) {
+                    if (!Character.isDigit(textFields[j].getText().charAt(k))) {
+                        isValid = false;
+                        break Outer;
+                    }
+                }
+
+
+            } else {
+                if (textFields[j].getText().length() == 0) {
+
+                    isValid = false;
+                    break Outer;
+                }
+                for (int k = 0; k < textFields[j].getText().length(); k++) {
+                    if (!Character.isDigit(textFields[j].getText().charAt(k))) {
+
+                        isValid = false;
+                        break Outer;
+                    }
+                }
+
+            }
+
+
+        }
+
+
+        if (isValid)
+            return true;
+
+        else return false;
+    }
+
+
+    public Label getTextWatchDisplay() {
+        return textWatchDisplay;
+    }
+
+    public Button getScrnshotButton() {
+        return scrnshotButton;
+    }
+    public void disableRadioButtons(){
+        for (int i = 0; i < 3; i++)
+            radioButtons[i].setSelected(false);
+    }
 }
 
 

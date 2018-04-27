@@ -7,9 +7,13 @@ import javafx.geometry.Point2D;
 import javafx.scene.chart.XYChart;
 import javafx.util.Duration;
 import ui.AppUI;
+import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static settings.AppPropertyTypes.CONTINUOUS_FINISHED;
+import static settings.AppPropertyTypes.RUNNING_STATE;
 
 /**
  * @author Ritwik Banerjee
@@ -81,10 +85,8 @@ public class RandomClassifier extends Classifier {
                     line.getData().add(new XYChart.Data<>(startX, startY - 20));
                     line.getData().add(new XYChart.Data<>(endX, endY + 20));
                     ((AppUI) applicationTemplate.getUIComponent()).getChart().setAnimated(false);
-//            ((AppUI) applicationTemplate.getUIComponent()).getChart().getYAxis().setAutoRanging(false);
-//            ((AppUI) applicationTemplate.getUIComponent()).getChart().getXAxis().setAutoRanging(false);
                     ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(true);
-                    ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText("Continuous Algorithm Running..");
+                    ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText(PropertyManager.getManager().getPropertyValue(RUNNING_STATE.toString()));
                     ((AppUI) applicationTemplate.getUIComponent()).disableState(true);
                     ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().set(0, line);
                 });
@@ -100,10 +102,13 @@ public class RandomClassifier extends Classifier {
                 timeline.getKeyFrames().add(keyFrame);
                 timeline.play();
                 timeline.setOnFinished(e -> {
-                    finished=true;
+
                     ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(false);
                     ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
-                    ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText("Continuous Algorithm Running finished ");
+                    ((AppUI) applicationTemplate.getUIComponent()).getDisplayButton().setDisable(true);
+                    ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText(PropertyManager.getManager().getPropertyValue(CONTINUOUS_FINISHED.toString()));
+                    ((AppUI) applicationTemplate.getUIComponent()).disableRadioButtons();
+                    finished=true;
                 });
             } else {
                 Timeline timeline = new Timeline();
@@ -132,8 +137,6 @@ public class RandomClassifier extends Classifier {
                     line.getData().add(new XYChart.Data<>(startX, startY - 20));
                     line.getData().add(new XYChart.Data<>(endX, endY + 20));
                     ((AppUI) applicationTemplate.getUIComponent()).getChart().setAnimated(false);
-        //            ((AppUI) applicationTemplate.getUIComponent()).getChart().getYAxis().setAutoRanging(false);
-        //            ((AppUI) applicationTemplate.getUIComponent()).getChart().getXAxis().setAutoRanging(false);
                     ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(true);
                     ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().set(0, line);
                 });
@@ -146,6 +149,7 @@ public class RandomClassifier extends Classifier {
                         ((AppUI) applicationTemplate.getUIComponent()).getToggleButton().setDisable(true);
                     else {
                         ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
+                        ((AppUI) applicationTemplate.getUIComponent()).getDisplayButton().setDisable(true);
                         finished=true;
                     }
                     ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(false);

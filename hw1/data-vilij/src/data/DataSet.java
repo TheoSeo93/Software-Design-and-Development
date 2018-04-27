@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import static ui.DataVisualizer.tabRegex;
+
 /**
  * This class specifies how an algorithm will expect the dataset to be. It is
  * provided as a rudimentary structure only, and does not include many of the
@@ -34,12 +36,14 @@ public class DataSet {
 
     public static class InvalidDataNameException extends Exception {
 
+        public static String error = "Invalid name '%s'";
         private static final String NAME_ERROR_MSG = "All data instance names must start with the @ character.";
 
         public InvalidDataNameException(String name) {
-            super(String.format("Invalid name '%s'." + NAME_ERROR_MSG, name));
+            super(String.format(error + NAME_ERROR_MSG , name));
         }
     }
+
 
     private static String nameFormatCheck(String name) throws InvalidDataNameException {
         if (!name.startsWith("@"))
@@ -81,7 +85,7 @@ public class DataSet {
     }
 
     private void addInstance(String tsdLine) throws InvalidDataNameException {
-        String[] arr = tsdLine.split("\t");
+        String[] arr = tsdLine.split(tabRegex);
         labels.put(nameFormatCheck(arr[0]), arr[1]);
         locations.put(arr[0], locationOf(arr[2]));
     }

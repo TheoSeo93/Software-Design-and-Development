@@ -27,7 +27,7 @@ import static ui.DataVisualizer.*;
  * @see XYChart
  */
 public final class TSDProcessor {
-    private static String error = "Invalid name '%s'";
+    public static String error = "Invalid name '%s'";
 
     private static String onHover = "onHover";
 
@@ -162,9 +162,6 @@ public final class TSDProcessor {
                 startY = points.get(i).getY();
         }
 
-        XYChart.Series<Number, Number> avgSeries = new XYChart.Series<>();
-
-        avgSeries.setName(manager.getPropertyValue(AVG.toString()));
 
         chart.getData().add(0, new XYChart.Series<>());
 
