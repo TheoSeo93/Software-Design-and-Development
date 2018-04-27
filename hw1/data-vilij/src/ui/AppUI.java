@@ -98,7 +98,6 @@ public final class AppUI extends UITemplate {
     private int countClicked;
     private Classification[] classificationConfigs;
     private Algorithm.AlgorithmType algorithmType;
-    private boolean lock;
     private HBox displayBox;
     private Algorithm currentAlgorithm;
     private Label textWatchDisplay;
@@ -306,6 +305,7 @@ public final class AppUI extends UITemplate {
                 } else {
                     if (countClicked == 0) {
                         currentAlgorithm.setFinished(false);
+                        comboBox.setDisable(true);
                         chart.getData().clear();
                         tsdProcessor.update();
                         new AppData(applicationTemplate).loadData(chartData);
@@ -324,6 +324,7 @@ public final class AppUI extends UITemplate {
                             currentAlgorithm.setFinished(true);
                         } else {
                             toggleButton.setDisable(true);
+                            comboBox.setDisable(true);
                             new AppData(applicationTemplate).applyAlgorithm();
                             textWatchDisplay.setText(PropertyManager.getManager().getPropertyValue(CURRENT_ITERATION.toString()) + (countClicked ) + System.lineSeparator() +PropertyManager.getManager().getPropertyValue(PROMPT_PROCEED.toString()));
                             countClicked++;
@@ -660,8 +661,11 @@ public final class AppUI extends UITemplate {
     public void disableState(boolean disable) {
         comboBox.setDisable(disable);
         toggleButton.setDisable(disable);
-        displayButton.setDisable(disable);
+    }
 
+
+    public ComboBox getComboBox() {
+        return comboBox;
     }
 
     public ToggleButton getToggleButton() {

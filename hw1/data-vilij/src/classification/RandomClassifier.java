@@ -9,6 +9,7 @@ import javafx.util.Duration;
 import ui.AppUI;
 import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -60,109 +61,115 @@ public class RandomClassifier extends Classifier {
     @Override
     public void run() {
 
-            if(tocontinue.get()) {
-                finished=false;
-                Timeline timeline = new Timeline();
-                KeyFrame keyFrame = new KeyFrame(Duration.millis(500), (ActionEvent actionEvent) -> {
-                    int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
-                    int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();
-                    int constant = new Double(RAND.nextDouble() * 100).intValue();
-                    output = Arrays.asList(xCoefficient, yCoefficient, constant);
-                    ArrayList<Point2D> points = new ArrayList<>();
-                    points.addAll(dataset.getLocations().values());
-                    double startY = points.get(0).getY();
-                    double endY = points.get(0).getY();
+        if (tocontinue.get()) {
+            finished = false;
+            Timeline timeline = new Timeline();
+            KeyFrame keyFrame = new KeyFrame(Duration.millis(500), (ActionEvent actionEvent) -> {
+                int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
+                int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();
+                int constant = new Double(RAND.nextDouble() * 100).intValue();
+                output = Arrays.asList(xCoefficient, yCoefficient, constant);
+                ArrayList<Point2D> points = new ArrayList<>();
+                points.addAll(dataset.getLocations().values());
+                double startY = points.get(0).getY();
+                double endY = points.get(0).getY();
 
-                    for (int j = 0; j < points.size(); j++) {
-                        if (startY < points.get(j).getY())
-                            startY = points.get(j).getY();
-                        if (endY > points.get(j).getY())
-                            endY = points.get(j).getY();
-                    }
-                    double startX = (-yCoefficient * (startY - 20) - constant) / xCoefficient;
-                    double endX = (-yCoefficient * (endY + 20) - constant) / xCoefficient;
-                    XYChart.Series<Number, Number> line = new XYChart.Series<>();
-                    line.getData().add(new XYChart.Data<>(startX, startY - 20));
-                    line.getData().add(new XYChart.Data<>(endX, endY + 20));
-                    ((AppUI) applicationTemplate.getUIComponent()).getChart().setAnimated(false);
-                    ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(true);
-                    ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText(PropertyManager.getManager().getPropertyValue(RUNNING_STATE.toString()));
-                    ((AppUI) applicationTemplate.getUIComponent()).disableState(true);
-                    ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().set(0, line);
-                });
-                int iterationSimulation = 0;
-                for (int i = 1; i <= maxIterations; i++) {
-                    if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
-                        iterationSimulation = i;
-                        break;
-                    } else iterationSimulation = i;
+                for (int j = 0; j < points.size(); j++) {
+                    if (startY < points.get(j).getY())
+                        startY = points.get(j).getY();
+                    if (endY > points.get(j).getY())
+                        endY = points.get(j).getY();
                 }
-                iterationSimulation/=updateInterval;
-                timeline.setCycleCount(iterationSimulation);
-                timeline.getKeyFrames().add(keyFrame);
-                timeline.play();
-                timeline.setOnFinished(e -> {
+                double startX = (-yCoefficient * (startY - 20) - constant) / xCoefficient;
+                double endX = (-yCoefficient * (endY + 20) - constant) / xCoefficient;
+                XYChart.Series<Number, Number> line = new XYChart.Series<>();
+                line.getData().add(new XYChart.Data<>(startX, startY - 20));
+                line.getData().add(new XYChart.Data<>(endX, endY + 20));
+                ((AppUI) applicationTemplate.getUIComponent()).getChart().setAnimated(false);
+                ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(true);
+                ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText(PropertyManager.getManager().getPropertyValue(RUNNING_STATE.toString()));
+                ((AppUI) applicationTemplate.getUIComponent()).disableState(true);
+                ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().set(0, line);
+            });
+            int iterationSimulation = 0;
+            for (int i = 1; i <= maxIterations; i++) {
+                if (i > maxIterations * .6 && RAND.nextDouble() < 0.05) {
+                    iterationSimulation = i;
+                    break;
+                } else iterationSimulation = i;
+            }
+            iterationSimulation /= updateInterval;
+            timeline.setCycleCount(iterationSimulation);
+            timeline.getKeyFrames().add(keyFrame);
+            timeline.play();
+            timeline.setOnFinished(e -> {
 
-                    ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(false);
+                ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(false);
+                ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
+                ((AppUI) applicationTemplate.getUIComponent()).getDisplayButton().setDisable(true);
+                ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText(PropertyManager.getManager().getPropertyValue(CONTINUOUS_FINISHED.toString()));
+                ((AppUI) applicationTemplate.getUIComponent()).disableRadioButtons();
+                finished = true;
+            });
+        } else {
+            Timeline timeline = new Timeline();
+            KeyFrame keyFrame = new KeyFrame(Duration.millis(500), (ActionEvent actionEvent) -> {
+
+                int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
+                int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();
+                int constant = new Double(RAND.nextDouble() * 100).intValue();
+
+                output = Arrays.asList(xCoefficient, yCoefficient, constant);
+
+                ArrayList<Point2D> points = new ArrayList<>();
+                points.addAll(dataset.getLocations().values());
+                double startY = points.get(0).getY();
+                double endY = points.get(0).getY();
+
+                for (int j = 0; j < points.size(); j++) {
+                    if (startY < points.get(j).getY())
+                        startY = points.get(j).getY();
+                    if (endY > points.get(j).getY())
+                        endY = points.get(j).getY();
+                }
+                double startX = (-yCoefficient * (startY - 20) - constant) / xCoefficient;
+                double endX = (-yCoefficient * (endY + 20) - constant) / xCoefficient;
+                XYChart.Series<Number, Number> line = new XYChart.Series<>();
+                line.getData().add(new XYChart.Data<>(startX, startY - 20));
+                line.getData().add(new XYChart.Data<>(endX, endY + 20));
+                ((AppUI) applicationTemplate.getUIComponent()).getChart().setAnimated(false);
+                ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(true);
+                ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().set(0, line);
+                ((AppUI) applicationTemplate.getUIComponent()).getComboBox().setDisable(true);
+            });
+
+            timeline.setCycleCount(1);
+            timeline.getKeyFrames().add(keyFrame);
+            timeline.play();
+            timeline.setOnFinished(e -> {
+                if (!finished) {
+                    ((AppUI) applicationTemplate.getUIComponent()).getToggleButton().setDisable(true);
+                    ((AppUI) applicationTemplate.getUIComponent()).getComboBox().setDisable(true);
+                } else {
                     ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
                     ((AppUI) applicationTemplate.getUIComponent()).getDisplayButton().setDisable(true);
-                    ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText(PropertyManager.getManager().getPropertyValue(CONTINUOUS_FINISHED.toString()));
-                    ((AppUI) applicationTemplate.getUIComponent()).disableRadioButtons();
-                    finished=true;
-                });
-            } else {
-                Timeline timeline = new Timeline();
-                KeyFrame keyFrame = new KeyFrame(Duration.millis(500), (ActionEvent actionEvent) -> {
-
-                    int xCoefficient = new Double(RAND.nextDouble() * 100).intValue();
-                    int yCoefficient = new Double(RAND.nextDouble() * 100).intValue();
-                    int constant = new Double(RAND.nextDouble() * 100).intValue();
-
-                    output = Arrays.asList(xCoefficient, yCoefficient, constant);
-
-                    ArrayList<Point2D> points = new ArrayList<>();
-                    points.addAll(dataset.getLocations().values());
-                    double startY = points.get(0).getY();
-                    double endY = points.get(0).getY();
-
-                    for (int j = 0; j < points.size(); j++) {
-                        if (startY < points.get(j).getY())
-                            startY = points.get(j).getY();
-                        if (endY > points.get(j).getY())
-                            endY = points.get(j).getY();
-                    }
-                    double startX = (-yCoefficient * (startY - 20) - constant) / xCoefficient;
-                    double endX = (-yCoefficient * (endY + 20) - constant) / xCoefficient;
-                    XYChart.Series<Number, Number> line = new XYChart.Series<>();
-                    line.getData().add(new XYChart.Data<>(startX, startY - 20));
-                    line.getData().add(new XYChart.Data<>(endX, endY + 20));
-                    ((AppUI) applicationTemplate.getUIComponent()).getChart().setAnimated(false);
-                    ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(true);
-                    ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().set(0, line);
-                });
-
-                timeline.setCycleCount(1);
-                timeline.getKeyFrames().add(keyFrame);
-                timeline.play();
-                timeline.setOnFinished(e -> {
-                    if(!finished)
-                        ((AppUI) applicationTemplate.getUIComponent()).getToggleButton().setDisable(true);
-                    else {
-                        ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
-                        ((AppUI) applicationTemplate.getUIComponent()).getDisplayButton().setDisable(true);
-                        finished=true;
-                    }
-                    ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(false);
-                });
-            }
+                    finished = true;
+                }
+                ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(false);
+            });
+        }
     }
 
     public void setApplicationTemplate(ApplicationTemplate applicationTemplate) {
         this.applicationTemplate = applicationTemplate;
     }
-    public boolean isFinished(){ return finished; }
-    public void setFinished(boolean finished){
-        this.finished=finished;
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 
 }

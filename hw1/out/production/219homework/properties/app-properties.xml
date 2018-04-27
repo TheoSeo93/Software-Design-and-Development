@@ -97,8 +97,17 @@ functionality within the main workspace. -->
         <property name="LABELS_TEXTWATCHER" value="labels-textwatcher"/>
 
         <property name="MDIALOG" value="mDialog"/>
-        <property name="RANDOMCLASSIFIER" value="RANDOMCLASSIFIER"/>
-        <property name="RANDOMCLUSTERING" value="RANDOMCLUSTERING"/>
+        <property name="RUNNING_STATE" value="Continuous Algorithm Running.."/>
+        <property name="CONTINUOUS_FINISHED" value="Continuous Algorithm Running finished "/>
+        <property name="RUNNING_EXIT" value="Would you terminate the task and exit?"/>
+        <property name="CURRENTLY_RUNNING" value="The algorithm is currently running"/>
+        <property name="EXIT" value="Exit"/>
+        <property name="CHART_DISPLAYED" value="Chart Displayed"/>
+        <property name="PROMPT_PROCEED" value="Please click display button to proceed."/>
+        <property name="ALGO_FINISHED" value="Algorithm running finished."/>
+        <property name="TOTAL_ITERATION" value="Algorithm running..total iteration is : "/>
+        <property name="CURRENT_ITERATION" value="Algorithm running..current iteration is : "/>
+
 
     </property_list>
     <property_options_list/>
