@@ -1,6 +1,10 @@
 package classification;
 
 
+import javafx.geometry.Point2D;
+
+import java.util.Map;
+
 import static settings.AppPropertyTypes.CLASSIFICATION;
 
 public class Classification extends Classifier {

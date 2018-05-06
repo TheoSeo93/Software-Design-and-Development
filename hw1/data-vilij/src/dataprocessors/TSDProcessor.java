@@ -1,5 +1,6 @@
 package dataprocessors;
 
+import algorithms.Algorithm;
 import javafx.geometry.Point2D;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
@@ -34,18 +35,18 @@ public final class TSDProcessor {
     public static class InvalidDataNameException extends Exception {
 
         public InvalidDataNameException(String name, String wrongPos) {
-            super(String.format(error + manager.getPropertyValue(NAME_ERROR_MSG.toString()) + wrongPos, name));
+            super(String.format(error + PropertyManager.getManager().getPropertyValue(NAME_ERROR_MSG.toString()) + wrongPos, name));
         }
     }
 
     private boolean nullLabel;
     private Map<String, String> dataLabels;
     private Map<String, Point2D> dataPoints;
-    private static PropertyManager manager;
-
+    private PropertyManager manager;
     public TSDProcessor() {
         dataLabels = new HashMap<>();
         dataPoints = new HashMap<>();
+        manager =PropertyManager.getManager();
     }
 
     /**
@@ -96,7 +97,7 @@ public final class TSDProcessor {
                             String label = secondMatch.group(0);
                             name = name.trim();
                             label = label.trim();
-                            if (label.contains(PropertyManager.getManager().getPropertyValue(NULL.toString())))
+                            if (label.equals(PropertyManager.getManager().getPropertyValue(NULL.toString())))
                                 nullLabel = true;
                             Point2D point = new Point2D(Double.valueOf(thirdMatch.group(0)), Double.parseDouble(fourthMatch.group(0)));
                             if (!dataLabels.containsKey(name)) {
@@ -117,6 +118,7 @@ public final class TSDProcessor {
                                 errorMessage.append(manager.getPropertyValue(WRONG_DATA_FORMAT_ERROR_CONTENT.toString()));
                                 errorMessage.append(manager.getPropertyValue(ERROR_POSITION.toString()));
                                 errorMessage.append(lineNumber.get() + System.lineSeparator());
+
                             }
                             lineNumber.getAndIncrement();
                         }
@@ -125,6 +127,7 @@ public final class TSDProcessor {
                         lineNumber.getAndIncrement();
                         errorMessage.append(e.getMessage() + System.lineSeparator());
                         notError.set(false);
+
                     }
                 });
 
@@ -137,6 +140,14 @@ public final class TSDProcessor {
         clear();
     }
 
+    public void setDataLabels(Map<String, String> dataLabels) {
+        this.dataLabels = dataLabels;
+    }
+
+    public void setDataPoints(Map<String, Point2D> dataPoints) {
+        this.dataPoints = dataPoints;
+    }
+
     /**
      * Exports the data to the specified 2-D chart.
      *
@@ -146,35 +157,12 @@ public final class TSDProcessor {
 
         ArrayList<Point2D> points = new ArrayList<>();
         points.addAll(dataPoints.values());
-        double startX = points.get(0).getX();
-        double endX = 0;
-        double startY = points.get(0).getY();
-        double endY =0;
-        for (int i = 0; i < points.size(); i++) {
-
-            if (endX < points.get(i).getX())
-                endX = points.get(i).getX();
-            if (startX > points.get(i).getX())
-                startX = points.get(i).getX();
-            if (endY < points.get(i).getY())
-                endY = points.get(i).getY();
-            if (startY > points.get(i).getY())
-                startY = points.get(i).getY();
-        }
-
 
         chart.getData().add(0, new XYChart.Series<>());
 
-
         Set<String> labels = new HashSet<>(dataLabels.values());
-
-
-        int counter = 1;
         for (String label : labels) {
-            if (counter > 10) {
 
-                break;
-            }
             XYChart.Series<Number, Number> series = new XYChart.Series<>();
             series.setName(label);
 
@@ -185,10 +173,7 @@ public final class TSDProcessor {
                 data.setExtraValue(entry.getKey());
             });
             chart.getData().add(series);
-            counter++;
         }
-
-
         Tooltip toolTip = new Tooltip();
         int count = 0;
         for (XYChart.Series<Number, Number> series : chart.getData()) {
@@ -201,7 +186,6 @@ public final class TSDProcessor {
                 toolTip.install(data.getNode(), new Tooltip(data.getExtraValue().toString() + manager.getPropertyValue(XPOS.toString()) + data.getXValue() + manager.getPropertyValue(YPOS.toString()) + data.getYValue()));
                 data.getNode().setOnMouseEntered(event -> data.getNode().getStyleClass().add(onHover));
                 data.getNode().setOnMouseExited(event -> data.getNode().getStyleClass().remove(onHover));
-
             }
 
         }
@@ -232,9 +216,6 @@ public final class TSDProcessor {
         return new HashSet<>(dataLabels.values()).size();
     }
 
-    public void setManager(PropertyManager manager) {
-        this.manager = manager;
-    }
 
     public int getDataSize() {
         return dataPoints.size();
@@ -242,6 +223,10 @@ public final class TSDProcessor {
 
     public Map<String, Point2D> getDataPoints() {
         return dataPoints;
+    }
+
+    public Map<String, String> getDataLabels() {
+        return dataLabels;
     }
 
     public boolean checkNullLabel() {

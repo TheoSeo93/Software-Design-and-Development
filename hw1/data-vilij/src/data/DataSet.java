@@ -59,20 +59,7 @@ public class DataSet {
     private Map<String, String> labels;
     private Map<String, Point2D> locations;
 
-    /**
-     * Creates an empty dataset.
-     * @param labels
-     * @param dataPoints
-     * @param integer
-     * @param valueOf
-     * @param selected
-     */
-
-
-
-    public Map<String, String> getLabels(Map<String, String> labels, Map<String, Point2D> dataPoints, Integer integer, Integer valueOf, boolean selected) {
-        return this.labels;
-    }
+    public Map<String, String> getLabels()     { return labels; }
 
     public Map<String, Point2D> getLocations() {
         return locations;

@@ -1,5 +1,9 @@
 package algorithms;
 
+import javafx.geometry.Point2D;
+
+import java.util.Map;
+
 import static settings.AppPropertyTypes.CLUSTERING;
 
 public class Clustering implements Algorithm {
@@ -47,6 +51,7 @@ public class Clustering implements Algorithm {
     public void setFinished(boolean finished) {
         this.isFinished=finished;
     }
+
 
 
     @Override

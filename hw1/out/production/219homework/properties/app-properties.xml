@@ -34,7 +34,7 @@ functionality within the main workspace. -->
         <property name="'WRONG_EXTENSION" value ="Wrong extension format"/>
         <property name="ERROR_POSITION" value=" Error at line # "/>
         <property name="NAME_ERROR_MSG" value=" All data instance names must start with the @ character. "/>
-        <!-- APPLICATION-SPECIFIC MESSAGE TITLES -->
+        <!-- APPLICATION-SPECIFIC MESSAGE TITLeS -->
         <property name="SAVE_UNSAVED_WORK_TITLE" value="Save Current Work"/>
 
         <!-- APPLICATION-SPECIFIC MESSAGES -->
@@ -75,7 +75,7 @@ functionality within the main workspace. -->
         <property name="OTHER_BUTTON" value="other-button"/>
 
         <property name="ALGORITHM_TYPE" value="Set Algorithm Type"/>
-        <property name="TEXTWATCH_MSG" value="The input has to be a positive integer."/>
+        <property name="TEXTWATCH_MSG" value="The input cannot be non-number."/>
         <property name="RADIOBUTTONS" value="radiobuttons"/>
         <property name="MAX_ITERATIONS" value="Max Iterations"/>
         <property name="INTERVAL" value="Update Interval"/>

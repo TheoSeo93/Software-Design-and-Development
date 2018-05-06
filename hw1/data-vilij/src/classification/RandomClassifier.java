@@ -4,6 +4,7 @@ import data.DataSet;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.chart.XYChart;
 import javafx.util.Duration;
 import ui.AppUI;
@@ -90,6 +91,15 @@ public class RandomClassifier extends Classifier {
                 ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText(PropertyManager.getManager().getPropertyValue(RUNNING_STATE.toString()));
                 ((AppUI) applicationTemplate.getUIComponent()).disableState(true);
                 ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().set(0, line);
+                ((AppUI) applicationTemplate.getUIComponent()).getDisplayButton().setDisable(true);
+                line.setName("Classifying Line");
+                Node fill = line.getNode().lookup(".chart-series-line");
+                fill.setStyle("-fx-stroke: red;");
+                for (int i = 0; i < line.getData().size(); i++) {
+                    Node symbol = line.getData().get(i).getNode().lookup(".chart-line-symbol");
+                    symbol.setStyle(" -fx-background-color: transparent, transparent;");
+                }
+
             });
             int iterationSimulation = 0;
             for (int i = 1; i <= maxIterations; i++) {
@@ -103,7 +113,6 @@ public class RandomClassifier extends Classifier {
             timeline.getKeyFrames().add(keyFrame);
             timeline.play();
             timeline.setOnFinished(e -> {
-
                 ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(false);
                 ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
                 ((AppUI) applicationTemplate.getUIComponent()).getDisplayButton().setDisable(true);
@@ -135,12 +144,21 @@ public class RandomClassifier extends Classifier {
                 double startX = (-yCoefficient * (startY - 20) - constant) / xCoefficient;
                 double endX = (-yCoefficient * (endY + 20) - constant) / xCoefficient;
                 XYChart.Series<Number, Number> line = new XYChart.Series<>();
+                line.setName("Classifying Line");
                 line.getData().add(new XYChart.Data<>(startX, startY - 20));
                 line.getData().add(new XYChart.Data<>(endX, endY + 20));
                 ((AppUI) applicationTemplate.getUIComponent()).getChart().setAnimated(false);
                 ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(true);
                 ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().set(0, line);
                 ((AppUI) applicationTemplate.getUIComponent()).getComboBox().setDisable(true);
+                Node fill = line.getNode().lookup(".default-color0.chart-series-line");
+                fill.setStyle("-fx-stroke: red;");
+                for (int i = 0; i < line.getData().size(); i++) {
+                    Node symbol = line.getData().get(i).getNode().lookup(".default-color0.chart-line-symbol");
+                    symbol.setStyle(" -fx-background-color: transparent, transparent;");
+                }
+
+
             });
 
             timeline.setCycleCount(1);

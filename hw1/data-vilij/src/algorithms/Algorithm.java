@@ -8,7 +8,7 @@ package algorithms;
 public interface Algorithm extends Runnable {
 
     enum AlgorithmType {
-        CLASSIFICATION, CLUSTERING, RANDOMCLASSIFIER, RANDOMCLUSTERING
+        KMEANSCLUSTERER, RANDOMCLASSIFIER, RANDOMCLUSTERER
     }
 
     int getMaxIterations();
@@ -20,4 +20,5 @@ public interface Algorithm extends Runnable {
     boolean isFinished();
 
     void setFinished(boolean finished);
+
 }

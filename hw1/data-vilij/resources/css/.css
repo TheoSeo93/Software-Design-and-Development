@@ -20,7 +20,7 @@
                                    -fx-font-size: 12px;
 }
 
-.default-color0.chart-series-line { -fx-stroke: blue; }
+
 
 .chart-series-line {
   -fx-stroke: transparent;
@@ -36,10 +36,6 @@
 .line-symbol {
     -fx-background-color: transparent, transparent;
 }
-
-.default-color0.chart-line-symbol { -fx-background-color: transparent; }
-
-
 .axis{
     -fx-border-color: transparent;
 }

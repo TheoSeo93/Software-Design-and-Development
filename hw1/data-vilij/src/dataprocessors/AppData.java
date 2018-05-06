@@ -1,9 +1,9 @@
 package dataprocessors;
 
 import algorithms.Algorithm;
-import algorithms.Clustering;
-import classification.Classification;
 import classification.RandomClassifier;
+import clusterer.KMeansClusterer;
+import clusterer.RandomClusterer;
 import javafx.geometry.Point2D;
 import javafx.scene.control.RadioButton;
 import javafx.scene.text.Text;
@@ -42,7 +42,11 @@ public class AppData implements DataComponent {
     private String specified;
     private String wrongExtention;
     private String wrongExtentionContent;
+    private boolean isClustering;
 
+    public AppData() {
+        this.processor = new TSDProcessor();
+    }
 
     public AppData(ApplicationTemplate applicationTemplate) {
         this.processor = new TSDProcessor();
@@ -55,12 +59,20 @@ public class AppData implements DataComponent {
         wrongDataFormatContent = applicationTemplate.manager.getPropertyValue(WRONG_EXTENSION_CONTENT.toString());
     }
 
+    public boolean isClustering() {
+        return isClustering;
+    }
+
+    public void setClustering(boolean clustering) {
+        isClustering = clustering;
+    }
+
     @Override
     public void loadData(Path dataFilePath) {
         pendingText.setLength(0);
         pendingText.trimToSize();
-        processor.setManager(applicationTemplate.manager);
         ((AppUI) applicationTemplate.getUIComponent()).getTextArea().clear();
+        processor.clear();
         try {
             InputStream inputStream = Files.newInputStream(dataFilePath);
             StringBuilder textBuilder = new StringBuilder();
@@ -76,38 +88,43 @@ public class AppData implements DataComponent {
                     } else {
                         ((AppUI) applicationTemplate.getUIComponent()).setMoreThanTen(false);
                         textBuilder.append(line + newLineRegex);
-
                     }
                     counter++;
                 }
             }
-
-            processor.processString(textBuilder.toString());
-            updatedChartData = textBuilder.toString();
+            processor.processString(textBuilder.toString() + pendingText.toString());
+            updatedChartData = textBuilder.toString() + pendingText.toString();
             String filePath = dataFilePath.toAbsolutePath().toString() + System.lineSeparator();
             updateTextFlow(filePath);
-            if (processor.getDataSize() > 10)
-                applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(DATA_EXCEEDED.toString(), applicationTemplate.manager.getPropertyValue(DATA_EXCEEDED.toString()) + processor.getDataSize());
-            processor.clear();
             ((AppUI) applicationTemplate.getUIComponent()).getTextArea().setText(textBuilder.toString());
             ((AppUI) applicationTemplate.getUIComponent()).setReadOnly();
         } catch (Exception ex) {
             applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(LOAD.toString(), ex.getMessage());
             processor.clear();
         }
-
         ((AppUI) applicationTemplate.getUIComponent()).setPendingText(pendingText);
+    }
 
+    public void loadData(String dataString) throws Exception {
+        processor.processString(dataString);
+        processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
+        displayData();
+        ((AppUI) applicationTemplate.getUIComponent()).enableScrnshot();
 
     }
 
-
-
-    public void loadData(String dataString) throws Exception {
-        processor.setManager(applicationTemplate.manager);
+    public void loadData(String dataString, boolean firstClick) throws Exception {
         processor.processString(dataString);
-        displayData();
+        processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
+        ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().remove(0);
+        if (firstClick)
+            return;
+        applyAlgorithm();
         ((AppUI) applicationTemplate.getUIComponent()).enableScrnshot();
+
+    }
+
+    public void updateDataSet(){
 
     }
 
@@ -121,10 +138,13 @@ public class AppData implements DataComponent {
 
     @Override
     public void saveData(Path dataFilePath) {
-        String chartData = ((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText().toString();
+        String chartData = getChartData();
+        saveData(dataFilePath, chartData);
+    }
+
+    public void saveData(Path dataFilePath, String chartData) {
         String title = SAVE_WRONG_DATA.toString();
         updatedChartData = chartData;
-        processor.setManager(applicationTemplate.manager);
         try {
             processor.clear();
             processor.processString(chartData);
@@ -133,14 +153,15 @@ public class AppData implements DataComponent {
             return;
         }
 
-        try (PrintWriter writer = new PrintWriter(Files.newOutputStream(dataFilePath))) {
+        try  {
+            PrintWriter writer = new PrintWriter(Files.newOutputStream(dataFilePath));
             writer.write(chartData);
             writer.close();
         } catch (IOException e) {
-            applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(SAVE_IOEXCEPTION.toString(),
+                    System.out.print(e.getMessage());
+                    applicationTemplate.getDialog(Dialog.DialogType.ERROR).show(SAVE_IOEXCEPTION.toString(),
                     applicationTemplate.manager.getPropertyValue(SAVE_IOEXCEPTION.toString()));
         }
-
     }
 
     public void updateTextFlow(String dataFilePath) {
@@ -181,45 +202,33 @@ public class AppData implements DataComponent {
         return processor.getLabelsAsMap();
     }
 
-    public void displayData() {
 
-        processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
-        if(((AppUI) applicationTemplate.getUIComponent()).getCurrentAlgorithm().tocontinue())
+    public void displayData() {
         applyAlgorithm();
-        ((AppUI) applicationTemplate.getUIComponent()).enableScrnshot();
         processor.clear();
 
     }
 
     public void applyAlgorithm() {
-        Classification[] classificationConfigs = ((AppUI) applicationTemplate.getUIComponent()).getClassificationConfigs();
+        Algorithm[] kmeansClusterers = ((AppUI) applicationTemplate.getUIComponent()).getKmeansClusterers();
         Algorithm[] randomClassifiers = ((AppUI) applicationTemplate.getUIComponent()).getRandomClassifiers();
-        Clustering[] clusterConfigs = ((AppUI) applicationTemplate.getUIComponent()).getClusterConfigs();
+        Algorithm[] randomClusterers = ((AppUI) applicationTemplate.getUIComponent()).getRandomClusterers();
         RadioButton[] radioButtons = ((AppUI) applicationTemplate.getUIComponent()).getRadioButtons();
         switch (((AppUI) applicationTemplate.getUIComponent()).getAlgorithmType()) {
-            case RANDOMCLUSTERING:
-//                    for(int i=0;i<3;i++){
-//                        if(radioButtons[i].isSelected()){
-//                            randomClassifiers[i].run();
-//                            break;
-//                        }
-//                    }
-                break;
-            case CLASSIFICATION:
+            case RANDOMCLUSTERER:
                 for (int i = 0; i < 3; i++) {
                     if (radioButtons[i].isSelected()) {
-                        if (classificationConfigs[i].tocontinue())
-                            ((AppUI) applicationTemplate.getUIComponent()).disableState(true);
-                        new Thread(classificationConfigs[i]).start();
-                        ((AppUI) applicationTemplate.getUIComponent()).disableState(false);
+                        ((RandomClusterer) randomClusterers[i]).setApplicationTemplate(applicationTemplate);
+                        new Thread(randomClusterers[i]).start();
                         break;
                     }
                 }
                 break;
-            case CLUSTERING:
+            case KMEANSCLUSTERER:
                 for (int i = 0; i < 3; i++) {
                     if (radioButtons[i].isSelected()) {
-                        clusterConfigs[i].run();
+                        ((KMeansClusterer) kmeansClusterers[i]).setApplicationTemplate(applicationTemplate);
+                        new Thread(kmeansClusterers[i]).start();
                         break;
                     }
                 }
@@ -228,7 +237,7 @@ public class AppData implements DataComponent {
                 for (int i = 0; i < 3; i++) {
                     if (radioButtons[i].isSelected()) {
                         ((RandomClassifier) randomClassifiers[i]).setApplicationTemplate(applicationTemplate);
-                            new Thread(randomClassifiers[i]).start();
+                        new Thread(randomClassifiers[i]).start();
                         break;
                     }
                 }
@@ -237,5 +246,17 @@ public class AppData implements DataComponent {
     }
 
 
+    public void displayData(Map<String, Point2D> locations, Map<String, String> labels) {
+        processor.setDataPoints(locations);
+        processor.setDataLabels(labels);
+        processor.toChartData(((AppUI) applicationTemplate.getUIComponent()).getChart());
+        ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().remove(0);
+    }
 
+    public ApplicationTemplate getApplicationTemplate() {
+        return applicationTemplate;
+    }
+    public String getChartData(){
+       return ((AppUI) applicationTemplate.getUIComponent()).getTextArea().getText() + pendingText.toString();
+    }
 }

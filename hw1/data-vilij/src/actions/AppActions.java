@@ -1,17 +1,13 @@
 package actions;
 
 
-import classification.RandomClassifier;
 import dataprocessors.AppData;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import ui.AppUI;
 import vilij.components.ActionComponent;
@@ -83,13 +79,11 @@ public final class AppActions implements ActionComponent {
             file = fileChooser.showSaveDialog(applicationTemplate.getUIComponent().getPrimaryWindow());
             if (file != null)
                 dataFilePath = file.toPath();
-
         }
         if (file != null) {
             applicationTemplate.getDataComponent().saveData(dataFilePath);
             ((AppUI) applicationTemplate.getUIComponent()).setSaveDisabled();
             isSaved = true;
-
         }
 
 
