@@ -1,5 +1,6 @@
-package clusterer;
+package algorithm_list;
 
+import algorithms.Clusterer;
 import data.DataSet;
 import dataprocessors.AppData;
 import javafx.animation.KeyFrame;
@@ -45,6 +46,8 @@ public class KMeansClusterer extends Clusterer {
         this.isContinuous= new AtomicBoolean(isContinuous);
         firstRun=true;
     }
+
+
 
     @Override
     public int getMaxIterations() {

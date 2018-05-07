@@ -1,4 +1,4 @@
-package classification;
+package algorithms;
 import algorithms.Algorithm;
 
 import java.util.List;

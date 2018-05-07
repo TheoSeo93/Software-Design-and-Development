@@ -1,9 +1,9 @@
 package dataprocessors;
 
 import algorithms.Algorithm;
-import classification.RandomClassifier;
-import clusterer.KMeansClusterer;
-import clusterer.RandomClusterer;
+import algorithm_list.RandomClassifier;
+import algorithm_list.KMeansClusterer;
+import algorithm_list.RandomClusterer;
 import javafx.geometry.Point2D;
 import javafx.scene.control.RadioButton;
 import javafx.scene.text.Text;
@@ -57,6 +57,7 @@ public class AppData implements DataComponent {
         specified = applicationTemplate.manager.getPropertyValue(SPECIFIED_FILE.toString());
         wrongExtention = applicationTemplate.manager.getPropertyValue(WRONG_EXTENSION.toString());
         wrongDataFormatContent = applicationTemplate.manager.getPropertyValue(WRONG_EXTENSION_CONTENT.toString());
+
     }
 
     public boolean isClustering() {

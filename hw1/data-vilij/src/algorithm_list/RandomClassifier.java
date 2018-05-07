@@ -1,5 +1,6 @@
-package classification;
+package algorithm_list;
 
+import algorithms.Classifier;
 import data.DataSet;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
@@ -14,8 +15,7 @@ import vilij.templates.ApplicationTemplate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static settings.AppPropertyTypes.CONTINUOUS_FINISHED;
-import static settings.AppPropertyTypes.RUNNING_STATE;
+import static settings.AppPropertyTypes.*;
 
 /**
  * @author Ritwik Banerjee
@@ -92,12 +92,12 @@ public class RandomClassifier extends Classifier {
                 ((AppUI) applicationTemplate.getUIComponent()).disableState(true);
                 ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().set(0, line);
                 ((AppUI) applicationTemplate.getUIComponent()).getDisplayButton().setDisable(true);
-                line.setName("Classifying Line");
-                Node fill = line.getNode().lookup(".chart-series-line");
-                fill.setStyle("-fx-stroke: red;");
+                line.setName(PropertyManager.getManager().getPropertyValue(CLASSIFIER_LINE.toString()));
+                Node fill = line.getNode().lookup(PropertyManager.getManager().getPropertyValue(CSS_CHARTLINE.toString()));
+                fill.setStyle(PropertyManager.getManager().getPropertyValue(CSS_STROKE.toString()));
                 for (int i = 0; i < line.getData().size(); i++) {
-                    Node symbol = line.getData().get(i).getNode().lookup(".chart-line-symbol");
-                    symbol.setStyle(" -fx-background-color: transparent, transparent;");
+                    Node symbol = line.getData().get(i).getNode().lookup(PropertyManager.getManager().getPropertyValue(CSS_LINE_SYMBOL.toString()));
+                    symbol.setStyle(PropertyManager.getManager().getPropertyValue(CSS_FXBACKGROUND.toString()));
                 }
 
             });
@@ -144,18 +144,18 @@ public class RandomClassifier extends Classifier {
                 double startX = (-yCoefficient * (startY - 20) - constant) / xCoefficient;
                 double endX = (-yCoefficient * (endY + 20) - constant) / xCoefficient;
                 XYChart.Series<Number, Number> line = new XYChart.Series<>();
-                line.setName("Classifying Line");
+                line.setName(PropertyManager.getManager().getPropertyValue(CLASSIFIER_LINE.toString()));
                 line.getData().add(new XYChart.Data<>(startX, startY - 20));
                 line.getData().add(new XYChart.Data<>(endX, endY + 20));
                 ((AppUI) applicationTemplate.getUIComponent()).getChart().setAnimated(false);
                 ((AppUI) applicationTemplate.getUIComponent()).getScrnshotButton().setDisable(true);
                 ((AppUI) applicationTemplate.getUIComponent()).getChart().getData().set(0, line);
                 ((AppUI) applicationTemplate.getUIComponent()).getComboBox().setDisable(true);
-                Node fill = line.getNode().lookup(".default-color0.chart-series-line");
-                fill.setStyle("-fx-stroke: red;");
+                Node fill = line.getNode().lookup(PropertyManager.getManager().getPropertyValue(CSS_DEFAULT_ZERO.toString()));
+                fill.setStyle(PropertyManager.getManager().getPropertyValue(CSS_STROKE.toString()));
                 for (int i = 0; i < line.getData().size(); i++) {
-                    Node symbol = line.getData().get(i).getNode().lookup(".default-color0.chart-line-symbol");
-                    symbol.setStyle(" -fx-background-color: transparent, transparent;");
+                    Node symbol = line.getData().get(i).getNode().lookup(PropertyManager.getManager().getPropertyValue(CSS_DEFAULT_SYMBOL.toString()));
+                    symbol.setStyle(PropertyManager.getManager().getPropertyValue(CSS_FXBACKGROUND.toString()));
                 }
 
 

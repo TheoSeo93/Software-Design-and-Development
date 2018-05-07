@@ -1,13 +1,12 @@
-package clusterer;
+package algorithm_list;
 
-import algorithms.Algorithm;
+import algorithms.Clusterer;
 import data.DataSet;
 import dataprocessors.AppData;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
-import javafx.scene.chart.XYChart;
 import javafx.util.Duration;
 import ui.AppUI;
 import vilij.propertymanager.PropertyManager;
@@ -88,7 +87,6 @@ public class RandomClusterer extends Clusterer {
                 ((AppUI) applicationTemplate.getUIComponent()).getTextWatchDisplay().setText(PropertyManager.getManager().getPropertyValue(RUNNING_STATE.toString()));
                 ((AppUI) applicationTemplate.getUIComponent()).disableState(true);
                 ((AppUI) applicationTemplate.getUIComponent()).getDisplayButton().setDisable(true);
-
                 recomputeCentroids();
             });
             initializeCentroids();

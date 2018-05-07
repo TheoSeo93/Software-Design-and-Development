@@ -107,6 +107,22 @@ functionality within the main workspace. -->
         <property name="ALGO_FINISHED" value="Algorithm running finished."/>
         <property name="TOTAL_ITERATION" value="Algorithm running..total iteration is : "/>
         <property name="CURRENT_ITERATION" value="Algorithm running..current iteration is : "/>
+        <property name="ALGORITHM_1" value="RandomClassifier"/>
+        <property name="RandomClassifier" value="RandomClassifier"/>
+        <property name="KMeans" value="KMeansClusterer"/>
+        <property name="RandomClusterer" value="RandomClusterer"/>
+
+        <property name="FORNAME_RC" value="algorithm_list.RandomClassifier"/>
+        <property name="FORNAME_KM" value="algorithm_list.KMeansClusterer"/>
+        <property name="FORNAME_RCU" value="algorithm_list.RandomClusterer"/>
+
+        <property name="CLASSIFIER_LINE" value="Classifying Line"/>
+        <property name="CSS_CHARTLINE" value=".chart-series-line "/>
+        <property name="CSS_FXBACKGROUND" value="-fx-background-color: transparent, transparent;"/>
+        <property name="CSS_DEFAULT_ZERO" value=".default-color0.chart-series-line"/>
+        <property name="CSS_DEFAULT_SYMBOL" value=".default-color0.chart-line-symbol"/>
+        <property name="CSS_STROKE" value="-fx-stroke: red;"/>
+        <property name="CSS_LINE_SYMBOL" value=".chart-line-symbol"/>
 
 
     </property_list>

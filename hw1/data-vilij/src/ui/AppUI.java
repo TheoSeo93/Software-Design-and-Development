@@ -2,14 +2,15 @@ package ui;
 
 import actions.AppActions;
 import algorithms.Algorithm;
-import classification.RandomClassifier;
-import clusterer.KMeansClusterer;
-import clusterer.RandomClusterer;
+import algorithm_list.RandomClassifier;
+import algorithm_list.KMeansClusterer;
+import algorithm_list.RandomClusterer;
 import data.DataSet;
 import dataprocessors.AppData;
 import dataprocessors.TSDProcessor;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -33,19 +34,28 @@ import vilij.propertymanager.PropertyManager;
 import vilij.templates.ApplicationTemplate;
 import vilij.templates.UITemplate;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static settings.AppPropertyTypes.*;
-import static ui.DataVisualizer.newLineRegex;
-import static ui.DataVisualizer.regexString;
-import static ui.DataVisualizer.tabRegex;
-import static vilij.settings.PropertyTypes.*;
+import static ui.DataVisualizer.*;
+import static vilij.settings.PropertyTypes.GUI_RESOURCE_PATH;
+import static vilij.settings.PropertyTypes.ICONS_RESOURCE_PATH;
 
 /**
  * This is the application's user interface implementation.
@@ -97,21 +107,15 @@ public final class AppUI extends UITemplate {
     private Label textWatchDisplay;
     private Object[] algorithms;
 
-    public LineChart<Number, Number> getChart() {
-        return chart;
-    }
-
     public AppUI(Stage primaryStage, ApplicationTemplate applicationTemplate) {
 
         super(primaryStage, applicationTemplate);
         this.applicationTemplate = applicationTemplate;
-
         newCss = this.getClass().getResource(applicationTemplate.manager.getPropertyValue(CSS_ADDRESS.toString())).toExternalForm();
         PropertyManager manager = applicationTemplate.manager;
         kMeansClusterers = new KMeansClusterer[3];
         randomClusterers = new RandomClusterer[3];
         randomClassifiers = new RandomClassifier[3];
-
         algorithms = new Object[]{randomClassifiers,};
         hBox = new HBox();
         textAreaTitle = new Text(manager.getPropertyValue(TEXT_AREA_TITLE.toString()));
@@ -137,7 +141,13 @@ public final class AppUI extends UITemplate {
         configImg = new ImageView(new Image(getClass().getResourceAsStream(configImgPath)));
         imageViews = new ImageView[]{settings1, settings2, settings3};
         displayBox = new HBox();
+
     }
+
+    public LineChart<Number, Number> getChart() {
+        return chart;
+    }
+
 
     @Override
     protected void setResourcePaths(ApplicationTemplate applicationTemplate) {
@@ -399,10 +409,10 @@ public final class AppUI extends UITemplate {
                 Text algoName;
                 if (comboBox.getSelectionModel().getSelectedItem().toString().equals(Algorithm.AlgorithmType.RANDOMCLUSTERER.toString())) {
                     algorithmType = Algorithm.AlgorithmType.RANDOMCLUSTERER;
-                    algoName = new Text((CLUSTERING.name()));
+                    algoName = new Text(PropertyManager.getManager().getPropertyValue(RANDOMCLUSTERING.toString()));
                 } else if (comboBox.getSelectionModel().getSelectedItem().toString().equals(Algorithm.AlgorithmType.KMEANSCLUSTERER.toString())) {
                     algorithmType = Algorithm.AlgorithmType.KMEANSCLUSTERER;
-                    algoName = new Text((CLASSIFICATION.name()));
+                    algoName = new Text(PropertyManager.getManager().getPropertyValue(KMeans.toString()));
                 } else {
                     algorithmType = Algorithm.AlgorithmType.RANDOMCLASSIFIER;
                     algoName = new Text((RANDOMCLASSIFIER.name()));
@@ -546,7 +556,7 @@ public final class AppUI extends UITemplate {
 
                 {
                     if (newValue) {
-                        String chartData = "";
+                        String chartData;
                         if (pendingText != null)
                             chartData = textArea.getText() + pendingText.toString();
                         else
@@ -884,37 +894,89 @@ public final class AppUI extends UITemplate {
             } catch (Exception e) {
 
             }
-            if (firstCheck) {
+            try {
+                Class[] clusterArgs = new Class[]{DataSet.class, int.class, int.class, int.class, boolean.class};
+                Class[] classifierArgs = new Class[]{DataSet.class, int.class, int.class, boolean.class};
+                Class<?> randomClassifierClass = Class.forName("algorithm_list.RandomClassifier");
+                Constructor randomClassifierConst = randomClassifierClass.getConstructor(classifierArgs);
+                Class<?> kmeansClass = Class.forName("algorithm_list.KMeansClusterer");
+                Constructor kmeansConst = kmeansClass.getConstructor(clusterArgs);
+                Class<?> randomClusterClass = Class.forName("algorithm_list.RandomClusterer");
+                Constructor randomCluseterConst = randomClusterClass.getConstructor(clusterArgs);
 
-                radioButtons[0].setDisable(false);
-                if (algorithmType == Algorithm.AlgorithmType.KMEANSCLUSTERER) {
-                    kMeansClusterers[0] = new KMeansClusterer(new DataSet((((AppData) applicationTemplate.getDataComponent()).getLabels()), ((AppData) applicationTemplate.getDataComponent()).getDataPoints()), Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
-                } else if (algorithmType == Algorithm.AlgorithmType.RANDOMCLUSTERER) {
-                    randomClusterers[0] = new RandomClusterer(new DataSet((((AppData) applicationTemplate.getDataComponent()).getLabels()), ((AppData) applicationTemplate.getDataComponent()).getDataPoints()), Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+                Map<String, String> labels = ((AppData) applicationTemplate.getDataComponent()).getLabels();
+                Map<String, Point2D> datapoints = ((AppData) applicationTemplate.getDataComponent()).getDataPoints();
+
+
+                if (firstCheck) {
+
+                    radioButtons[0].setDisable(false);
+                    if (algorithmType == Algorithm.AlgorithmType.KMEANSCLUSTERER) {
+                        kMeansClusterers[0] = (KMeansClusterer) kmeansConst.newInstance(new DataSet(labels, datapoints),
+                                Integer.valueOf(textFields[0].getText()),
+                                Integer.valueOf(textFields[1].getText()),
+                                Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+
+                    } else if (algorithmType == Algorithm.AlgorithmType.RANDOMCLUSTERER) {
+                        randomClusterers[0] = randomClusterers[0] = (RandomClusterer) randomCluseterConst.newInstance(new DataSet(labels, datapoints),
+                                Integer.valueOf(textFields[0].getText()),
+                                Integer.valueOf(textFields[1].getText()),
+                                Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+                    } else {
+
+                        randomClassifiers[0] = (RandomClassifier) randomClassifierConst.newInstance(new DataSet(labels, datapoints),
+                                Integer.valueOf(textFields[0].getText()),
+                                Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
+                    }
+
+                } else if (secondCheck) {
+                    radioButtons[1].setDisable(false);
+                    if (algorithmType == Algorithm.AlgorithmType.KMEANSCLUSTERER) {
+                        kMeansClusterers[1] = (KMeansClusterer) kmeansConst.newInstance(new DataSet(labels, datapoints),
+                                Integer.valueOf(textFields[0].getText()),
+                                Integer.valueOf(textFields[1].getText()),
+                                Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+
+                    } else if (algorithmType == Algorithm.AlgorithmType.RANDOMCLUSTERER) {
+                        randomClusterers[1] = randomClusterers[0] = (RandomClusterer) randomCluseterConst.newInstance(new DataSet(labels, datapoints),
+                                Integer.valueOf(textFields[0].getText()),
+                                Integer.valueOf(textFields[1].getText()),
+                                Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+                    } else {
+
+                        randomClassifiers[1] = (RandomClassifier) randomClassifierConst.newInstance(new DataSet(labels, datapoints),
+                                Integer.valueOf(textFields[0].getText()),
+                                Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
+                    }
+
                 } else {
-                    randomClassifiers[0] = new RandomClassifier(new DataSet((((AppData) applicationTemplate.getDataComponent()).getLabels()), ((AppData) applicationTemplate.getDataComponent()).getDataPoints()), Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
+                    radioButtons[2].setDisable(false);
+                    if (algorithmType == Algorithm.AlgorithmType.KMEANSCLUSTERER) {
+                        kMeansClusterers[2] = (KMeansClusterer) kmeansConst.newInstance(new DataSet(labels, datapoints),
+                                Integer.valueOf(textFields[0].getText()),
+                                Integer.valueOf(textFields[1].getText()),
+                                Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+
+                    } else if (algorithmType == Algorithm.AlgorithmType.RANDOMCLUSTERER) {
+                        randomClusterers[2] = randomClusterers[0] = (RandomClusterer) randomCluseterConst.newInstance(new DataSet(labels, datapoints),
+                                Integer.valueOf(textFields[0].getText()),
+                                Integer.valueOf(textFields[1].getText()),
+                                Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
+                    } else {
+
+                        randomClassifiers[2] = (RandomClassifier) randomClassifierConst.newInstance(new DataSet(labels, datapoints),
+                                Integer.valueOf(textFields[0].getText()),
+                                Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
+                    }
+
                 }
 
-            } else if (secondCheck) {
-                radioButtons[1].setDisable(false);
-                if (algorithmType == Algorithm.AlgorithmType.KMEANSCLUSTERER) {
-                    kMeansClusterers[1] = new KMeansClusterer(new DataSet((((AppData) applicationTemplate.getDataComponent()).getLabels()), ((AppData) applicationTemplate.getDataComponent()).getDataPoints()), Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
-                } else if (algorithmType == Algorithm.AlgorithmType.RANDOMCLUSTERER) {
-                    randomClusterers[1] = new RandomClusterer(new DataSet((((AppData) applicationTemplate.getDataComponent()).getLabels()), ((AppData) applicationTemplate.getDataComponent()).getDataPoints()), Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
-                } else {
-                    randomClassifiers[1] = new RandomClassifier(new DataSet((((AppData) applicationTemplate.getDataComponent()).getLabels()), ((AppData) applicationTemplate.getDataComponent()).getDataPoints()), Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
-                }
+            } catch (ClassNotFoundException | NoSuchMethodException e) {
 
-            } else {
-                radioButtons[2].setDisable(false);
-                if (algorithmType == Algorithm.AlgorithmType.KMEANSCLUSTERER) {
-                    kMeansClusterers[2] = new KMeansClusterer(new DataSet((((AppData) applicationTemplate.getDataComponent()).getLabels()), ((AppData) applicationTemplate.getDataComponent()).getDataPoints()), Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
-                } else if (algorithmType == Algorithm.AlgorithmType.RANDOMCLUSTERER) {
-                    randomClusterers[2] = new RandomClusterer(new DataSet((((AppData) applicationTemplate.getDataComponent()).getLabels()), ((AppData) applicationTemplate.getDataComponent()).getDataPoints()), Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), Integer.valueOf(textFields[2].getText()), isContinuous.isSelected());
-                } else {
-                    randomClassifiers[2] = new RandomClassifier(new DataSet((((AppData) applicationTemplate.getDataComponent()).getLabels()), ((AppData) applicationTemplate.getDataComponent()).getDataPoints()), Integer.valueOf(textFields[0].getText()), Integer.valueOf(textFields[1].getText()), isContinuous.isSelected());
-                }
-
+            } catch (IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
             }
             newStage.close();
         });
@@ -1186,5 +1248,6 @@ public final class AppUI extends UITemplate {
             radioButtons[i].setSelected(false);
     }
 }
+
 
 

@@ -1,9 +1,5 @@
-package classification;
+package algorithms;
 
-
-import javafx.geometry.Point2D;
-
-import java.util.Map;
 
 import static settings.AppPropertyTypes.CLASSIFICATION;
 

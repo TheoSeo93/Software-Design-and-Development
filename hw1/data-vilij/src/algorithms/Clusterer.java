@@ -1,4 +1,4 @@
-package clusterer;
+package algorithms;
 
 import algorithms.Algorithm;
 

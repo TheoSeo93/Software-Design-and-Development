@@ -1,5 +1,6 @@
 package algorithms;
 
+import algorithms.Algorithm;
 import javafx.geometry.Point2D;
 
 import java.util.Map;

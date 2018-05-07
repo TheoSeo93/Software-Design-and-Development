@@ -1,7 +1,5 @@
 package settings;
 
-import java.util.Set;
-
 /**
  * This enumerable type lists the various application-specific property types listed in the initial set of properties to
  * be loaded from the workspace properties <code>xml</code> file specified by the initialization parameters.
@@ -104,7 +102,17 @@ public enum AppPropertyTypes {
     ALGO_FINISHED,
     TOTAL_ITERATION,
     CURRENT_ITERATION,
-    EXIT
+    EXIT,
+    RandomClassifier,
+    KMeans,
+    CLASSIFIER_LINE,
+    CSS_CHARTLINE,
+    CSS_FXBACKGROUND,
+    CSS_DEFAULT_ZERO,
+    CSS_DEFAULT_SYMBOL,
+    CSS_STROKE,
+    CSS_LINE_SYMBOL
+
 
 
 
